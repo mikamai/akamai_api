@@ -1,0 +1,17 @@
+AKAMAI_API is a collection of AKAMAI webservices proxy classes whose aim is to convert wsdl format in a more easy-to-write, modern and human readable format.
+
+At the moment only three web services and a handful of methods are defined:
+
+h3. CCU (purge requests)
+ - purge
+
+h3. ECCU (advanced purge requests)
+ - get_ids
+ - get_info
+ - set_notes
+ - set_notify_email
+ - delete
+ - upload
+
+h3. SITE ACCELERATOR
+ - cp_codes
