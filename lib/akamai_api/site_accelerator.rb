@@ -1,6 +1,6 @@
-module Akamai
+module AkamaiApi
   class SiteAccelerator
-    include Akamai::WebService
+    include AkamaiApi::WebService
 
     use_manifest 'site_accelerator_report.wsdl'
 

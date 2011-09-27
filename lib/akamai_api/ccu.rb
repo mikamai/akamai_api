@@ -1,6 +1,8 @@
-module Akamai
+require 'mustache'
+
+module AkamaiApi
   class Ccu
-    include Akamai::WebService
+    include AkamaiApi::WebService
 
     use_manifest 'ccuapi-axis.wsdl'
 
@@ -32,7 +34,7 @@ module Akamai
     end
 
     private
-    class PurgeRequest < Mustache
+    class PurgeRequest < ::Mustache
       attr_accessor :username, :password, :options, :uris
 
       self.template_path = File.join File.dirname(__FILE__), '../../templates'

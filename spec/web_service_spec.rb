@@ -1,8 +1,8 @@
 require File.expand_path(File.dirname(__FILE__) + '/spec_helper')
 
-describe Akamai::WebService do
+describe AkamaiApi::WebService do
   class Foo
-    include Akamai::WebService
+    include AkamaiApi::WebService
 
     def get_account
       self.account
@@ -26,7 +26,7 @@ describe Akamai::WebService do
 
     it 'should set account values using initialize' do
       f = Foo.new 'foo', 'foo2'
-      f.get_account.should == Akamai::LoginInfo.new('foo', 'foo2')
+      f.get_account.should == AkamaiApi::LoginInfo.new('foo', 'foo2')
     end
 
     it 'should define client facility' do
@@ -51,7 +51,7 @@ describe Akamai::WebService do
 
     it 'get_manifest_path should join Akamai wsdl folder and manifest' do
       Foo.use_manifest 'test'
-      Foo.get_manifest_path.should == File.join(Akamai.wsdl_folder, 'test')
+      Foo.get_manifest_path.should == File.join(AkamaiApi.wsdl_folder, 'test')
     end
   end
 
@@ -73,7 +73,7 @@ describe Akamai::WebService do
         raise Savon::HTTP::Error.new HTTPI::Response.new 401, {}, {}
       end
       f = Foo.new
-      lambda { f.sample2 }.should raise_error(Akamai::LoginError)
+      lambda { f.sample2 }.should raise_error(AkamaiApi::LoginError)
     end
   end
 end

@@ -2,7 +2,7 @@ source :rubygems
 
 gemspec
 
-gem 'savon', :require => 'savon'
+gem 'savon'
 gem 'mustache'
 gem 'activesupport'
 

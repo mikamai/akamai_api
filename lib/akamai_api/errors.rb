@@ -1,4 +1,4 @@
-module Akamai
+module AkamaiApi
   class Error < RuntimeError
   end
 

@@ -1,12 +1,12 @@
 require File.expand_path(File.dirname(__FILE__) + '/spec_helper')
 
-describe Akamai::Ccu do
+describe AkamaiApi::Ccu do
   it 'should define a purge method' do
     should respond_to(:purge)
   end
 
   it 'should raise error if login is not correct' do
-    lambda { Akamai::Ccu.new.purge }.should raise_error(Akamai::LoginError)
+    lambda { AkamaiApi::Ccu.new.purge }.should raise_error(AkamaiApi::LoginError)
   end
 
   it 'should report correctly' do
@@ -22,7 +22,7 @@ describe Akamai::Ccu do
       }
     }
     Savon::Client.any_instance.should_receive(:request).and_return expected
-    resp = Akamai::Ccu.new.purge 'http://www.prada.com', {}
+    resp = AkamaiApi::Ccu.new.purge 'http://www.prada.com', {}
     resp[:code].should == 100
   end
 end

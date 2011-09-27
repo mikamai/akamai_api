@@ -1,7 +1,7 @@
 Bundler.require :default
 
 root = File.expand_path(File.dirname(__FILE__) + '/..')
-require File.join root, 'lib/akamai.rb'
+require File.join root, 'lib/akamai_api.rb'
 
 Savon.configure do |config|
   config.log = false            # disable logging

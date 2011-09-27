@@ -1,8 +1,8 @@
 require 'base64'
 
-module Akamai
+module AkamaiApi
   class Eccu
-    include Akamai::WebService
+    include AkamaiApi::WebService
 
     use_manifest 'eccu.wsdl'
 

@@ -1,4 +1,4 @@
-module Akamai
+module AkamaiApi
   class LoginInfo
     attr_accessor :username, :password
 
@@ -8,7 +8,7 @@ module Akamai
     end
 
     def == a
-      if a.kind_of? Akamai::LoginInfo
+      if a.kind_of? AkamaiApi::LoginInfo
         self.username == a.username && self.password == a.password
       else
         false

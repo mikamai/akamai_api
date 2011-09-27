@@ -1,12 +1,12 @@
 require File.expand_path(File.dirname(__FILE__) + '/spec_helper')
 
-describe Akamai::Eccu do
+describe AkamaiApi::Eccu do
   it 'should define a get_ids' do
     should respond_to(:get_ids)
   end
 
   it 'should raise error if login is not correct' do
-    lambda { Akamai::Eccu.new.get_ids }.should raise_error(Akamai::LoginError)
+    lambda { AkamaiApi::Eccu.new.get_ids }.should raise_error(AkamaiApi::LoginError)
   end
 
   it 'test get_ids proxy call' do
@@ -18,7 +18,7 @@ describe Akamai::Eccu do
       }
     }
     Savon::Client.any_instance.should_receive(:request).with('getIds').and_return expected
-    list = Akamai::Eccu.new.get_ids
+    list = AkamaiApi::Eccu.new.get_ids
     list.should be_a(Array)
     list.length.should == 2
   end
@@ -40,7 +40,7 @@ describe Akamai::Eccu do
       }
     }
     Savon::Client.any_instance.should_receive(:request).with('getInfo').and_return expected
-    list = Akamai::Eccu.new.get_info 123123
+    list = AkamaiApi::Eccu.new.get_info 123123
     list.should be_a(Hash)
     list[:id].should == 123123
   end
@@ -52,7 +52,7 @@ describe Akamai::Eccu do
       }
     }
     Savon::Client.any_instance.should_receive(:request).with('setNotes').and_return expected
-    status = Akamai::Eccu.new.set_notes 123123, 'notes'
+    status = AkamaiApi::Eccu.new.set_notes 123123, 'notes'
     status.should == true
   end
 
@@ -63,7 +63,7 @@ describe Akamai::Eccu do
       }
     }
     Savon::Client.any_instance.should_receive(:request).with('setStatusChangeEmail').and_return expected
-    status = Akamai::Eccu.new.set_notify_email 123123, 'giovanni@mikamai.com'
+    status = AkamaiApi::Eccu.new.set_notify_email 123123, 'giovanni@mikamai.com'
     status.should == true
   end
 
@@ -74,7 +74,7 @@ describe Akamai::Eccu do
       }
     }
     Savon::Client.any_instance.should_receive(:request).with('delete').and_return expected
-    status = Akamai::Eccu.new.delete 123123
+    status = AkamaiApi::Eccu.new.delete 123123
     status.should == true
   end
 
@@ -85,7 +85,7 @@ describe Akamai::Eccu do
       }
     }
     Savon::Client.any_instance.should_receive(:request).with('upload').and_return expected
-    file_id = Akamai::Eccu.new.upload 'Sample Content', :notify_email => 'info@mikamai.com', :property => 'http://www.mikamai.com'
+    file_id = AkamaiApi::Eccu.new.upload 'Sample Content', :notify_email => 'info@mikamai.com', :property => 'http://www.mikamai.com'
     file_id.should == 123123
   end
 end

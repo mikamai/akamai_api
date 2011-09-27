@@ -1,12 +1,12 @@
 require File.expand_path(File.dirname(__FILE__) + '/spec_helper')
 
-describe Akamai::SiteAccelerator do
+describe AkamaiApi::SiteAccelerator do
   it 'should define a cp_codes method' do
     should respond_to(:cp_codes)
   end
 
   it 'should raise error if login is not correct' do
-    lambda { Akamai::SiteAccelerator.new.cp_codes }.should raise_error(Akamai::LoginError)
+    lambda { AkamaiApi::SiteAccelerator.new.cp_codes }.should raise_error(AkamaiApi::LoginError)
   end
 
   it 'should report correctly' do
@@ -24,7 +24,7 @@ describe Akamai::SiteAccelerator do
                    ]
     }
     Savon::Client.any_instance.should_receive(:request).with('getCPCodes').and_return expected
-    list = Akamai::SiteAccelerator.new.cp_codes
+    list = AkamaiApi::SiteAccelerator.new.cp_codes
     list.should be_a(Array)
     list.length.should == 2
   end
