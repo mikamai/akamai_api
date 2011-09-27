@@ -8,6 +8,7 @@ require 'thor/rake_compat'
 
 class Default < Thor
   include Thor::RakeCompat
+  Bundler::GemHelper.install_tasks
 
   desc "spec", "Run RSpec code examples"
   def spec

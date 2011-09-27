@@ -1,3 +1,11 @@
+PATH
+  remote: .
+  specs:
+    akamai_api (0.0.1)
+      activesupport
+      mustache
+      savon (>= 0.9.7)
+
 GEM
   remote: http://rubygems.org/
   specs:
@@ -46,6 +54,7 @@ PLATFORMS
 
 DEPENDENCIES
   activesupport
+  akamai_api!
   autotest-fsevent
   autotest-growl
   autotest-standalone
