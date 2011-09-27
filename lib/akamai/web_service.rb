@@ -1,28 +1,20 @@
-module Akamai
-  @wsdl_folder = File.join File.dirname(__FILE__), '../../wsdls'
-  @login = nil
+require 'active_support/core_ext/module/attribute_accessors'
 
-  def self.account
-    @account
-  end
-  def self.account= account
-    @account = account
-  end
-  def self.wsdl_folder
-    @wsdl_folder
-  end
-  def self.wsdl_folder= folder
-    @wsdl_folder = folder
-  end
+module Akamai
+  mattr_accessor :account
+  mattr_accessor :wsdl_folder
+  @@wsdl_folder = File.join File.dirname(__FILE__), '../../wsdls'
   
   module WebService
     def self.included klass
       klass.extend ClassMethods
       klass.send :define_method, 'initialize' do |*args|
-        if args.length > 0
+        if args.length == 2
           @account = Akamai::LoginInfo.new args[0], args[1]
-        else
+        elsif args.length == 0
           @account = Akamai.account
+        else
+          raise ArgumentError.new 'Too much arguments'
         end
         @client = Savon::Client.new do |wsdl, http|
           wsdl.document = File.join self.class.get_manifest_path
@@ -33,7 +25,7 @@ module Akamai
 
     module ClassMethods
       def get_manifest_path
-        File.join Akamai.wsdl_folder, @manifest
+        File.join Akamai.wsdl_folder, @@manifest
       end
 
       def service_call sym, &block
@@ -47,7 +39,7 @@ module Akamai
       end
 
       def use_manifest manifest
-        @manifest = manifest
+        @@manifest = manifest
       end
     end
 

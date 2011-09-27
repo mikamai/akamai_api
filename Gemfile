@@ -1,6 +1,16 @@
 source :rubygems
 
 gem 'savon', :require => 'savon'
-gem 'thor'
-gem 'rspec'
 gem 'mustache'
+gem 'activesupport'
+
+group :development do
+  gem 'thor'
+end
+
+group :test, :development do
+  gem 'rspec'
+  gem 'autotest-standalone'
+  gem 'autotest-growl'
+  gem 'autotest-fsevent'
+end
