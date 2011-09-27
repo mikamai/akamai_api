@@ -10,7 +10,7 @@ module AkamaiApi
     def self.included klass
       klass.extend ClassMethods
       klass.send :define_method, 'initialize' do |*args|
-        if args.length == 0
+        if args.length == 0 or args.length == 1 && args[0].nil?
           @account = AkamaiApi.account
         elsif args.length == 1
           if args[0].kind_of? AkamaiApi::LoginInfo
