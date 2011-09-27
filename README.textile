@@ -2,10 +2,12 @@ AKAMAI_API is a collection of AKAMAI webservices proxy classes whose aim is to c
 
 At the moment only three web services and a handful of methods are defined:
 
-h3. CCU (purge requests)
+h4. CCU (purge requests)
+
  - purge
 
-h3. ECCU (advanced purge requests)
+h4. ECCU (advanced purge requests)
+
  - get_ids
  - get_info
  - set_notes
@@ -13,5 +15,17 @@ h3. ECCU (advanced purge requests)
  - delete
  - upload
 
-h3. SITE ACCELERATOR
+h4. SITE ACCELERATOR
+
  - cp_codes
+
+
+h3. Configuration
+
+It uses Savon to communicate with akamai. Configure savon to customize it. e.g.
+
+bc. #configure statements
+Savon.configure do |config|
+  config.log = false            # disable logging
+  config.log_level = :error     # changing the log level
+end

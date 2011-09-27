@@ -10,10 +10,16 @@ module AkamaiApi
     def self.included klass
       klass.extend ClassMethods
       klass.send :define_method, 'initialize' do |*args|
-        if args.length == 2
-          @account = AkamaiApi::LoginInfo.new args[0], args[1]
-        elsif args.length == 0
+        if args.length == 0
           @account = AkamaiApi.account
+        elsif args.length == 1
+          if args[0].kind_of? AkamaiApi::LoginInfo
+            @account = args[0]
+          else
+            raise ArgumentError.new 'Bad argument: expected AkamaiApi::Login if there is only one argument'
+          end
+        elsif args.length == 2
+          @account = AkamaiApi::LoginInfo.new args[0], args[1]
         else
           raise ArgumentError.new 'Too much arguments'
         end

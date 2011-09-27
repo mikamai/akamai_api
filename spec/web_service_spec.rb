@@ -19,6 +19,11 @@ describe AkamaiApi::WebService do
       lambda { Foo.new 'test', 'test', 'test' }.should raise_error(ArgumentError)
     end
 
+    it 'should expect a loginInfo instance if there is only one argument' do
+      lambda { Foo.new 'test' }.should raise_error
+      lambda { Foo.new AkamaiApi::LoginInfo.new 'test', 'test' }.should_not raise_error
+    end
+
     it 'should define account facility' do
       f = Foo.new
       f.should respond_to(:account)
