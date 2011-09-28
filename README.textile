@@ -29,3 +29,7 @@ Savon.configure do |config|
   config.log = false            # disable logging
   config.log_level = :error     # changing the log level
 end
+
+By default, AkamaiApi will use remote manifests to communicate with WebServices. It's however reccomended, for performance reasons, to use the local copy of these manifests (embedded inside AkamaiApi):
+
+@AkamaiApi.use_local_manifests = true@
