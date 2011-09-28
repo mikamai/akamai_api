@@ -1,6 +1,10 @@
-require 'akamai_api/login_info'
-require 'akamai_api/errors'
-require 'akamai_api/web_service'
-require 'akamai_api/site_accelerator'
-require 'akamai_api/ccu'
-require 'akamai_api/eccu'
+this_dir = File.dirname __FILE__
+lib_dir = File.join this_dir, 'akamai_api'
+
+require File.join lib_dir, 'login_info'
+require File.join lib_dir, 'errors'
+require File.join lib_dir, 'web_service'
+require File.join lib_dir, 'site_accelerator'
+require File.join lib_dir, 'ccu'
+require File.join lib_dir, 'eccu'
+ 
