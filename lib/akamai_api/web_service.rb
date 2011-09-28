@@ -25,7 +25,7 @@ module AkamaiApi
           raise ArgumentError.new 'Too much arguments'
         end
         @client = Savon::Client.new do |wsdl, http|
-          wsdl.document = File.join self.class.get_manifest
+          wsdl.document = self.class.get_manifest
           http.auth.basic @account.username, @account.password if @account
         end
       end
@@ -33,10 +33,10 @@ module AkamaiApi
 
     module ClassMethods
       def get_manifest
-        if AkamaiApi.use_local_manifests && @@local_manifest
-          File.join AkamaiApi.wsdl_folder, @@local_manifest
+        if AkamaiApi.use_local_manifests && @local_manifest
+          File.join AkamaiApi.wsdl_folder, @local_manifest
         else
-          @@remote_manifest
+          @remote_manifest
         end
       end
 
@@ -51,8 +51,8 @@ module AkamaiApi
       end
 
       def use_manifest remote, local = nil
-        @@remote_manifest = remote
-        @@local_manifest = local
+        @remote_manifest = remote
+        @local_manifest = local
       end
     end
 
