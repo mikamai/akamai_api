@@ -50,13 +50,25 @@ describe AkamaiApi::WebService do
       Foo.should respond_to(:use_manifest)
     end
 
-    it 'should define get_manifest_path' do
-      Foo.should respond_to(:get_manifest_path)
+    it 'use_manifest helper should accept the remote wsdl and, as option, the local manifest' do
+      lambda { Foo.use_manifest 'test' }.should_not raise_error
+      lambda { Foo.use_manifest 'test', 'test' }.should_not raise_error
     end
 
-    it 'get_manifest_path should join Akamai wsdl folder and manifest' do
-      Foo.use_manifest 'test'
-      Foo.get_manifest_path.should == File.join(AkamaiApi.wsdl_folder, 'test')
+    it 'should define get_manifest' do
+      Foo.should respond_to(:get_manifest)
+    end
+
+    it 'get_manifest should return the remote manifest if AkamaiApi.use_local_manifests is false' do
+      Foo.use_manifest 'remote', 'local'
+      AkamaiApi.use_local_manifests = false
+      Foo.get_manifest.should == 'remote'
+    end
+
+    it 'get_manifest should return the local manifest if AkamaiApi.use_local_manifests is true' do
+      Foo.use_manifest 'remote', 'local'
+      AkamaiApi.use_local_manifests = true
+      Foo.get_manifest.should == File.join(AkamaiApi.wsdl_folder, 'local')
     end
   end
 

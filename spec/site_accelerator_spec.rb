@@ -1,6 +1,8 @@
 require File.expand_path(File.dirname(__FILE__) + '/spec_helper')
 
 describe AkamaiApi::SiteAccelerator do
+  before { AkamaiApi.use_local_manifests = true }
+  
   it 'should define a cp_codes method' do
     should respond_to(:cp_codes)
   end

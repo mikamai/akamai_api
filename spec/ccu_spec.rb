@@ -1,6 +1,8 @@
 require File.expand_path(File.dirname(__FILE__) + '/spec_helper')
 
 describe AkamaiApi::Ccu do
+  before { AkamaiApi.use_local_manifests = true }
+  
   it 'should define a purge method' do
     should respond_to(:purge)
   end

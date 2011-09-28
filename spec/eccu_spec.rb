@@ -1,6 +1,8 @@
 require File.expand_path(File.dirname(__FILE__) + '/spec_helper')
 
 describe AkamaiApi::Eccu do
+  before { AkamaiApi.use_local_manifests = true }
+  
   it 'should define a get_ids' do
     should respond_to(:get_ids)
   end
