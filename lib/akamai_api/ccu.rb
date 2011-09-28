@@ -4,7 +4,7 @@ module AkamaiApi
   class Ccu
     include AkamaiApi::WebService
 
-    use_manifest 'ccuapi-axis.wsdl'
+    use_manifest 'https://ccuapi.akamai.com/ccuapi-axis.wsdl', 'ccuapi-axis.wsdl'
 
     service_call :purge do |uris, options|
       options ||= {}

@@ -4,7 +4,7 @@ module AkamaiApi
   class Eccu
     include AkamaiApi::WebService
 
-    use_manifest 'eccu.wsdl'
+    use_manifest 'https://control.akamai.com/webservices/services/PublishECCU?wsdl', 'eccu.wsdl'
 
     service_call :get_ids do
       resp = client.request 'getIds'
