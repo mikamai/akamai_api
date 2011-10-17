@@ -7,18 +7,16 @@
                    SOAP-ENV:encodingStyle="http://schemas.xmlsoap.org/soap/encoding/">
   <SOAP-ENV:Body>
     <ns1:purgeRequest>
-      <name xsi:type="xsd:string">{{username}}</name>
-      <pwd xsi:type="xsd:string">{{password}}</pwd>
+      <name xsi:type="xsd:string">sample</name>
+      <pwd xsi:type="xsd:string">sample</pwd>
       <network xsi:type="xsd:string"></network>
       <opt SOAP-ENC:arrayType="xsd:string[0]" xsi:type="ns1:ArrayOfString">
-        {{#options}}
-          <item xsi:type="xsd:string">{{key}}={{value}}</item>
-        {{/options}}
+          <item xsi:type="xsd:string">key1=value1</item>
+          <item xsi:type="xsd:string">key2=value2</item>
       </opt>
       <uri SOAP-ENC:arrayType="xsd:string[1]" xsi:type="ns1:ArrayOfString">
-        {{#uris}}
-          <item xsi:type="xsd:string">{{.}}</item>
-        {{/uris}}
+          <item xsi:type="xsd:string">uri1</item>
+          <item xsi:type="xsd:string">uri2</item>
       </uri>
     </ns1:purgeRequest>
   </SOAP-ENV:Body>
