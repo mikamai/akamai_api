@@ -2,16 +2,11 @@ require 'spec_helper'
 
 module AkamaiApi
   describe Ccu do
-    let(:client) do
-      Savon::Client.new do
-        wsdl.endpoint = "http://example.com"
-        wsdl.namespace = "http://users.example.com"
-      end
-    end
+    include SavonTester
 
     before do
       savon.expects('wsdl:purgeRequest').returns(:success)
-      Ccu.stub :client => client, :basic_auth => nil
+      stub_savon_model Ccu
     end
 
     describe '#purge response' do

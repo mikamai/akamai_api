@@ -2,17 +2,12 @@ require 'spec_helper'
 
 module AkamaiApi
   describe CpCode do
-    let(:client) do
-      Savon::Client.new do
-        wsdl.endpoint = "http://example.com"
-        wsdl.namespace = "http://users.example.com"
-      end
-    end
+    include SavonTester
 
     describe '::all' do
       before do
         savon.expects('getCPCodes').returns(:sample)
-        CpCode.stub :client => client, :basic_auth => nil
+        stub_savon_model CpCode
       end
 
       it 'should return a collection of models' do
