@@ -78,9 +78,9 @@ class AkamaiCommand < Thor
   def eccu_requests
     set_config
     if options[:last]
-      requests = [AkamaiApi::EccuRequest.last]
+      requests = Array.wrap AkamaiApi::EccuRequest.last :verbose => options[:verbose]
     else
-      requests = AkamaiApi::EccuRequest.all
+      requests = AkamaiApi::EccuRequest.all :verbose => options[:verbose]
     end
     requests.each do |request|
       puts <<-CONSOLE
@@ -93,7 +93,7 @@ class AkamaiCommand < Thor
 * Notified to: #{request.email}
 * Uploaded by #{request.uploaded_by} on #{request.upload_date}
       CONSOLE
-      if options[:verbose]
+      if request.file[:content].present?
         puts "Content:"
         puts request.file[:content]
       end

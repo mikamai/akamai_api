@@ -52,20 +52,24 @@ module AkamaiApi
         client.request('getIds').body[:get_ids_response][:file_ids][:file_ids]
       end
 
-      def all
-        all_ids.map { |v| EccuRequest.find v }
+      def all args = {}
+        all_ids.map { |v| EccuRequest.find v, args }
       end
 
-      def last
-        find all_ids.last
+      def last args = {}
+        find all_ids.last, args
       end
 
-      def find code
+      def first args = {}
+        find all_ids.first, args
+      end
+
+      def find code, args = {}
         basic_auth *AkamaiApi.config[:auth]
         resp = client.request 'getInfo' do
           SoapBody.new(soap) do
-            integer :fileId, code
-            boolean :retrieveContents, true
+            integer :fileId, code.to_i
+            boolean :retrieveContents, args[:verbose] == true
           end
         end
         resp = resp[:get_info_response][:eccu_info]
@@ -86,7 +90,7 @@ module AkamaiApi
           :notes => get_if_kind(resp[:notes], String),
           :property => {
             :name => get_if_kind(resp[:property_name], String),
-            :exact_match => (resp[:property_name_exact_match] == 'true'),
+            :exact_match => (resp[:property_name_exact_match] == true),
             :type => get_if_kind(resp[:property_type], String)
           },
           :email => get_if_kind(resp[:status_change_email], String),
