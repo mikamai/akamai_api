@@ -17,7 +17,7 @@ You can provide auth info using one of the following methods:
 Use *akamai_api help* to view the help of the CLI.
 Using the CLI you can:
 
-- View the list of CP Codes (e.g. akamai_api cp_codes) for CCU
+- View the list of CP Codes (e.g. *akamai_api cp_codes*) for CCU
 - Purge a resource or a list of resources (Urls or CP Codes) via CCU
 - See or publish a request via ECCU
 
