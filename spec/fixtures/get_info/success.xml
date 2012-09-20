@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <soapenv:Body>
+    <getInfoResponse soapenv:encodingStyle="http://schemas.xmlsoap.org/soap/encoding/">
+      <EccuInfo xsi:type="ns1:EccuInfo" xmlns:ns1="https://control.akamai.com/Publish.xsd">
+        <contents xsi:type="xsd:base64Binary">PGVjY3U+XG4gIDxyZXZhbGlkYXRlPm5vdzwvcmV2YWxpZGF0ZT5cbjwvZWNj\ndT5cbg==</contents>
+        <extendedStatusMessage xsi:type="xsd:string">File successfully deployed to Akamai network (Succeeded)</extendedStatusMessage>
+        <fileId xsi:type="xsd:int">1234567</fileId>
+        <fileSize xsi:type="xsd:int">127</fileSize>
+        <filename xsi:type="xsd:string" xsi:nil="true"/>
+        <notes xsi:type="xsd:string">ECCU Request using EdgeControl</notes>
+        <propertyName xsi:type="xsd:string">www.example.com</propertyName>
+        <propertyNameExactMatch xsi:type="xsd:boolean">true</propertyNameExactMatch>
+        <propertyType xsi:type="xsd:string">hostheader</propertyType>
+        <statusChangeEmail xsi:type="xsd:string">foo@example.com</statusChangeEmail>
+        <statusCode xsi:type="xsd:int">4000</statusCode>
+        <statusMessage xsi:type="xsd:string">File successfully deployed to Akamai's network</statusMessage>
+        <statusUpdateDate xsi:type="xsd:dateTime">2012-09-20T07:58:10.936Z</statusUpdateDate>
+        <uploadDate xsi:type="xsd:dateTime">2012-09-20T07:17:25.936Z</uploadDate>
+        <uploadedBy xsi:type="xsd:string">foo</uploadedBy>
+        <versionString xsi:type="xsd:string" xsi:nil="true"/>
+      </EccuInfo>
+    </getInfoResponse>
+  </soapenv:Body>
+</soapenv:Envelope>

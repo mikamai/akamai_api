@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <soapenv:Body>
+    <getIdsResponse soapenv:encodingStyle="http://schemas.xmlsoap.org/soap/encoding/">
+      <fileIds soapenc:arrayType="xsd:int[10]" xsi:type="soapenc:Array" xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/">
+        <fileIds xsi:type="xsd:int">42994282</fileIds>
+        <fileIds xsi:type="xsd:int">43000154</fileIds>
+      </fileIds>
+    </getIdsResponse>
+  </soapenv:Body>
+</soapenv:Envelope>
