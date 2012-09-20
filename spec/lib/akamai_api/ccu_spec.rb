@@ -60,9 +60,10 @@ module AkamaiApi
 
     describe '#purge request arguments' do
       it 'should include user and password' do
-        SoapBody.any_instance.stub :string => ''
-        SoapBody.any_instance.should_receive(:string).with(:name, AkamaiApi.config[:auth].first).and_return nil
-        SoapBody.any_instance.should_receive(:string).with(:pwd, AkamaiApi.config[:auth].last)
+        soap_body = SoapBody.any_instance
+        soap_body.stub :string => ''
+        soap_body.should_receive(:string).with :name, AkamaiApi.config[:auth].first
+        soap_body.should_receive(:string).with :pwd, AkamaiApi.config[:auth].last
         Ccu.purge :remove, :arl, 'foo'
       end
 
