@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <soapenv:Body>
+    <soapenv:Fault>
+      <faultcode>soapenv:Server.generalException</faultcode>
+      <faultstring>ECCU validation failed: You are not authorized to specify this digital property</faultstring>
+      <detail>
+        <ns1:exceptionName xmlns:ns1="http://xml.apache.org/axis/">com.akamai.aws.util.AWSFault</ns1:exceptionName>
+        <ns2:hostname xmlns:ns2="http://xml.apache.org/axis/">example.akamai.com</ns2:hostname>
+      </detail>
+    </soapenv:Fault>
+  </soapenv:Body>
+</soapenv:Envelope>

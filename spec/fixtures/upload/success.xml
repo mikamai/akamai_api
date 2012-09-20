@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <soapenv:Body>
+    <uploadResponse soapenv:encodingStyle="http://schemas.xmlsoap.org/soap/encoding/">
+      <fileId xsi:type="xsd:int">1234567</fileId>
+    </uploadResponse>
+  </soapenv:Body>
+</soapenv:Envelope>

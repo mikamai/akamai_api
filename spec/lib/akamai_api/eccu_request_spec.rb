@@ -65,6 +65,34 @@ module AkamaiApi
       end
     end
 
+    describe '::publish_file' do
+      it 'calls publish with the content of the specified file'
+    end
+
+    describe '::publish' do
+      context 'when there is an error' do
+        before { savon.expects('upload').returns(:fault) }
+
+        it 'raises an error'
+      end
+
+      context 'when there are no errors' do
+        before { savon.expects('upload').returns(:success) }
+
+        it 'returns an EccuRequest instance'
+
+        it 'assigns the fields correctly'
+
+        it 'assigns a default notes field if no notes are specified'
+
+        it 'assigns emails field if specified'
+
+        it 'assigns the property type to hostheader by default'
+
+        it 'assigns the property exact match to true by default'
+      end
+    end
+
     describe 'instance' do
       describe 'constructor' do
         it 'assigns the attributes hash to the accessors' do
