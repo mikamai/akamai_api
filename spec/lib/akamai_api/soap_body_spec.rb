@@ -35,5 +35,17 @@ module AkamaiApi
         subject.body_attributes[:foo]['soapenc:arrayType'].should == 'xsd:string[2]'
       end
     end
+
+    describe '#text' do
+      before { subject.text 'foo', 'foo' }
+
+      it 'adds a base64 encoded string field' do
+        Base64.decode64(subject.body[:foo]).should == 'foo'
+      end
+
+      it 'sets the correct type attribute' do
+        subject.body_attributes[:foo]['xsi:type'].should == 'xsd:base64Binary'
+      end
+    end
   end
 end

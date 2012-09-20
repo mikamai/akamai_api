@@ -16,6 +16,12 @@ module AkamaiApi
       body[:attributes!] ||= {}
     end
 
+    def text name, value
+      name = name.to_sym
+      body[name] = Base64.encode64 value
+      body_attributes[name] = { 'xsi:type' => 'xsd:base64Binary' }
+    end
+
     def boolean name, value
       name = name.to_sym
       body[name] = value
