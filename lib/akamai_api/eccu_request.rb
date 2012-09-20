@@ -100,6 +100,30 @@ module AkamaiApi
         })
       end
 
+      def publish_file domains, file_name, args = {}
+        args[:file_name] = file_name
+        publish domains, File.read(file_name), args
+      end
+
+      def publish domains, content, args = {}
+        basic_auth *AkamaiApi.config[:auth]
+        resp = client.request 'upload' do
+          SoapBody.new(soap) do
+            string :filename,                args[:file_name] || ''
+            text   :contents,                content
+            string :notes,                   args[:notes] || 'ECCU Request using AkamaiApi gem'
+            string :versionString,           args[:version] || ''
+            if args[:emails]
+              string :statusChangeEmail,     Array.wrap(args[:emails]).join(' ')
+            end
+            string :propertyName,            Array.wrap(domains).join(' ')
+            string :propertyType,            args[:property_type] || 'hostheader'
+            boolean :propertyNameExactMatch, args[:property_exact_match] || true
+          end
+        end
+        find resp.body[:upload_response][:file_id]
+      end
+
       private
 
       # This method is used because, for nil values, savon will respond with an hash containing all other attributes.
