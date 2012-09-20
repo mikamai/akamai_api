@@ -90,9 +90,9 @@ class AkamaiCommand < Thor
           #{request.status[:update_date]}
 * Notes   : #{request.notes}
 * Property: #{request.property[:type]} (#{request.property[:name]}) #{'with exact match' if request.property[:exact_match]}
-* Notified to: #{request.email}
 * Uploaded by #{request.uploaded_by} on #{request.upload_date}
       CONSOLE
+      puts "* Notification Email: #{request.email}" if request.email
       if request.file[:content].present?
         puts "Content:"
         puts request.file[:content]
