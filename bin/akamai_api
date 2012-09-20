@@ -2,63 +2,7 @@
 require 'thor'
 require 'active_support/core_ext'
 require 'akamai_api'
-
-class EccuRequestView
-  def initialize(eccu_request)
-    @request = eccu_request
-  end
-
-  def template
-    res = ["* Code    : #{@request.code}",
-           "* Status  : #{@request.status[:code]}"]
-    res.last << " - #{@request.status[:extended]}" if @request.status[:extended].present?
-    res << "            #{@request.status[:update_date]}"
-    res << "* Property: #{@request.property[:name]} (#{@request.property[:type]})"
-    res << "            with exact match" if @request.property[:exact_match]
-    res << "* Notes   : #{@request.notes}" if @request.notes.present?
-    res << "* Email   : #{@request.email}" if @request.email
-    res << "* Uploaded by #{@request.uploaded_by} on #{@request.upload_date}"
-    if @request.file[:content].present?
-      res << "* Content:"
-      res << @request.file[:content]
-    end
-    res.join "\n"
-  end
-
-  def self.template(eccu_request)
-    new(eccu_request).template
-  end
-end
-
-class CpCodeView
-  def initialize(cpcode)
-    @cpcode = cpcode
-  end
-
-  def template
-    "ID: #{@cpcode.code}\tDescription: #{@cpcode.description}"
-  end
-
-  def self.template cpcode
-    new(cpcode).template
-  end
-end
-
-class CcuResponseView
-  def initialize(response)
-    @response = response
-  end
-
-  def template
-    res = ['#### Response Details ####',
-           "* Request ID: #{@response.session_id}",
-           "* Code: #{@response.code} (#{@response.status})",
-           "* Message: #{@response.message}"]
-    res << "* Estimate Time: #{@response.estimated_time} secs.;" if @response.estimated_time > 0
-    res << "* Error caused by: #{res.uri};" if res.uri
-    res.join "\n"
-  end
-end
+require 'akamai_api/cli'
 
 class AkamaiCommand < Thor
   def initialize *args
@@ -74,7 +18,7 @@ class AkamaiCommand < Thor
   def cp_codes
     set_config
     AkamaiApi::CpCode.all.each do |cp_code|
-      puts CpCodeView.template(cp_code)
+      puts AkamaiApi::Cli::Template.cp_code(cp_code)
     end
   end
 
@@ -119,7 +63,7 @@ class AkamaiCommand < Thor
     args[:email]  = options[:emails] if options[:emails]
     res = AkamaiApi::Ccu.purge options[:action], type, items, args
     puts '------------'
-    puts CcuResponseView.template(res)
+    puts AkamaiApi::Cli::Template.ccu_response res
     puts '------------'
   end
 
@@ -140,7 +84,7 @@ class AkamaiCommand < Thor
     end
     requests.each do |request|
       puts '------------'
-      puts EccuRequestView.template(request)
+      puts AkamaiApi::Cli::Template.eccu_request request
     end
     puts '------------'
   end
@@ -178,7 +122,7 @@ class AkamaiCommand < Thor
     id = AkamaiApi::EccuRequest.publish_file options[:property], options[:source], args
     puts 'Request correctly published. Details:'
     puts '------------'
-    puts EccuRequestView.template AkamaiApi::EccuRequest.find id, :verbose => true
+    puts AkamaiApi::Cli::Template.eccu_request AkamaiApi::EccuRequest.find id, :verbose => true
     puts '------------'
   end
 
