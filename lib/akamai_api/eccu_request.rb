@@ -118,10 +118,10 @@ module AkamaiApi
             end
             string :propertyName,            Array.wrap(domains).join(' ')
             string :propertyType,            args[:property_type] || 'hostheader'
-            boolean :propertyNameExactMatch, args[:property_exact_match] || true
+            boolean :propertyNameExactMatch, args[:property_exact_match].nil? && true || args[:property_exact_match]
           end
         end
-        find resp.body[:upload_response][:file_id]
+        resp.body[:upload_response][:file_id].to_i
       end
 
       private

@@ -65,31 +65,77 @@ module AkamaiApi
       end
     end
 
-    describe '::publish_file' do
-      it 'calls publish with the content of the specified file'
-    end
+    describe 'publishing' do
+      let(:xml_request) { File.expand_path "../../../fixtures/eccu_request.xml", __FILE__ }
+      let(:xml_request_content) { File.read xml_request }
 
-    describe '::publish' do
-      context 'when there is an error' do
-        before { savon.expects('upload').returns(:fault) }
-
-        it 'raises an error'
+      describe '::publish_file' do
+        it 'calls publish with the content of the specified file' do
+          args = {}
+          EccuRequest.should_receive(:publish).with('foo', xml_request_content, args)
+          EccuRequest.publish_file('foo', xml_request, args)
+        end
       end
 
-      context 'when there are no errors' do
-        before { savon.expects('upload').returns(:success) }
+      describe '::publish' do
+        context 'when there is an error' do
+          before { savon.expects('upload').returns(:fault) }
 
-        it 'returns an EccuRequest instance'
+          it 'raises an error' do
+            expect { EccuRequest.publish '', xml_request_content }
+          end
+        end
 
-        it 'assigns the fields correctly'
+        context 'when there are no errors' do
+          before { savon.expects('upload').returns(:success) }
 
-        it 'assigns a default notes field if no notes are specified'
+          it 'returns an EccuRequest instance' do
+            EccuRequest.publish('', xml_request_content).should be_a Fixnum
+          end
 
-        it 'assigns emails field if specified'
+          it 'assigns the fields correctly' do
+            soap_body = SoapBody.any_instance
+            soap_body.should_receive(:string).with :filename, 'eccu_request.xml'
+            soap_body.should_receive(:text).with   :contents, xml_request_content
+            soap_body.should_receive(:string).with :notes,    'sample notes'
+            soap_body.should_receive(:string).with :versionString, 'v2'
+            soap_body.should_receive(:string).with :statusChangeEmail, 'foo@foo.com bar@bar.com'
+            soap_body.should_receive(:string).with :propertyName, 'foo.com bar.com'
+            soap_body.should_receive(:string).with :propertyType, 'prop'
+            soap_body.should_receive(:boolean).with :propertyNameExactMatch, false
+            EccuRequest.publish(%w(foo.com bar.com), xml_request_content, {
+              :file_name => 'eccu_request.xml',
+              :notes     => 'sample notes',
+              :version   => 'v2',
+              :emails    => %w(foo@foo.com bar@bar.com),
+              :property_type => 'prop',
+              :property_exact_match => false
+            })
+          end
 
-        it 'assigns the property type to hostheader by default'
+          it 'assigns a default notes field if no notes are specified' do
+            SoapBody.any_instance.stub :string => nil
+            SoapBody.any_instance.should_receive(:string).with(:notes, kind_of(String))
+            EccuRequest.publish '', xml_request_content
+          end
 
-        it 'assigns the property exact match to true by default'
+          it 'assigns emails field if specified' do
+            SoapBody.any_instance.should_not_receive(:string).with(:statusChangeEmail, anything())
+            EccuRequest.publish '', xml_request_content
+          end
+
+          it 'assigns the property type to hostheader by default' do
+            SoapBody.any_instance.stub :string => nil
+            SoapBody.any_instance.should_receive(:string).with(:propertyType, 'hostheader')
+            EccuRequest.publish '', xml_request_content
+          end
+
+          it 'assigns the property exact match to true by default' do
+            SoapBody.any_instance.stub :boolean => nil
+            SoapBody.any_instance.should_receive(:boolean).with(:propertyNameExactMatch, true)
+            EccuRequest.publish '', xml_request_content
+          end
+        end
       end
     end
 
