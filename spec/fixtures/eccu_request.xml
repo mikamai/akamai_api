@@ -1,0 +1,10 @@
+<?xml version="1.0"?>
+<eccu>
+  <match:recursive-dirs value="foo" >
+    <match:recursive-dirs value="bar" >
+      <match:recursive-dirs value="baz.jpg" >
+        <revalidate>now</revalidate>
+      </match:recursive-dirs>
+    </match:recursive-dirs>
+  </match:recursive-dirs>
+</eccu>
