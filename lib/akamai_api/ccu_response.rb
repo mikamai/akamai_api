@@ -2,8 +2,9 @@ module AkamaiApi
   class CcuResponse
     attr_reader :status_code, :raw
 
-    def initialize(response)
+    def initialize(response, requested_items)
       @raw = response
+      @requested_items = requested_items
     end
 
     def raw_body
@@ -46,6 +47,10 @@ module AkamaiApi
 
     def uri_index
       raw_body[:purge_request_response][:return][:uri_index].to_i
+    end
+
+    def uri
+      uri_index >= 0 && @requested_items[uri_index] || nil
     end
   end
 end

@@ -3,6 +3,63 @@ require 'thor'
 require 'active_support/core_ext'
 require 'akamai_api'
 
+class EccuRequestView
+  def initialize(eccu_request)
+    @request = eccu_request
+  end
+
+  def template
+    res = ["* Code    : #{@request.code}",
+           "* Status  : #{@request.status[:code]}"]
+    res.last << " - #{@request.status[:extended]}" if @request.status[:extended].present?
+    res << "            #{@request.status[:update_date]}"
+    res << "* Property: #{@request.property[:name]} (#{@request.property[:type]})"
+    res << "            with exact match" if @request.property[:exact_match]
+    res << "* Notes   : #{@request.notes}" if @request.notes.present?
+    res << "* Email   : #{@request.email}" if @request.email
+    res << "* Uploaded by #{@request.uploaded_by} on #{@request.upload_date}"
+    if @request.file[:content].present?
+      res << "* Content:"
+      res << @request.file[:content]
+    end
+    res.join "\n"
+  end
+
+  def self.template(eccu_request)
+    new(eccu_request).template
+  end
+end
+
+class CpCodeView
+  def initialize(cpcode)
+    @cpcode = cpcode
+  end
+
+  def template
+    "ID: #{@cpcode.code}\tDescription: #{@cpcode.description}"
+  end
+
+  def self.template cpcode
+    new(cpcode).template
+  end
+end
+
+class CcuResponseView
+  def initialize(response)
+    @response = response
+  end
+
+  def template
+    res = ['#### Response Details ####',
+           "* Request ID: #{@response.session_id}",
+           "* Code: #{@response.code} (#{@response.status})",
+           "* Message: #{@response.message}"]
+    res << "* Estimate Time: #{@response.estimated_time} secs.;" if @response.estimated_time > 0
+    res << "* Error caused by: #{res.uri};" if res.uri
+    res.join "\n"
+  end
+end
+
 class AkamaiCommand < Thor
   def initialize *args
     @config_file = File.expand_path File.join '~', '.akamai_api.yml'
@@ -17,7 +74,7 @@ class AkamaiCommand < Thor
   def cp_codes
     set_config
     AkamaiApi::CpCode.all.each do |cp_code|
-      puts "ID: #{cp_code.code}; Description: #{cp_code.description}"
+      puts CpCodeView.template(cp_code)
     end
   end
 
@@ -61,14 +118,9 @@ class AkamaiCommand < Thor
     args[:domain] = options[:domain] if options[:domain]
     args[:email]  = options[:emails] if options[:emails]
     res = AkamaiApi::Ccu.purge options[:action], type, items, args
-    puts <<-CONSOLE
-#### Response Details ####
-* Request ID: #{res.session_id};
-* Code: #{res.code} (#{res.status});
-* Message: #{res.message};
-    CONSOLE
-    puts "* Estimate Time: #{res.estimated_time} secs.;" if res.estimated_time > 0
-    puts "* Error caused by: #{items[res.uri_index]};" if res.uri_index >= 0
+    puts '------------'
+    puts CcuResponseView.template(res)
+    puts '------------'
   end
 
   desc 'eccu_requests', 'Show the the last requests made to ECCU'
@@ -87,22 +139,10 @@ class AkamaiCommand < Thor
       requests = AkamaiApi::EccuRequest.all :verbose => options[:verbose]
     end
     requests.each do |request|
-      puts <<-CONSOLE
-------------
-* Code    : #{request.code}
-* Status  : #{request.status[:code]} - #{request.status[:extended]}
-          #{request.status[:update_date]}
-* Notes   : #{request.notes}
-* Property: #{request.property[:type]} (#{request.property[:name]}) #{'with exact match' if request.property[:exact_match]}
-* Uploaded by #{request.uploaded_by} on #{request.upload_date}
-      CONSOLE
-      puts "* Notification Email: #{request.email}" if request.email
-      if request.file[:content].present?
-        puts "Content:"
-        puts request.file[:content]
-      end
+      puts '------------'
+      puts EccuRequestView.template(request)
     end
-    puts "------------"
+    puts '------------'
   end
 
   desc 'publish_eccu', 'Publish an ECCU request'
@@ -136,23 +176,10 @@ class AkamaiCommand < Thor
     }
     args[:emails] = options[:emails] if options[:emails]
     id = AkamaiApi::EccuRequest.publish_file options[:property], options[:source], args
-    puts "Request correctly published. Details:"
-    request = AkamaiApi::EccuRequest.find id, :verbose => true
-    puts <<-CONSOLE
-------------
-* Code    : #{request.code}
-* Status  : #{request.status[:code]} - #{request.status[:extended]}
-        #{request.status[:update_date]}
-* Notes   : #{request.notes}
-* Property: #{request.property[:type]} (#{request.property[:name]}) #{'with exact match' if request.property[:exact_match]}
-* Uploaded by #{request.uploaded_by} on #{request.upload_date}
-    CONSOLE
-    puts "* Notification Email: #{request.email}" if request.email
-    if request.file[:content].present?
-      puts "Content:"
-      puts request.file[:content]
-    end
-    puts "------------"
+    puts 'Request correctly published. Details:'
+    puts '------------'
+    puts EccuRequestView.template AkamaiApi::EccuRequest.find id, :verbose => true
+    puts '------------'
   end
 
   no_tasks do

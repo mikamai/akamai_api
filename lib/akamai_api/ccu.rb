@@ -54,7 +54,7 @@ module AkamaiApi
             array  :uri,  items
           end
         end
-        CcuResponse.new response
+        CcuResponse.new response, items
       end
     end
   end
