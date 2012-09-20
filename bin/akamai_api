@@ -72,6 +72,10 @@ class AkamaiCommand < Thor
   end
 
   desc 'eccu_requests', 'Show the the last requests made to ECCU'
+  method_option :username, :type => :string, :aliases => '-u',
+                :desc => 'Username used to authenticate on Akamai Control Panel'
+  method_option :password, :type => :string, :aliases => '-p',
+                :desc => 'Password used to authenticate on Akamai Control Panel'
   method_option :verbose, :type => :boolean, :aliases => '-v',
                 :desc => 'Print file content too'
   method_option :last, :type => :boolean, :aliases => '-l'
@@ -97,6 +101,56 @@ class AkamaiCommand < Thor
         puts "Content:"
         puts request.file[:content]
       end
+    end
+    puts "------------"
+  end
+
+  desc 'publish_eccu', 'Publish an ECCU request'
+  method_option :username, :type => :string, :aliases => '-u',
+                :desc => 'Username used to authenticate on Akamai Control Panel'
+  method_option :password, :type => :string, :aliases => '-p',
+                :desc => 'Password used to authenticate on Akamai Control Panel'
+  method_option :property, :type => :string, :aliases => '-dp', :required => true,
+                :banner => 'example.com',
+                :desc => 'List of digital properties to which apply the ECCU request'
+  method_option :source, :type => :string, :aliases => '-s', :required => true,
+                :banner => 'path/to/file.xml',
+                :desc => 'Source file to publish on ECCU'
+  method_option :property_type, :type => :string, :aliases => '-pt',
+                :default => 'hostheader', :banner => 'type',
+                :desc => 'Property Type to use for the specified properties'
+  method_option :no_exact_match, :type => :boolean,
+                :desc => 'Do not do an exact match on property names'
+  method_option :emails,   :type => :array,  :aliases => '-e',
+                :banner => "foo@foo.com bar@bar.com",
+                :desc => 'Email(s) used to send notification when the request has been completed'
+  method_option :notes, :type => :string, :aliases => '-n',
+                :default => 'ECCU Request using AkamaiApi gem',
+                :desc => 'Notes to apply on the ECCU Request'
+  def publish_eccu
+    set_config
+    args = {
+      :notes => options[:notes],
+      :property_exact_match => !options[:no_exact_match],
+      :property_type => options[:property_type]
+    }
+    args[:emails] = options[:emails] if options[:emails]
+    id = AkamaiApi::EccuRequest.publish_file options[:property], options[:source], args
+    puts "Request correctly published. Details:"
+    request = AkamaiApi::EccuRequest.find id, :verbose => true
+    puts <<-CONSOLE
+------------
+* Code    : #{request.code}
+* Status  : #{request.status[:code]} - #{request.status[:extended]}
+        #{request.status[:update_date]}
+* Notes   : #{request.notes}
+* Property: #{request.property[:type]} (#{request.property[:name]}) #{'with exact match' if request.property[:exact_match]}
+* Uploaded by #{request.uploaded_by} on #{request.upload_date}
+    CONSOLE
+    puts "* Notification Email: #{request.email}" if request.email
+    if request.file[:content].present?
+      puts "Content:"
+      puts request.file[:content]
     end
     puts "------------"
   end

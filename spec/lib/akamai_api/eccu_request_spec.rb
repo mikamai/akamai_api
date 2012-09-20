@@ -100,10 +100,10 @@ module AkamaiApi
             soap_body.should_receive(:string).with :notes,    'sample notes'
             soap_body.should_receive(:string).with :versionString, 'v2'
             soap_body.should_receive(:string).with :statusChangeEmail, 'foo@foo.com bar@bar.com'
-            soap_body.should_receive(:string).with :propertyName, 'foo.com bar.com'
+            soap_body.should_receive(:string).with :propertyName, 'foo.com'
             soap_body.should_receive(:string).with :propertyType, 'prop'
             soap_body.should_receive(:boolean).with :propertyNameExactMatch, false
-            EccuRequest.publish(%w(foo.com bar.com), xml_request_content, {
+            EccuRequest.publish('foo.com', xml_request_content, {
               :file_name => 'eccu_request.xml',
               :notes     => 'sample notes',
               :version   => 'v2',

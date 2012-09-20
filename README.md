@@ -31,11 +31,24 @@ Additionally you can specify (default values in bold):
 
 ## ECCU
 
+### Viewing Requests
+
 You can see the requests published on ECCU using *akamai_api eccu_requests*
 For each request you will see all its details (code, status, etc.) except the file content.
 To view the file content add the --verbose (-v) option.
 
 You can also restrict the listing to the last request using the --last (-l) option.
+
+### Publishing Requests
+
+To publish your request you can use the *publish_eccu* command. E.g.:
+
+```bash
+    akamai_api publish_eccu --property="example.com" --source="path/to/request.xml"
+```
+
+--property and --source are mandatory. The first specifies the Akamai Digital Property for the request. The latter is the source file to publish on ECCU.
+Use *akamai_api help publish_eccu* to see additional options.
 
 # As a Library
 
@@ -101,6 +114,15 @@ The following code should be self explaining about both class methods and instan
     last_request.update_email! 'foo@foo.com' # => Invoke the ECCU service to change the email to be notified on status change
     last_request.destroy                     # => Invoke the ECCU service to delete the request
 ```
+
+Use the ::publish method to publish an ECCU Request:
+
+```ruby
+    AkamaiApi::EccuRequest.publish 'example.com', my_content, args
+    AkamaiApi::EccuRequest.publish_file 'example.com', 'path/to/file.xml', args
+```
+
+You can specify the following optional arguments in args: file_name, notes, version, emails, property_type, property_exact_match
 
 # Specs
 

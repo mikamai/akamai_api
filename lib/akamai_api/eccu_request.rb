@@ -100,12 +100,12 @@ module AkamaiApi
         })
       end
 
-      def publish_file domains, file_name, args = {}
+      def publish_file property, file_name, args = {}
         args[:file_name] = file_name
-        publish domains, File.read(file_name), args
+        publish property, File.read(file_name), args
       end
 
-      def publish domains, content, args = {}
+      def publish property, content, args = {}
         basic_auth *AkamaiApi.config[:auth]
         resp = client.request 'upload' do
           SoapBody.new(soap) do
@@ -116,7 +116,7 @@ module AkamaiApi
             if args[:emails]
               string :statusChangeEmail,     Array.wrap(args[:emails]).join(' ')
             end
-            string :propertyName,            Array.wrap(domains).join(' ')
+            string :propertyName,            property
             string :propertyType,            args[:property_type] || 'hostheader'
             boolean :propertyNameExactMatch, args[:property_exact_match].nil? && true || args[:property_exact_match]
           end
