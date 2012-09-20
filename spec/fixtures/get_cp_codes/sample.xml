@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <soapenv:Body>
+    <getCPCodesResponse soapenv:encodingStyle="http://schemas.xmlsoap.org/soap/encoding/">
+      <getCPCodesReturn soapenc:arrayType="ns1:CPCodeInfo[34]" xsi:type="soapenc:Array" xmlns:ns1="https://control.akamai.com/Data.xsd" xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/">
+        <getCPCodesReturn href="#id0"/>
+        <getCPCodesReturn href="#id1"/>
+      </getCPCodesReturn>
+    </getCPCodesResponse>
+    <multiRef id="id0" soapenc:root="0" soapenv:encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" xsi:type="ns2:CPCodeInfo" xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/" xmlns:ns2="https://control.akamai.com/Data.xsd">
+      <cpcode xsi:type="xsd:int">12345</cpcode>
+      <description xsi:type="xsd:string">Foo Site</description>
+      <service xsi:type="xsd:string">Site_Accel::Site_Accel</service>
+    </multiRef>
+    <multiRef id="id1" soapenc:root="0" soapenv:encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" xsi:type="ns3:CPCodeInfo" xmlns:ns3="https://control.akamai.com/Data.xsd" xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/">
+      <cpcode xsi:type="xsd:int">23456</cpcode>
+      <description xsi:type="xsd:string">Sample Site</description>
+      <service xsi:type="xsd:string">Site_Accel::Site_Accel</service>
+    </multiRef>
+  </soapenv:Body>
+</soapenv:Envelope>
