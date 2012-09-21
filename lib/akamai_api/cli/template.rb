@@ -19,7 +19,7 @@ module AkamaiApi
       end
 
       def self.cp_code cpcode
-        "ID: #{cpcode.code}\tDescription: #{cpcode.description}"
+        "#{cpcode.code}\t#{cpcode.description}"
       end
 
       def self.ccu_response response

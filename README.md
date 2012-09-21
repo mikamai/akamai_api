@@ -1,9 +1,10 @@
 # AkamaiApi
 
+AkamaiApi is a ruby library and command line utility to interact with Akamai CCU (Content Control Utility) and ECCU (Enhanced Content Control Utility) services.
+
 # Using the CLI
 
-After gem installation you will have a CLI utility to execute operations on Akamai. Each method requires authentication.
-You can provide auth info using one of the following methods:
+After gem installation you will have a CLI utility to execute operations on Akamai. Each method requires authentication. You can provide auth info using one of the following methods:
 
 - Passing --username (-u) and --password (-p) arguments at each invocation
 - Creating a config file in your HOME directory named .akamai_api.yml with the following format:
@@ -14,41 +15,93 @@ You can provide auth info using one of the following methods:
       - pass
 ```
 
-Use *akamai_api help* to view the help of the CLI.
-Using the CLI you can:
+## Tasks
 
-- View the list of CP Codes (e.g. *akamai_api cp_codes*) for CCU
-- Purge a resource or a list of resources (Urls or CP Codes) via CCU
-- See or publish a request via ECCU
+When using the CLI you can work with both CCU and ECCU.
+
+```
+    akamai_api ccu          # CCU Interface
+    akamai_api eccu         # ECCU Interface
+    akamai_api help [TASK]  # Describe available tasks or one specific task
+```
+Use *akamai_api help* to view the help of the CLI.
 
 ## CCU
 
-You can purge a list of urls using the --urls option or a list of cp codes using the --cpcodes option. You need only one of them (you cannot use both).
-Additionally you can specify (default values in bold):
-- domain: production|staging - This is optional and usually you will not need this option
-- action: remove|**invalidate** - Invalidate will mark the resource as expired while Remove will completely remove the resource cache
-- emails: [foo@foo.com bar@bar.com] - A list of emails used to send a notification after the purge has been completed
+In the CCU interface you can work with CP Codes and URLs.
+
+```
+    akamai_api ccu cpcode          # CP Code CCU actions
+    akamai_api ccu help [COMMAND]  # Describe subcommands or one specific subcommand
+    akamai_api ccu url             # URL CCU actions
+```
+
+### CP Code
+
+```
+    akamai_api ccu cpcode help [COMMAND]                  # Describe subcommands or one specific subcommand
+    akamai_api ccu cpcode invalidate CPCODE1 CPCODE2 ...  # Purge CP Code(s) marking their cache as expired
+    akamai_api ccu cpcode list                            # Print the list of CP Codes
+    akamai_api ccu cpcode remove CPCODE1 CPCODE2 ...      # Purge CP Code(s) removing them from the cache
+```
+
+When removing or invalidating a CP Code you can provide the following optional arguments:
+
+- *--domain*: Specify if you want to work with *production* or *staging*. This is a completely optional argument and usually you don't need to set it.
+- *--emails*: Specify the list of email used by Akamai to send notifications about the purge request.
+
+### URL
+
+```
+  akamai_api ccu url help [COMMAND]                                                   # Describe subcommands or one specific subcommand
+  akamai_api ccu url invalidate http://john.com/a.txt http://www.smith.com/b.txt ...  # Purge URL(s) marking their cache as expired
+  akamai_api ccu url remove http://john.com/a.txt http://www.smith.com/b.txt ...      # Purge URL(s) removing them from the cache
+```
+
+When removing or invalidating a CP Code you can provide the following optional arguments:
+
+- *--domain*: Specify if you want to work with *production* or *staging*. This is a completely optional argument and usually you don't need to set it.
+- *--emails*: Specify the list of email used by Akamai to send notifications about the purge request.
 
 ## ECCU
 
-### Viewing Requests
+In the ECCU interface you can see the requestes already published and publish your own requests.
 
-You can see the requests published on ECCU using *akamai_api eccu_requests*
-For each request you will see all its details (code, status, etc.) except the file content.
-To view the file content add the --verbose (-v) option.
-
-You can also restrict the listing to the last request using the --last (-l) option.
-
-### Publishing Requests
-
-To publish your request you can use the *publish_eccu* command. E.g.:
-
-```bash
-    akamai_api publish_eccu --property="example.com" --source="path/to/request.xml"
+```
+    akamai_api eccu help [COMMAND]                           # Describe subcommands or one specific subcommand
+    akamai_api eccu last_request                             # Print the last request made to ECCU
+    akamai_api eccu publish_xml path/to/request.xml john.com  # Publish a request made in XML for the specified Digital Property (usually the Host Header)
+    akamai_api eccu requests                                 # Print the list of the last requests made to ECCU
 ```
 
---property and --source are mandatory. The first specifies the Akamai Digital Property for the request. The latter is the source file to publish on ECCU.
-Use *akamai_api help publish_eccu* to see additional options.
+### Viewing Requests
+
+You can see the requests published on ECCU using *akamai_api eccu requests*
+For each request you will see all its details (code, status, etc.) except the file content.
+To view the file content add the --content (-c) option.
+
+To see only the last request you can use *akamai_api eccu last_request*.
+
+### Publishing Requests in XML
+
+To publish requests made in XML (ECCU Request Format) you can use *akamai_api eccu publish_xml*.
+
+```
+Usage:
+  akamai_api publish_xml path/to/request.xml john.com
+
+Options:
+  -pt, [--property-type=type]             # Type of enlisted properties
+                                          # Default: hostheader
+      [--no-exact-match]                  # Do not do an exact match on property names
+  -e, [--emails=foo@foo.com bar@bar.com]  # Email(s) to use to send notification on status change
+  -n, [--notes=NOTES]
+                                          # Default: ECCU Request using AkamaiApi gem
+```
+
+The command takes two arguments:
+- the file containing the request;
+- the Digital Property to which you want to apply the request (usually it's the host);
 
 # As a Library
 

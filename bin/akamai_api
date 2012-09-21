@@ -4,140 +4,19 @@ require 'active_support/core_ext'
 require 'akamai_api'
 require 'akamai_api/cli'
 
-class AkamaiCommand < Thor
-  def initialize *args
-    @config_file = File.expand_path File.join '~', '.akamai_api.yml'
+class AkamaiApiCommand < Thor
+  desc 'ccu', 'CCU Interface'
+  subcommand 'ccu', AkamaiApi::Cli::Ccu
+
+  desc 'eccu', 'ECCU Interface'
+  subcommand 'eccu', AkamaiApi::Cli::Eccu
+
+  def help *args
+    puts
+    puts "AkamaiApi is a command line utility to interact with Akamai CCU (Content Control Utility) and ECCU (Enhanced Content Control Utility) services."
+    puts
     super
-  end
-
-  desc 'cp_codes', 'Return the list of all cp_codes'
-  method_option :username, :type => :string, :aliases => '-u',
-                :desc => 'Username used to authenticate on Akamai Control Panel'
-  method_option :password, :type => :string, :aliases => '-p',
-                :desc => 'Password used to authenticate on Akamai Control Panel'
-  def cp_codes
-    set_config
-    AkamaiApi::CpCode.all.each do |cp_code|
-      puts AkamaiApi::Cli::Template.cp_code(cp_code)
-    end
-  end
-
-  desc 'purge', 'Purge a list of items (ex. akamai purge_by_cp_code --cpcodes="1234 5678"). You need to use --cpcodes OR --urls (you cannot use both)'
-  method_option :username, :type => :string, :aliases => '-u',
-                :desc => 'Username used to authenticate on Akamai Control Panel'
-  method_option :password, :type => :string, :aliases => '-p',
-                :desc => 'Password used to authenticate on Akamai Control Panel'
-  method_option :action,   :type => :string, :aliases => '-a',
-                :default => 'invalidate', :required => true,
-                :banner => 'remove|invalidate',
-                :desc => 'Action to use for purging. Use "remove" to completely remove a resource from the cache and "invalidate" to simply mark the resource as expired.'
-  method_option :domain,   :type => :string, :aliases => '-d',
-                :banner => 'production|staging',
-                :desc => 'Optional argument used to specify the environment. Usually you will not need this option'
-  method_option :emails,   :type => :array,  :aliases => '-e',
-                :banner => "foo@foo.com bar@bar.com",
-                :desc => 'Email(s) used to send notification when the purge has been completed'
-  method_option :urls,     :type => :array,
-                :banner => 'http://example.com/foo http://example.com/bar',
-                :desc => 'Use this option to purge a list of url. You cannot use both --urls and --cpcodes'
-  method_option :cpcodes,  :type => :array,
-                :banner => '1234 5678',
-                :desc => 'Use this option to purge a list of cp codes. You cannot use both --urls and --cpcodes'
-  def purge
-    set_config
-    if options[:urls].nil? && options[:cpcodes].nil?
-      raise "You should choose if you want to remove a url (use --urls option) or cpcodes (use --cpcodes option)"
-    end
-    if options[:urls].present? && options[:cpcodes].present?
-      raise "You cannot remove both urls and cpcodes. Choose only one!"
-    end
-    if options[:urls]
-      type = :arl
-      items = options[:urls]
-    else
-      type = :cpcode
-      items = options[:cpcodes]
-    end
-    args = {}
-    args[:domain] = options[:domain] if options[:domain]
-    args[:email]  = options[:emails] if options[:emails]
-    res = AkamaiApi::Ccu.purge options[:action], type, items, args
-    puts '------------'
-    puts AkamaiApi::Cli::Template.ccu_response res
-    puts '------------'
-  end
-
-  desc 'eccu_requests', 'Show the the last requests made to ECCU'
-  method_option :username, :type => :string, :aliases => '-u',
-                :desc => 'Username used to authenticate on Akamai Control Panel'
-  method_option :password, :type => :string, :aliases => '-p',
-                :desc => 'Password used to authenticate on Akamai Control Panel'
-  method_option :verbose, :type => :boolean, :aliases => '-v',
-                :desc => 'Print file content too'
-  method_option :last, :type => :boolean, :aliases => '-l'
-  def eccu_requests
-    set_config
-    if options[:last]
-      requests = Array.wrap AkamaiApi::EccuRequest.last :verbose => options[:verbose]
-    else
-      requests = AkamaiApi::EccuRequest.all :verbose => options[:verbose]
-    end
-    requests.each do |request|
-      puts '------------'
-      puts AkamaiApi::Cli::Template.eccu_request request
-    end
-    puts '------------'
-  end
-
-  desc 'publish_eccu', 'Publish an ECCU request'
-  method_option :username, :type => :string, :aliases => '-u',
-                :desc => 'Username used to authenticate on Akamai Control Panel'
-  method_option :password, :type => :string, :aliases => '-p',
-                :desc => 'Password used to authenticate on Akamai Control Panel'
-  method_option :property, :type => :string, :aliases => '-dp', :required => true,
-                :banner => 'example.com',
-                :desc => 'List of digital properties to which apply the ECCU request'
-  method_option :source, :type => :string, :aliases => '-s', :required => true,
-                :banner => 'path/to/file.xml',
-                :desc => 'Source file to publish on ECCU'
-  method_option :property_type, :type => :string, :aliases => '-pt',
-                :default => 'hostheader', :banner => 'type',
-                :desc => 'Property Type to use for the specified properties'
-  method_option :no_exact_match, :type => :boolean,
-                :desc => 'Do not do an exact match on property names'
-  method_option :emails,   :type => :array,  :aliases => '-e',
-                :banner => "foo@foo.com bar@bar.com",
-                :desc => 'Email(s) used to send notification when the request has been completed'
-  method_option :notes, :type => :string, :aliases => '-n',
-                :default => 'ECCU Request using AkamaiApi gem',
-                :desc => 'Notes to apply on the ECCU Request'
-  def publish_eccu
-    set_config
-    args = {
-      :notes => options[:notes],
-      :property_exact_match => !options[:no_exact_match],
-      :property_type => options[:property_type]
-    }
-    args[:emails] = options[:emails] if options[:emails]
-    id = AkamaiApi::EccuRequest.publish_file options[:property], options[:source], args
-    puts 'Request correctly published. Details:'
-    puts '------------'
-    puts AkamaiApi::Cli::Template.eccu_request AkamaiApi::EccuRequest.find id, :verbose => true
-    puts '------------'
-  end
-
-  no_tasks do
-    def set_config
-      config = YAML::load_file(@config_file).symbolize_keys
-      if options[:username] && options[:password]
-        config.merge! :auth => [options[:username], options[:password]]
-      end
-      if config[:auth].nil? || config[:auth].compact.blank?
-        raise "#{@config_file} does not exist or doesn't contain auth info and you didn't specify username and password options"
-      end
-      AkamaiApi.config.merge! config
-    end
   end
 end
 
-AkamaiCommand.start
+AkamaiApiCommand.start
