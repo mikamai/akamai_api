@@ -7,32 +7,16 @@ module AkamaiApi
     document 'https://ccuapi.akamai.com/ccuapi-axis.wsdl'
 
     class << self
-      # TODO use metaprogramming for this stuff
-      # and use arl, cpcode instead of url and cp_code
-      # to be consistent with akamai naming
-      # and avoid naming confusion
-      def invalidate_cpcode items, args = {}
-        invalidate :cpcode, items, args
-      end
-
-      def invalidate_arl items, args = {}
-        invalidate :arl, items, args
-      end
-
-      def remove_cpcode items, args = {}
-        remove :cpcode, items, args
-      end
-
-      def remove_arl items, args = {}
-        remove :arl, items, args
-      end
-
-      def invalidate items, args = {}
-        purge :invalidate, items, args
-      end
-
-      def remove type, items, args = {}
-        purge :remove, type, items, args
+      [:invalidate, :remove].each do |action|
+        send :define_method, action do |type, items, args = {}|
+          purge action, type, items, args
+        end
+        [:arl, :cpcode].each do |type|
+          method_name = "#{action}_#{type}".to_sym
+          send :define_method, method_name do |items, args = {}|
+            purge action, type, items, args
+          end
+        end
       end
 
       def purge action, type, items, args = {}
