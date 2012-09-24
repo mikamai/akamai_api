@@ -28,7 +28,7 @@ module AkamaiApi
                "* Code: #{response.code} (#{response.status})",
                "* Message: #{response.message}"]
         res << "* Estimate Time: #{response.estimated_time} secs.;" if response.estimated_time > 0
-        res << "* Error caused by: #{response.uri};" if res.uri
+        res << "* Error caused by: #{response.uri};" if response.uri
         res.join "\n"
       end
     end

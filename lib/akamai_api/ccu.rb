@@ -14,18 +14,16 @@ module AkamaiApi
       def invalidate_cpcode items, args = {}
         invalidate :cpcode, items, args
       end
-      alias invalidate_cp_code invalidate_cpcode
 
-      def invalidate_url items, args = {}
+      def invalidate_arl items, args = {}
         invalidate :arl, items, args
       end
-      alias invalidate_arl invalidate_url
 
-      def remove_cp_code items, args = {}
+      def remove_cpcode items, args = {}
         remove :cpcode, items, args
       end
 
-      def remove_url items, args = {}
+      def remove_arl items, args = {}
         remove :arl, items, args
       end
 

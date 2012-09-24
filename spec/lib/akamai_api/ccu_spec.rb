@@ -11,23 +11,23 @@ module AkamaiApi
 
     describe '#purge response' do
       it 'is a CcuResponse object' do
-        Ccu.remove_cp_code('12345').should be_a CcuResponse
+        Ccu.remove_cpcode('12345').should be_a CcuResponse
       end
 
       it 'returns code 100' do
-        Ccu.remove_cp_code('12345').code.should == 100
+        Ccu.remove_cpcode('12345').code.should == 100
       end
 
       it 'returns a success message' do
-        Ccu.remove_cp_code('12345').message.should == 'Success.'
+        Ccu.remove_cpcode('12345').message.should == 'Success.'
       end
 
       it 'returns a unique session id' do
-        Ccu.remove_cp_code('12345').session_id.should == '97870328-018c-11e2-aabc-489beabc489b'
+        Ccu.remove_cpcode('12345').session_id.should == '97870328-018c-11e2-aabc-489beabc489b'
       end
 
       it 'returns the estimated time in seconds' do
-        Ccu.remove_cp_code('12345').estimated_time.should == 420
+        Ccu.remove_cpcode('12345').estimated_time.should == 420
       end
     end
 

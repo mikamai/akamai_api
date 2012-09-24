@@ -4,8 +4,8 @@ module AkamaiApi
       desc 'cpcode', 'CP Code CCU actions'
       subcommand 'cpcode', CcuCpCode
 
-      desc 'url', 'URL CCU actions'
-      subcommand 'url', CcuUrl
+      desc 'arl', 'ARL CCU actions'
+      subcommand 'arl', CcuArl
     end
   end
 end

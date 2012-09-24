@@ -28,12 +28,12 @@ Use *akamai_api help* to view the help of the CLI.
 
 ## CCU
 
-In the CCU interface you can work with CP Codes and URLs.
+In the CCU interface you can work with CP Codes and ARLs.
 
 ```
     akamai_api ccu cpcode          # CP Code CCU actions
     akamai_api ccu help [COMMAND]  # Describe subcommands or one specific subcommand
-    akamai_api ccu url             # URL CCU actions
+    akamai_api ccu arl             # ARL CCU actions
 ```
 
 ### CP Code
@@ -50,15 +50,15 @@ When removing or invalidating a CP Code you can provide the following optional a
 - *--domain*: Specify if you want to work with *production* or *staging*. This is a completely optional argument and usually you don't need to set it.
 - *--emails*: Specify the list of email used by Akamai to send notifications about the purge request.
 
-### URL
+### ARL
 
 ```
-  akamai_api ccu url help [COMMAND]                                                   # Describe subcommands or one specific subcommand
-  akamai_api ccu url invalidate http://john.com/a.txt http://www.smith.com/b.txt ...  # Purge URL(s) marking their cache as expired
-  akamai_api ccu url remove http://john.com/a.txt http://www.smith.com/b.txt ...      # Purge URL(s) removing them from the cache
+  akamai_api ccu arl help [COMMAND]                                                   # Describe subcommands or one specific subcommand
+  akamai_api ccu arl invalidate http://john.com/a.txt http://www.smith.com/b.txt ...  # Purge ARL(s) marking their cache as expired
+  akamai_api ccu arl remove http://john.com/a.txt http://www.smith.com/b.txt ...      # Purge ARL(s) removing them from the cache
 ```
 
-When removing or invalidating a CP Code you can provide the following optional arguments:
+When removing or invalidating an ARL you can provide the following optional arguments:
 
 - *--domain*: Specify if you want to work with *production* or *staging*. This is a completely optional argument and usually you don't need to set it.
 - *--emails*: Specify the list of email used by Akamai to send notifications about the purge request.
@@ -141,12 +141,12 @@ e.g.
 ```ruby
     ccu = AkamaiApi::Ccu
 
-    ccu.invalidate_cp_codes cp_codes # => wrapper to call .purge :invalidate, :cpcode
-    ccu.invalidate_url urls          # => wrapper to call .purge :invalidate, :arl
-    ccu.invalidate :arl, urls        # => wrapper to call .purge :invalidate
+    ccu.invalidate_cpcodes cpcodes # => wrapper to call .purge :invalidate, :cpcode
+    ccu.invalidate_arl arls          # => wrapper to call .purge :invalidate, :arl
+    ccu.invalidate :arl, arls        # => wrapper to call .purge :invalidate
 
-    ccu.remove_cp_codes cp_codes # => wrapper to call .purge :remove, :cpcode
-    ccu.remove_url urls          # => wrapper to call .purge :remove, :arl
+    ccu.remove_cpcodes cpcodes # => wrapper to call .purge :remove, :cpcode
+    ccu.remove_arl arls          # => wrapper to call .purge :remove, :arl
     ccu.remove :arl              # => wrapper to call .purge :remove
 ```
 
