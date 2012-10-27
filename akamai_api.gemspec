@@ -8,8 +8,8 @@ Gem::Specification.new do |gem|
   gem.version       = AkamaiApi::VERSION
   gem.authors       = ["Nicola Racco"]
   gem.email         = ["nicola@nicolaracco.com"]
-  gem.description   = %q{TODO: Write a gem description}
-  gem.summary       = %q{TODO: Write a gem summary}
+  gem.description   = %q{Ruby toolkit to work with Akamai Content Control Utility API}
+  gem.summary       = %q{Ruby toolkit to work with Akamai Content Control Utility API}
   gem.homepage      = ""
 
   gem.files         = `git ls-files`.split($/)
