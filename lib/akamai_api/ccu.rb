@@ -4,7 +4,7 @@ module AkamaiApi
   class Ccu
     extend Savon::Model
 
-    document 'https://ccuapi.akamai.com/ccuapi-axis.wsdl'
+    document 'https://ccuapi.akamai.com/ccuapi.wsdl'
 
     class << self
       [:invalidate, :remove].each do |action|
