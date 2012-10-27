@@ -4,7 +4,7 @@ module AkamaiApi
   class Ccu
     extend Savon::Model
 
-    document 'https://ccuapi.akamai.com/ccuapi.wsdl'
+    document File.expand_path('../../../wsdls/ccuapi.wsdl', __FILE__)
 
     class << self
       [:invalidate, :remove].each do |action|
