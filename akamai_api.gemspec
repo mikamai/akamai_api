@@ -18,7 +18,7 @@ Gem::Specification.new do |gem|
   gem.require_paths = ["lib"]
 
   gem.add_dependency 'active_support', '>= 2'
-  gem.add_dependency 'thor',           '~> 0.14.0'
+  gem.add_dependency 'thor',           '>= 0.14.0', '< 2.0'
   gem.add_dependency 'savon',          '~> 1.2.0'
   gem.add_dependency 'builder',        '~> 3.1.3'
 
