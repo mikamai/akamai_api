@@ -1,13 +1,11 @@
-require 'active_support/concern'
-
 module SavonTester
-  extend ActiveSupport::Concern
-
-  included do
-    let(:client) do
-      Savon::Client.new do
-        wsdl.endpoint = "http://example.com"
-        wsdl.namespace = "http://users.example.com"
+  def self.included base
+    base.class_eval do
+      let(:client) do
+        Savon::Client.new do
+          wsdl.endpoint = "http://example.com"
+          wsdl.namespace = "http://users.example.com"
+        end
       end
     end
   end
