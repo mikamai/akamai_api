@@ -177,13 +177,17 @@ Use the ::publish method to publish an ECCU Request:
 
 You can specify the following optional arguments in args: file_name, notes, version, emails, property_type, property_exact_match
 
-# Specs
+# Contributing
 
-Before running the specs create a file auth.rb in ./spec with the following
+- Clone this repository
+- Run 'bundle install --binstubs=bin/stubs'
+- To run the specs, create the file spec/auth.rb with the following content:
 
-```ruby
+   ```ruby
     # Fill the following with your akamai login before running your spec
     AkamaiApi.config.merge!({
       :auth => ['user', 'pass']
     })
-```
+  ```
+
+- Run specs with `thor spec`

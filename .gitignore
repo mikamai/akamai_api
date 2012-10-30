@@ -17,3 +17,4 @@ test/version_tmp
 tmp
 spec/auth.rb
 Gemfile.lock
+bin/stubs/
