@@ -13,14 +13,16 @@ module AkamaiApi
     end
 
     def self.all
+      result = []
       basic_auth *AkamaiApi.config[:auth]
       client.request('getCPCodes').body[:multi_ref].map do |hash|
-        new({
+        result << new({
           :code        => hash[:cpcode],
           :description => hash[:description],
           :service     => hash[:service],
         })
       end
+      result
     end
   end
 end
