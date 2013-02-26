@@ -13,9 +13,15 @@ module AkamaiApi
     end
 
     def self.all
-      result = []
+      response, result = [], []
+
       basic_auth *AkamaiApi.config[:auth]
-      client.request('getCPCodes').body[:multi_ref].map do |hash|
+      response = client.request('getCPCodes').body[:multi_ref]
+
+      # We want an array to loop
+      response = [response] if response.is_a? Hash
+
+      response.map do |hash|
         result << new({
           :code        => hash[:cpcode],
           :description => hash[:description],
