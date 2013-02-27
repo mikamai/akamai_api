@@ -14,7 +14,9 @@ module AkamaiApi
 
     def self.all
       basic_auth *AkamaiApi.config[:auth]
-      client.request('getCPCodes').body[:multi_ref].map do |hash|
+      response = client.request('getCPCodes').body[:multi_ref]
+
+      Array.wrap(response).map do |hash|
         new({
           :code        => hash[:cpcode],
           :description => hash[:description],
