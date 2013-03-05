@@ -63,6 +63,11 @@ module AkamaiApi
         EccuRequest.should_receive(:find).with('b', anything()).and_return(:b)
         EccuRequest.all.should =~ [:a, :b]
       end
+      it 'returns the detail for each enlisted id even if only one id is returned' do
+        EccuRequest.stub! :all_ids => "a"
+        EccuRequest.should_receive(:find).with('a', anything()).and_return(:a)
+        EccuRequest.all.should =~ [:a]
+      end
     end
 
     describe 'publishing' do
