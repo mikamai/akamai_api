@@ -53,7 +53,7 @@ module AkamaiApi
       end
 
       def all args = {}
-        all_ids.map { |v| EccuRequest.find v, args }
+        Array.wrap(all_ids).map { |v| EccuRequest.find v, args }
       end
 
       def last args = {}
