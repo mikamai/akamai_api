@@ -5,7 +5,7 @@ module AkamaiApi
     include SavonTester
 
     before do
-      savon.expects('wsdl:purgeRequest').returns(:success)
+      savon.expects('wsdl:purgeRequest').returns :body => Savon::Spec::Fixture['purge_request', 'success']
       stub_savon_model Ccu
     end
 
