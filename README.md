@@ -141,7 +141,7 @@ e.g.
 ```ruby
     ccu = AkamaiApi::Ccu
 
-    ccu.invalidate_cpcodes cpcodes # => wrapper to call .purge :invalidate, :cpcode
+    ccu.invalidate_cpcode cpcodes # => wrapper to call .purge :invalidate, :cpcode
     ccu.invalidate_arl arls          # => wrapper to call .purge :invalidate, :arl
     ccu.invalidate :arl, arls        # => wrapper to call .purge :invalidate
 
