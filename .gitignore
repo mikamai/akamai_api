@@ -18,3 +18,4 @@ tmp
 spec/auth.rb
 Gemfile.lock
 bin/stubs/
+.idea/**
