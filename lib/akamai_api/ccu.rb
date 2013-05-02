@@ -8,13 +8,17 @@ module AkamaiApi
 
     class << self
       [:invalidate, :remove].each do |action|
-        send :define_method, action do |type, items, args = {}|
-          purge action, type, items, args
+        send :define_method, action do |*params|
+          raise ArgumentError, "wrong number of arguments (#{params.length} for 2..3)" if params.length < 2
+          type, items, opts = params
+          purge action, type, items, (opts || {})
         end
         [:arl, :cpcode].each do |type|
           method_name = "#{action}_#{type}".to_sym
-          send :define_method, method_name do |items, args = {}|
-            purge action, type, items, args
+          send :define_method, method_name do |*params|
+            raise ArgumentError, "wrong number of arguments (#{params.length} for 1..2)" if params.length < 1
+            items, opts = params
+            purge action, type, items, (opts || {})
           end
         end
       end

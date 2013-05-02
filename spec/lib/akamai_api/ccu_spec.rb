@@ -9,26 +9,48 @@ module AkamaiApi
       stub_savon_model Ccu
     end
 
-    describe '#purge response' do
-      it 'is a CcuResponse object' do
-        Ccu.remove_cpcode('12345').should be_a CcuResponse
+    shared_examples 'purge helper' do
+      it 'responds with a CcuResponse object' do
+        Ccu.send(method, '12345').should be_a CcuResponse
       end
 
-      it 'returns code 100' do
-        Ccu.remove_cpcode('12345').code.should == 100
-      end
+      context 'when data are correct' do
+        it 'returns the expected response code' do
+          Ccu.send(method, '12345').code.should == 100
+        end
 
-      it 'returns a success message' do
-        Ccu.remove_cpcode('12345').message.should == 'Success.'
-      end
+        it 'returns a successful message' do
+          Ccu.send(method, '12345').message.should == 'Success.'
+        end
 
-      it 'returns a unique session id' do
-        Ccu.remove_cpcode('12345').session_id.should == '97870328-018c-11e2-aabc-489beabc489b'
-      end
+        it 'returns a unique session id' do
+          Ccu.send(method, '12345').session_id.should == '97870328-018c-11e2-aabc-489beabc489b'
+        end
 
-      it 'returns the estimated time in seconds' do
-        Ccu.remove_cpcode('12345').estimated_time.should == 420
+        it 'returns the estimated time in seconds' do
+          Ccu.send(method, '12345').estimated_time.should == 420
+        end
       end
+    end
+
+    context '#invalidate_arl' do
+      let(:method) { 'invalidate_arl' }
+      it_should_behave_like 'purge helper'
+    end
+
+    context '#invalidate_cpcode' do
+      let(:method) { 'invalidate_cpcode' }
+      it_should_behave_like 'purge helper'
+    end
+
+    context '#remove_arl' do
+      let(:method) { 'remove_arl' }
+      it_should_behave_like 'purge helper'
+    end
+
+    context '#remove_cpcode' do
+      let(:method) { 'remove_cpcode' }
+      it_should_behave_like 'purge helper'
     end
 
     describe '#purge raises an error when' do
