@@ -7,6 +7,7 @@ AkamaiApi is a ruby library and command line utility to interact with Akamai CCU
 After gem installation you will have a CLI utility to execute operations on Akamai. Each method requires authentication. You can provide auth info using one of the following methods:
 
 - Passing --username (-u) and --password (-p) arguments at each invocation
+- Set ENV variables: AKAMAI_USERNAME and AKAMAI_PASSWORD
 - Creating a config file in your HOME directory named .akamai_api.yml with the following format:
 
 ```yaml
@@ -47,8 +48,8 @@ In the CCU interface you can work with CP Codes and ARLs.
 
 When removing or invalidating a CP Code you can provide the following optional arguments:
 
-- *--domain*: Specify if you want to work with *production* or *staging*. This is a completely optional argument and usually you don't need to set it.
-- *--emails*: Specify the list of email used by Akamai to send notifications about the purge request.
+- *--domain*, *-d*: Specify if you want to work with *production* or *staging*. This is a completely optional argument and usually you don't need to set it.
+- *--emails*, *-e*: Specify the list of email used by Akamai to send notifications about the purge request.
 
 ### ARL
 
@@ -60,8 +61,8 @@ When removing or invalidating a CP Code you can provide the following optional a
 
 When removing or invalidating an ARL you can provide the following optional arguments:
 
-- *--domain*: Specify if you want to work with *production* or *staging*. This is a completely optional argument and usually you don't need to set it.
-- *--emails*: Specify the list of email used by Akamai to send notifications about the purge request.
+- *--domain*, *-d*: Specify if you want to work with *production* or *staging*. This is a completely optional argument and usually you don't need to set it.
+- *--emails*, *-e*: Specify the list of email used by Akamai to send notifications about the purge request.
 
 ## ECCU
 
