@@ -12,6 +12,8 @@ module AkamaiApi
           config = YAML::load_file(config_file).symbolize_keys
           if options[:username] && options[:password]
             config.merge! :auth => [options[:username], options[:password]]
+          elsif ENV['AKAMAI_USERNAME'] && ENV['AKAMAI_PASSWORD']
+            config.merge! :auth => [ENV['AKAMAI_USERNAME'], ENV['AKAMAI_PASSWORD']]
           end
           if config[:auth].nil? || config[:auth].compact.blank?
             raise "#{config_file} does not exist or doesn't contain auth info and you didn't specify username and password options"
