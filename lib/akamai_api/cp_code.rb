@@ -10,7 +10,6 @@ module AkamaiApi
 
     def self.all
       response = client.call(:get_cp_codes).body[:multi_ref]
-
       Array.wrap(response).map do |hash|
         new({
           :code        => hash[:cpcode],
@@ -24,8 +23,9 @@ module AkamaiApi
 
     def self.client
       savon_args = {
-        :wsdl => File.expand_path('../../../wsdls/cpcode.wsdl', __FILE__),
-        :basic_auth => AkamaiApi.config[:auth]
+        :wsdl       => File.expand_path('../../../wsdls/cpcode.wsdl', __FILE__),
+        :basic_auth => AkamaiApi.config[:auth],
+        :log        => AkamaiApi.config[:log]
       }
       Savon.client savon_args
     end

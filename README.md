@@ -14,6 +14,7 @@ After gem installation you will have a CLI utility to execute operations on Akam
     auth:
       - user
       - pass
+    log: true # optional for enabling logging. false by default
 ```
 
 ## Tasks

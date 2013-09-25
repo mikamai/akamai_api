@@ -74,7 +74,8 @@ module AkamaiApi
         :wsdl => File.expand_path('../../../wsdls/ccuapi.wsdl', __FILE__),
         :namespaces => {
           'xmlns:soapenc' => 'http://schemas.xmlsoap.org/soap/encoding/'
-        }
+        },
+        :log => AkamaiApi.config[:log]
       }
       Savon.client savon_args
     end

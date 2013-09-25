@@ -128,8 +128,9 @@ module AkamaiApi
 
       def client
         savon_args = {
-          :wsdl => File.expand_path('../../../wsdls/eccu.wsdl', __FILE__),
-          :basic_auth => AkamaiApi.config[:auth]
+          :wsdl       => File.expand_path('../../../wsdls/eccu.wsdl', __FILE__),
+          :basic_auth => AkamaiApi.config[:auth],
+          :log        => AkamaiApi.config[:log]
         }
         Savon.client savon_args
       end
