@@ -98,7 +98,7 @@ module AkamaiApi
 
       def publish property, content, args = {}
         body = build_publish_soap_body property, content, args
-        resp = client.call :upload, :message => body.to_s
+        resp = client.call :upload, :message_tag => 'upload', :message => body.to_s
         resp.body[:upload_response][:file_id].to_i
       end
 

@@ -34,7 +34,7 @@ module AkamaiApi
     end
 
     def to_s
-      builder.to_s
+      builder.target!
     end
   end
 end
