@@ -17,11 +17,11 @@ Gem::Specification.new do |gem|
   gem.test_files    = gem.files.grep(%r{^(test|spec|features)/})
   gem.require_paths = ["lib"]
 
-  gem.add_dependency 'activesupport',  '>= 2.3.9', '< 4.0'
+  gem.add_dependency 'activesupport',  '>= 2.3.9',  '< 4.0'
   gem.add_dependency 'thor',           '>= 0.14.0', '< 2.0'
-  gem.add_dependency 'savon',          '~> 1.2.0'
+  gem.add_dependency 'savon',          '~> 2.2.0'
   gem.add_dependency 'builder',        '~> 3.0'
 
   gem.add_development_dependency 'rspec', '~> 2.11'
-  gem.add_development_dependency 'savon_spec', '~> 1.3'
+  gem.add_development_dependency 'guard-rspec', '~> 3.0.2'
 end

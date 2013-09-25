@@ -1,52 +1,40 @@
 module AkamaiApi
   class SoapBody
-    attr_accessor :soap
+    attr_reader :builder
 
-    def initialize soap, &block
-      self.soap = soap
-      self.soap.namespaces['xmlns:soapenc'] = 'http://schemas.xmlsoap.org/soap/encoding/'
+    def initialize &block
+      @builder = Builder::XmlMarkup.new
       instance_eval &block if block
     end
 
-    def body
-      soap.body ||= {}
-    end
-
-    def body_attributes
-      body[:attributes!] ||= {}
-    end
-
     def text name, value
-      name = name.to_sym
-      body[name] = Base64.encode64 value
-      body_attributes[name] = { 'xsi:type' => 'xsd:base64Binary' }
+      builder.tag! name, Base64.encode64(value), 'xsi:type' => 'xsd:base64Binary'
     end
 
     def boolean name, value
-      name = name.to_sym
-      body[name] = value
-      body_attributes[name] = { 'xsi:type' => 'xsd:boolean' }
+      builder.tag! name, value, 'xsi:type' => 'xsd:boolean'
     end
 
     def integer name, value
-      name = name.to_sym
-      body[name] = value
-      body_attributes[name] = { 'xsi:type' => 'xsd:int' }
+      builder.tag! name, value, 'xsi:type' => 'xsd:int'
     end
 
     def string name, value
-      name = name.to_sym
-      body[name] = value
-      body_attributes[name] = { 'xsi:type' => 'xsd:string' }
+      builder.tag! name, value, 'xsi:type' => 'xsd:string'
     end
 
     def array name, values
-      name = name.to_sym
-      body[name] = { 'item' => values }
-      body_attributes[name] = {
+      array_attrs = {
         'soapenc:arrayType' => "xsd:string[#{values.length}]",
         'xsi:type'          => 'wsdl:ArrayOfString'
       }
+      builder.tag! name, array_attrs do |tag|
+        values.each { |value| tag.item value }
+      end
+    end
+
+    def to_s
+      builder.target!
     end
   end
 end

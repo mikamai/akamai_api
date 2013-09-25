@@ -1,42 +1,46 @@
 require 'spec_helper'
 
-module AkamaiApi
-  describe CpCode do
-    include SavonTester
+describe AkamaiApi::CpCode do
+  include Savon::SpecHelper
 
-    describe '::all' do
+  before(:all) { savon.mock! }
+  after(:all)  { savon.unmock! }
+
+  describe '::all' do
+    context 'when there are multiple cp codes' do
       before do
-        savon.expects('getCPCodes').returns(:sample)
-        stub_savon_model CpCode
+        fixture = File.read 'spec/fixtures/cp_code/collection.xml'
+        savon.expects(:get_cp_codes).returns(fixture)
       end
 
-      it 'should return a collection of models' do
-        CpCode.all.each { |o| o.should be_a CpCode }
+      it 'returns a collection of cp codes' do
+        AkamaiApi::CpCode.all.each { |o| o.should be_a AkamaiApi::CpCode }
       end
 
-      it 'should correctly fill each object' do
-        CpCode.all.count.should == 2
-
-        model = CpCode.all.first
-        model.code.should == '12345'
-        model.description.should == 'Foo Site'
-        model.service.should == 'Site_Accel::Site_Accel'
+      it 'returns a collection with the correct size' do
+        AkamaiApi::CpCode.all.count.should == 2
       end
 
-      describe '::only one item' do
-        before do
-          savon.expects('getCPCodes').returns(:sample_one_item)
-          stub_savon_model CpCode
-        end
+      it 'correctly fills each cp code object' do
+        first = AkamaiApi::CpCode.all.first
+        first.code.should == '12345'
+        first.description.should == 'Foo Site'
+        first.service.should == 'Site_Accel::Site_Accel'
+      end
+    end
 
-        it 'should correctly fill when we have only one cp on return' do
-          CpCode.all.count.should == 1
+    context 'when there is only one cp code' do
+      before do
+        fixture = File.read 'spec/fixtures/cp_code/single.xml'
+        savon.expects(:get_cp_codes).returns(fixture)
+      end
 
-          model = CpCode.all.first
-          model.code.should == '12345'
-          model.description.should == 'Foo Site'
-          model.service.should == 'Site_Accel::Site_Accel'
-        end
+      it 'returns a collection of cp codes' do
+        AkamaiApi::CpCode.all.each { |o| o.should be_a AkamaiApi::CpCode }
+      end
+
+      it 'returns a collection with the correct size' do
+        AkamaiApi::CpCode.all.count.should == 1
       end
     end
   end

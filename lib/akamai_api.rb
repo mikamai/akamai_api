@@ -5,5 +5,5 @@ require 'savon'
 end
 
 module AkamaiApi
-  def self.config; @config ||= { :auth => ['', ''] }; end
+  def self.config; @config ||= { :auth => ['', ''], :log => false }; end
 end
