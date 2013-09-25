@@ -2,6 +2,8 @@
 
 AkamaiApi is a ruby library and command line utility to interact with Akamai CCU (Content Control Utility) and ECCU (Enhanced Content Control Utility) services.
 
+__Note__: If you have any problem with the current release, try to use the [savon1](https://github.com/nicolaracco/akamai_api/tree/savon1) branch (or [version 0.0.7](https://github.com/nicolaracco/akamai_api/tree/v0.0.7))... and open a pull request, of course :-)
+
 # Using the CLI
 
 After gem installation you will have a CLI utility to execute operations on Akamai. Each method requires authentication. You can provide auth info using one of the following methods:
