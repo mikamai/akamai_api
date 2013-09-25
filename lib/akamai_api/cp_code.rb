@@ -1,9 +1,5 @@
 module AkamaiApi
   class CpCode
-    extend Savon::Model
-
-    document 'https://control.akamai.com/nmrws/services/SiteAcceleratorReportService?wsdl'
-
     attr_accessor :code, :description, :service
 
     def initialize attributes
@@ -13,8 +9,7 @@ module AkamaiApi
     end
 
     def self.all
-      basic_auth *AkamaiApi.config[:auth]
-      response = client.request('getCPCodes').body[:multi_ref]
+      response = client.call(:get_cp_codes).body[:multi_ref]
 
       Array.wrap(response).map do |hash|
         new({
@@ -23,6 +18,16 @@ module AkamaiApi
           :service     => hash[:service],
         })
       end
+    end
+
+    private
+
+    def self.client
+      savon_args = {
+        :wsdl => File.expand_path('../../../wsdls/cpcode.wsdl', __FILE__),
+        :basic_auth => AkamaiApi.config[:auth]
+      }
+      Savon.client savon_args
     end
   end
 end

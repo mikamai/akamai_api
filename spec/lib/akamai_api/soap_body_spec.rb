@@ -1,22 +1,18 @@
+require 'spec_helper'
+
 module AkamaiApi
   describe SoapBody do
     let(:config) { double :env_namespace => '', :soap_version => '2' }
-    subject { SoapBody.new Savon::SOAP::XML.new config}
-
-    it 'adds the soapenc ns' do
-      Savon::SOAP::XML.new(config).namespaces.should_not include 'xmlns:soapenc'
-      subject.soap.namespaces.should include 'xmlns:soapenc'
-    end
 
     describe '#string' do
       before { subject.string 'foo', 'sample' }
 
       it 'adds a string field' do
-        subject.body[:foo].should == 'sample'
+        subject.to_s.should =~ /<foo.*>sample<\/foo>/
       end
 
       it 'sets the correct type attribute' do
-        subject.body_attributes[:foo]['xsi:type'].should == 'xsd:string'
+        subject.to_s.should =~ /<foo xsi:type=\"xsd:string\">/
       end
     end
 
@@ -24,15 +20,15 @@ module AkamaiApi
       before { subject.array 'foo', ['a', 'b'] }
 
       it 'adds an array field' do
-        subject.body[:foo].should == { 'item' => ['a', 'b'] }
+        subject.to_s.should =~ /<foo.*><item>a<\/item><item>b<\/item><\/foo>/
       end
 
       it 'sets the correct type attribute' do
-        subject.body_attributes[:foo]['xsi:type'].should == 'wsdl:ArrayOfString'
+        subject.to_s.should =~ /<foo.*xsi:type="wsdl:ArrayOfString"/
       end
 
       it 'sets the correct arrayType attribute' do
-        subject.body_attributes[:foo]['soapenc:arrayType'].should == 'xsd:string[2]'
+        subject.to_s.should =~ /<foo.*soapenc:arrayType="xsd:string\[2\]"/
       end
     end
 
@@ -40,11 +36,12 @@ module AkamaiApi
       before { subject.text 'foo', 'foo' }
 
       it 'adds a base64 encoded string field' do
-        Base64.decode64(subject.body[:foo]).should == 'foo'
+        match = subject.to_s.match /<foo.*>(.+)<\/foo>/m
+        Base64.decode64(match[1]).should == 'foo'
       end
 
       it 'sets the correct type attribute' do
-        subject.body_attributes[:foo]['xsi:type'].should == 'xsd:base64Binary'
+        subject.to_s.should =~ /<foo.*xsi:type="xsd:base64Binary/
       end
     end
   end
