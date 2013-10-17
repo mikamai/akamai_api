@@ -10,7 +10,7 @@ Gem::Specification.new do |gem|
   gem.email         = ["nicola@nicolaracco.com"]
   gem.description   = %q{Ruby toolkit to work with Akamai Content Control Utility API}
   gem.summary       = %q{Ruby toolkit to work with Akamai Content Control Utility API}
-  gem.homepage      = ""
+  gem.homepage      = 'https://github.com/nicolaracco/akamai_api'
 
   gem.files         = `git ls-files`.split($/)
   gem.executables   = gem.files.grep(%r{^bin/}).map{ |f| File.basename(f) }
