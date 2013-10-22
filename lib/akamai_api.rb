@@ -1,7 +1,7 @@
 require 'savon'
 
 %w(version cp_code soap_body ccu_response ccu eccu_request).each do |file|
-  require File.expand_path "../akamai_api/#{file}", __FILE__
+  require "akamai_api/#{file}"
 end
 
 module AkamaiApi
