@@ -45,7 +45,6 @@ In the CCU interface you can work with CP Codes and ARLs.
 ```
     akamai_api ccu cpcode help [COMMAND]                  # Describe subcommands or one specific subcommand
     akamai_api ccu cpcode invalidate CPCODE1 CPCODE2 ...  # Purge CP Code(s) marking their cache as expired
-    akamai_api ccu cpcode list                            # Print the list of CP Codes
     akamai_api ccu cpcode remove CPCODE1 CPCODE2 ...      # Purge CP Code(s) removing them from the cache
 ```
 
