@@ -22,51 +22,72 @@ module AkamaiApi
     end
 
     shared_examples 'purge helper' do
-      before do
-        body = soap_body(method, '12345').to_s
-        savon.expects(:purge_request).with(:message => body).returns(fixture)
-      end
-
       it 'responds with a CcuResponse object' do
-        Ccu.send(method, '12345').should be_a CcuResponse
+        VCR.use_cassette "ccu/#{method}/successful" do
+          Ccu.send(method, items).should be_a CcuResponse
+        end
       end
 
-      context 'when data are correct' do
+      it 'raises error when user is not authorized' do
+        VCR.use_cassette "ccu/#{method}/unauthorized" do
+          expect { Ccu.send(method, items) }.to raise_error AkamaiApi::Ccu::Unauthorized
+        end
+      end
+
+      describe 'when data are correct' do
         it 'returns the expected response code' do
-          Ccu.send(method, '12345').code.should == 100
+          VCR.use_cassette "ccu/#{method}/successful" do
+            Ccu.send(method, items).code.should == 201
+          end
         end
 
         it 'returns a successful message' do
-          Ccu.send(method, '12345').message.should == 'Success.'
+          VCR.use_cassette "ccu/#{method}/successful" do
+            Ccu.send(method, items).message.should == 'Request accepted.'
+          end
         end
 
-        it 'returns a unique session id' do
-          Ccu.send(method, '12345').session_id.should == '97870328-018c-11e2-aabc-489beabc489b'
+        it 'returns a unique purge id' do
+          VCR.use_cassette "ccu/#{method}/successful" do
+            Ccu.send(method, items).purge_id.should == '12345678-1234-1234-1234-123456789012'
+          end
+        end
+
+        it 'returns a unique support id' do
+          VCR.use_cassette "ccu/#{method}/successful" do
+            Ccu.send(method, items).support_id.should == '12345678901234567890-123456789'
+          end
         end
 
         it 'returns the estimated time in seconds' do
-          Ccu.send(method, '12345').estimated_time.should == 420
+          VCR.use_cassette "ccu/#{method}/successful" do
+            Ccu.send(method, items).estimated_time.should == 420
+          end
         end
       end
     end
 
     context '#invalidate_arl' do
       let(:method) { 'invalidate_arl' }
+      let(:items) { ['http://www.foo.bar/t.txt'] }
       it_should_behave_like 'purge helper'
     end
 
     context '#invalidate_cpcode' do
       let(:method) { 'invalidate_cpcode' }
+      let(:items) { ['12345'] }
       it_should_behave_like 'purge helper'
     end
 
     context '#remove_arl' do
       let(:method) { 'remove_arl' }
+      let(:items) { ['http://www.foo.bar/t.txt'] }
       it_should_behave_like 'purge helper'
     end
 
     context '#remove_cpcode' do
       let(:method) { 'remove_cpcode' }
+      let(:items) { ['12345'] }
       it_should_behave_like 'purge helper'
     end
 

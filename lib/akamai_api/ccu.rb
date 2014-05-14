@@ -1,3 +1,4 @@
+require 'httparty'
 require 'active_support/core_ext'
 
 module AkamaiApi
@@ -5,6 +6,7 @@ module AkamaiApi
     extend self
 
     class UnrecognizedOption < StandardError; end
+    class Unauthorized < StandardError; end
 
     [:invalidate, :remove].each do |action|
       send :define_method, action do |*params|
@@ -25,18 +27,20 @@ module AkamaiApi
     def purge action, type, items, args = {}
       validate_action action
       validate_type type
-      options = ["action=#{action}", "type=#{type}"]
-      add_domain args[:domain], options
-      add_email args[:email], options
-      body = SoapBody.new do
-        string :name,    AkamaiApi.config[:auth].first
-        string :pwd,     AkamaiApi.config[:auth].last
-        string :network, ''
-        array  :opt,     options
-        array  :uri,     Array.wrap(items)
+
+      auth = { username: AkamaiApi.config[:auth].first, password: AkamaiApi.config[:auth].last }
+      query = { type: type, action: action, objects: Array.wrap(items) }
+      if args.key?(:domain)
+        domain = args.delete(:domain)
+        query[:domain] = domain if domain
       end
-      response = client.call :purge_request, :message => body.to_s
-      CcuResponse.new response, items
+      response = HTTParty.post 'https://api.ccu.akamai.com/ccu/v2/queues/default', {
+        basic_auth: auth,
+        body: query.to_json,
+        headers: { 'Content-Type' => 'application/json' }
+      }
+      raise Unauthorized if response.code == 401
+      CcuResponse.new JSON.parse(response.body), items
     end
 
     private

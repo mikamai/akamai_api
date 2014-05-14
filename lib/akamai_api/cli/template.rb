@@ -23,13 +23,20 @@ module AkamaiApi
       end
 
       def self.ccu_response response
-        res = ['#### Response Details ####',
-               "* Request ID: #{response.session_id}",
-               "* Code: #{response.code} (#{response.status})",
-               "* Message: #{response.message}"]
-        res << "* Estimate Time: #{response.estimated_time} secs.;" if response.estimated_time > 0
-        res << "* Error caused by: #{response.uri};" if response.uri
-        res.join "\n"
+        result = [
+          "#### Response Details ####",
+          "* Purge ID: #{response.purge_id}",
+          "* Support ID: #{response.support_id}",
+          "* Result: #{response.code} - #{response.message}",
+        ]
+        if response.time_to_wait
+          result.concat [
+            "* Time to wait before check: #{response.time_to_wait} secs.",
+            "* Estimated time: #{response.estimated_time} secs.",
+            "* Progress URI: #{response.uri}"
+          ]
+        end
+        result.join "\n"
       end
     end
   end
