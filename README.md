@@ -51,7 +51,6 @@ In the CCU interface you can work with CP Codes and ARLs.
 When removing or invalidating a CP Code you can provide the following optional arguments:
 
 - *--domain*, *-d*: Specify if you want to work with *production* or *staging*. This is a completely optional argument and usually you don't need to set it.
-- *--emails*, *-e*: Specify the list of email used by Akamai to send notifications about the purge request.
 
 ### ARL
 
@@ -131,12 +130,12 @@ Remember to init the AkamaiApi gem with your login credentials. You can set your
 - action: symbol or string. It should be *remove* or *invalidate*. See the CLI documentation for more details
 - type: symbol or string. It should be *arl* or *cpcode*. Use arl to purge a list of urls, and cpcodes to purge a list of cp codes
 - items: the list of the resources to clean
-- args: additional options (email, domain)
+- args: additional options (domain)
 
 e.g.
 
 ```ruby
-    AkamaiApi::Ccu.purge :remove, :arl, ['http://www.foo.com/a.txt'], :email => ['foo@foo.com']
+    AkamaiApi::Ccu.purge :remove, :arl, ['http://www.foo.com/a.txt'], :domain => 'staging'
 ```
 
 ### Helpers

@@ -66,13 +66,6 @@ module AkamaiApi
       end
     end
 
-    def add_email email, options
-      if email.present?
-        emails = Array.wrap(email).join ','
-        options << "email-notification=#{emails}"
-      end
-    end
-
     def client
       savon_args = {
         :wsdl => File.expand_path('../../../wsdls/ccuapi.wsdl', __FILE__),
