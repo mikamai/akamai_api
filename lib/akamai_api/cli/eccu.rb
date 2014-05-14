@@ -43,6 +43,7 @@ module AkamaiApi
           :notes => options[:notes],
           :property_exact_match => !options[:no_exact_match],
           :property_type => options[:property_type],
+          :emails => options[:emails]
         }
         id = AkamaiApi::EccuRequest.publish_file property, source, args
         puts 'Request correctly published. Details:'
