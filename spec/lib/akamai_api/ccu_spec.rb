@@ -34,6 +34,14 @@ module AkamaiApi
         end
       end
 
+      it 'returns a different response when data are invalid' do
+        VCR.use_cassette "ccu/#{method}/forbidden" do
+          response = Ccu.send(method, items)
+          expect(response).to be_a CcuResponse
+          expect(response.code).to eq 403
+        end
+      end
+
       describe 'when data are correct' do
         it 'returns the expected response code' do
           VCR.use_cassette "ccu/#{method}/successful" do
@@ -70,24 +78,28 @@ module AkamaiApi
     context '#invalidate_arl' do
       let(:method) { 'invalidate_arl' }
       let(:items) { ['http://www.foo.bar/t.txt'] }
+
       it_should_behave_like 'purge helper'
     end
 
     context '#invalidate_cpcode' do
       let(:method) { 'invalidate_cpcode' }
       let(:items) { ['12345'] }
+
       it_should_behave_like 'purge helper'
     end
 
     context '#remove_arl' do
       let(:method) { 'remove_arl' }
       let(:items) { ['http://www.foo.bar/t.txt'] }
+
       it_should_behave_like 'purge helper'
     end
 
     context '#remove_cpcode' do
       let(:method) { 'remove_cpcode' }
       let(:items) { ['12345'] }
+
       it_should_behave_like 'purge helper'
     end
 

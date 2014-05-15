@@ -30,10 +30,7 @@ module AkamaiApi
 
       auth = { username: AkamaiApi.config[:auth].first, password: AkamaiApi.config[:auth].last }
       query = { type: type, action: action, objects: Array.wrap(items) }
-      if args.key?(:domain)
-        domain = args.delete(:domain)
-        query[:domain] = domain if domain
-      end
+      add_domain(args.delete(:domain), query)
       response = HTTParty.post 'https://api.ccu.akamai.com/ccu/v2/queues/default', {
         basic_auth: auth,
         body: query.to_json,
@@ -64,17 +61,6 @@ module AkamaiApi
         end
         options << "domain=#{domain}"
       end
-    end
-
-    def client
-      savon_args = {
-        :wsdl => File.expand_path('../../../wsdls/ccuapi.wsdl', __FILE__),
-        :namespaces => {
-          'xmlns:soapenc' => 'http://schemas.xmlsoap.org/soap/encoding/'
-        },
-        :log => AkamaiApi.config[:log]
-      }
-      Savon.client savon_args
     end
   end
 end
