@@ -14,6 +14,14 @@ module AkamaiApi
       @body ||= OpenStruct.new(raw_body[:purge_request_response][:return])
     end
 
+    def described_by
+      raw_body['describedBy']
+    end
+
+    def title
+      raw_body['title']
+    end
+
     def time_to_wait
       raw_body['pingAfterSeconds']
     end

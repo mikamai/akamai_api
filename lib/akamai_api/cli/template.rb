@@ -23,17 +23,33 @@ module AkamaiApi
       end
 
       def self.ccu_response response
+        if response.code == 201
+          ccu_successful_response response
+        else
+          ccu_error_response response
+        end
+      end
+
+      def self.ccu_error_response response
+        [
+          "There was an error processing your request:",
+          "\t* Result: #{response.code} - #{response.title} (#{response.message})",
+          "\t* Described by: #{response.described_by}"
+        ].join "\n"
+      end
+
+      def self.ccu_successful_response response
         result = [
-          "#### Response Details ####",
-          "* Purge ID: #{response.purge_id}",
-          "* Support ID: #{response.support_id}",
-          "* Result: #{response.code} - #{response.message}",
+          "Request has been submitted successfully:",
+          "\t* Result: #{response.code} - #{response.message}",
+          "\t* Purge ID: #{response.purge_id}",
+          "\t* Support ID: #{response.support_id}"
         ]
         if response.time_to_wait
           result.concat [
-            "* Time to wait before check: #{response.time_to_wait} secs.",
-            "* Estimated time: #{response.estimated_time} secs.",
-            "* Progress URI: #{response.uri}"
+            "\t* Time to wait before check: #{response.time_to_wait} secs.",
+            "\t* Estimated time: #{response.estimated_time} secs.",
+            "\t* Progress URI: #{response.uri}"
           ]
         end
         result.join "\n"
