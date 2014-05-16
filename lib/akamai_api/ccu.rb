@@ -1,5 +1,6 @@
 require 'httparty'
 require 'active_support/core_ext'
+require 'akamai_api/ccu/purge_request'
 
 module AkamaiApi
   module Ccu
@@ -25,42 +26,12 @@ module AkamaiApi
     end
 
     def purge action, type, items, args = {}
-      validate_action action
-      validate_type type
-
-      auth = { username: AkamaiApi.config[:auth].first, password: AkamaiApi.config[:auth].last }
-      query = { type: type, action: action, objects: Array.wrap(items) }
-      add_domain(args.delete(:domain), query)
-      response = HTTParty.post 'https://api.ccu.akamai.com/ccu/v2/queues/default', {
-        basic_auth: auth,
-        body: query.to_json,
-        headers: { 'Content-Type' => 'application/json' }
-      }
-      raise Unauthorized if response.code == 401
-      CcuResponse.new JSON.parse(response.body), items
+      request = PurgeRequest.new action, type, domain: args[:domain]
+      request.execute items
     end
 
-    private
-
-    def validate_action action
-      unless %w[invalidate remove].include? action.to_s
-        raise UnrecognizedOption, "Unknown type '#{action}' (only 'remove' and 'invalidate' are allowed)"
-      end
-    end
-
-    def validate_type type
-      unless %w[cpcode arl].include? type.to_s
-        raise UnrecognizedOption, "Unknown type '#{type}' (only 'cpcode' and 'arl' are allowed)"
-      end
-    end
-
-    def add_domain domain, options
-      if domain.present?
-        unless %w[production staging].include? domain.to_s
-          raise "Unknown domain type '#{domain}' (only :production and :staging are allowed)"
-        end
-        options << "domain=#{domain}"
-      end
+    def self.auth
+      { username: AkamaiApi.config[:auth].first, password: AkamaiApi.config[:auth].last }
     end
   end
 end

@@ -2,7 +2,7 @@
 http_interactions:
 - request:
     method: post
-    uri: https://USERNAME:PASSWORD@api.ccu.akamai.com/ccu/v2/queues/default
+    uri: https://USERNAME:PASSWORD@api.ccu.akamai.com/ccu/v2/queues/default/
     body:
       encoding: UTF-8
       string: '{"type":"arl","action":"remove","objects":["http://www.foo.bar/t.txt"]}'
@@ -31,6 +31,6 @@ http_interactions:
       string: '{"supportId": "17PY1400136670456141-247956576", "title": "unauthorized
         arl", "httpStatus": 403, "detail": "http://www.foo.bar/t.txt", "describedBy":
         "https://api.ccu.akamai.com/ccu/v2/errors/unauthorized-arl"}'
-    http_version: 
+    http_version:
   recorded_at: Thu, 15 May 2014 06:51:12 GMT
 recorded_with: VCR 2.9.0
