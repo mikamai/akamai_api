@@ -1,17 +1,12 @@
 require 'ostruct'
 require 'active_support/core_ext/module/delegation'
 
-module AkamaiApi
-  class CcuResponse
-    attr_reader :raw_body, :requested_items
+module AkamaiApi::Ccu
+  class PurgeResponse
+    attr_reader :raw_body
 
-    def initialize(body, requested_items)
+    def initialize(body)
       @raw_body = body
-      @requested_items = requested_items
-    end
-
-    def body
-      @body ||= OpenStruct.new(raw_body[:purge_request_response][:return])
     end
 
     def described_by

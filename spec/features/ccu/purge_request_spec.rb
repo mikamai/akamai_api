@@ -4,9 +4,9 @@ describe 'Given I request to purge an asset' do
   subject { AkamaiApi::Ccu }
 
   shared_examples 'purge helper' do
-    it 'responds with a CcuResponse object' do
+    it 'responds with a PurgeResponse object' do
       VCR.use_cassette "ccu/#{method}/successful" do
-        subject.send(method, items).should be_a AkamaiApi::CcuResponse
+        subject.send(method, items).should be_a AkamaiApi::Ccu::PurgeResponse
       end
     end
 
@@ -19,7 +19,7 @@ describe 'Given I request to purge an asset' do
     it 'returns a different response when data are invalid' do
       VCR.use_cassette "ccu/#{method}/forbidden" do
         response = subject.send(method, items)
-        expect(response).to be_a AkamaiApi::CcuResponse
+        expect(response).to be_a AkamaiApi::Ccu::PurgeResponse
         expect(response.code).to eq 403
       end
     end

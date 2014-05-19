@@ -46,7 +46,7 @@ module AkamaiApi::Ccu
 
     def parse_response response
       raise AkamaiApi::Ccu::Unauthorized if response.code == 401
-      AkamaiApi::CcuResponse.new response.parsed_response, []
+      AkamaiApi::Ccu::PurgeResponse.new response.parsed_response
     end
 
     def raise_unrecognized_action bad_action
