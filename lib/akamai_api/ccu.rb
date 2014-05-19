@@ -1,6 +1,8 @@
 require 'httparty'
 require 'active_support/core_ext'
 require 'akamai_api/ccu/purge_request'
+require 'akamai_api/ccu/status_response'
+require 'akamai_api/ccu/status_request'
 
 module AkamaiApi
   module Ccu
@@ -28,6 +30,10 @@ module AkamaiApi
     def purge action, type, items, args = {}
       request = PurgeRequest.new action, type, domain: args[:domain]
       request.execute items
+    end
+
+    def status
+      StatusRequest.new.execute
     end
 
     def self.auth

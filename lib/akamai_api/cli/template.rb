@@ -22,6 +22,15 @@ module AkamaiApi
         "#{cpcode.code}\t#{cpcode.description}"
       end
 
+      def self.ccu_status_response response
+        [
+          "Status has been successfully received:",
+          "\t* Result: #{response.code} - #{response.message}",
+          "\t* Queue Length: #{response.queue_length}",
+          "\t* Support ID: #{response.support_id}"
+        ].join "\n"
+      end
+
       def self.ccu_response response
         if response.code == 201
           ccu_successful_response response

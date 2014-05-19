@@ -1,0 +1,34 @@
+---
+http_interactions:
+- request:
+    method: get
+    uri: https://USERNAME:PASSWORD@api.ccu.akamai.com/ccu/v2/queues/default/
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers: {}
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Date:
+      - Mon, 19 May 2014 12:18:42 GMT
+      Server:
+      - Apache
+      Content-Length:
+      - '161'
+      Allow:
+      - GET, HEAD, POST
+      Vary:
+      - Authorization
+      Content-Type:
+      - application/json
+    body:
+      encoding: UTF-8
+      string: '{"supportId": "12345678901234567890-123456789", "httpStatus": 200,
+        "detail": "The queue may take a minute to reflect new or removed requests.",
+        "queueLength": 0}'
+    http_version:
+  recorded_at: Mon, 19 May 2014 12:18:43 GMT
+recorded_with: VCR 2.9.0
