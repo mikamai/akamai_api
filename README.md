@@ -38,6 +38,7 @@ In the CCU interface you can work with CP Codes and ARLs.
     akamai_api ccu cpcode          # CP Code CCU actions
     akamai_api ccu help [COMMAND]  # Describe subcommands or one specific subcommand
     akamai_api ccu arl             # ARL CCU actions
+    akamai_api ccu status          # Show the CCU Status
 ```
 
 ### CP Code
@@ -118,6 +119,16 @@ Remember to init the AkamaiApi gem with your login credentials. You can set your
 - EccuRequest: model representing an ECCU request.
 
 ## Ccu
+
+### ::status
+
+It returns an `AkamaiApi::Ccu::StatusResponse` describing the status of the Akamai CCU queue.
+
+e.g.
+
+```ruby
+    AkamaiApi::Ccu.status
+```
 
 ### ::purge
 
