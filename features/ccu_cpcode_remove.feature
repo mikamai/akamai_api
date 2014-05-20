@@ -1,10 +1,10 @@
-Feature: akamai_api ccu arl remove
-  In order to remove ARLs
+Feature: akamai_api ccu cpcode remove
+  In order to remove CPCodes
   As a CLI user
 
   @vcr
   Scenario: invalid credentials
-    When I run `akamai_api ccu arl remove http://www.foo.com/bar.txt -u foo -p bar`
+    When I run `akamai_api ccu cpcode remove 12345 -u foo -p bar`
     Then the output should contain:
       """
       Your login credentials are invalid.
@@ -12,23 +12,23 @@ Feature: akamai_api ccu arl remove
 
   @vcr
   Scenario: invalid item
-    When I run `akamai_api ccu arl remove http://www.foo.com/bar.txt`
+    When I run `akamai_api ccu cpcode remove 12345`
     Then the output should contain:
       """
       There was an error processing your request:
       """
     And the output should contain:
       """
-      * Result: 403 - unauthorized arl (http://www.foo.com/bar.txt)
+      * Result: 403 - unauthorized cpcode (12345)
       """
     And the output should contain:
       """
-      * Described by: https://api.ccu.akamai.com/ccu/v2/errors/unauthorized-arl
+      * Described by: https://api.ccu.akamai.com/ccu/v2/errors/unauthorized-cpcode
       """
 
   @vcr
   Scenario: single item
-    When I run `akamai_api ccu arl remove http://www.foo.com/bar.txt`
+    When I run `akamai_api ccu cpcode remove 12345`
     Then the output should contain:
       """
       Purge request successfully submitted:
@@ -56,7 +56,7 @@ Feature: akamai_api ccu arl remove
 
   @vcr
   Scenario: multiple items
-    When I run `akamai_api ccu arl remove http://www.foo.com/bar.txt http://www.foo.com/baz.txt`
+    When I run `akamai_api ccu cpcode remove 12345 12346`
     Then the output should contain:
       """
       Purge request successfully submitted:

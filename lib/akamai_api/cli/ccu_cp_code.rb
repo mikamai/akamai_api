@@ -35,7 +35,7 @@ module AkamaiApi
           puts AkamaiApi::Cli::Template.ccu_response res
           puts '------------'
         rescue AkamaiApi::Ccu::Unauthorized
-          puts "Your login credentials are invalid or the CPCode you entered belongs to someone else"
+          puts "Your login credentials are invalid."
         end
       end
     end

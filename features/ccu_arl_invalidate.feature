@@ -1,10 +1,10 @@
-Feature: akamai_api ccu arl remove
+Feature: akamai_api ccu arl invalidate
   In order to remove ARLs
   As a CLI user
 
   @vcr
   Scenario: invalid credentials
-    When I run `akamai_api ccu arl remove http://www.foo.com/bar.txt -u foo -p bar`
+    When I run `akamai_api ccu arl invalidate http://www.foo.com/bar.txt -u foo -p bar`
     Then the output should contain:
       """
       Your login credentials are invalid.
@@ -12,7 +12,7 @@ Feature: akamai_api ccu arl remove
 
   @vcr
   Scenario: invalid item
-    When I run `akamai_api ccu arl remove http://www.foo.com/bar.txt`
+    When I run `akamai_api ccu arl invalidate http://www.foo.com/bar.txt`
     Then the output should contain:
       """
       There was an error processing your request:
@@ -28,7 +28,7 @@ Feature: akamai_api ccu arl remove
 
   @vcr
   Scenario: single item
-    When I run `akamai_api ccu arl remove http://www.foo.com/bar.txt`
+    When I run `akamai_api ccu arl invalidate http://www.foo.com/bar.txt`
     Then the output should contain:
       """
       Purge request successfully submitted:
@@ -56,7 +56,7 @@ Feature: akamai_api ccu arl remove
 
   @vcr
   Scenario: multiple items
-    When I run `akamai_api ccu arl remove http://www.foo.com/bar.txt http://www.foo.com/baz.txt`
+    When I run `akamai_api ccu arl invalidate http://www.foo.com/bar.txt http://www.foo.com/baz.txt`
     Then the output should contain:
       """
       Purge request successfully submitted:
