@@ -6,10 +6,10 @@ require 'webmock/rspec'
 require 'vcr'
 
 VCR.configure do |c|
-  c.cassette_library_dir = 'spec/cassettes'
+  c.cassette_library_dir = 'cassettes'
   c.hook_into :webmock
   c.default_cassette_options = {
-    record: :once
+    record: :none
   }
   c.configure_rspec_metadata!
   c.after_http_request do |request|
