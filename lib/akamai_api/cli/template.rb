@@ -23,40 +23,50 @@ module AkamaiApi
       end
 
       def self.ccu_status_response response
-        rows = if response.is_a? AkamaiApi::Ccu::StatusResponse
-                 output = [
-                   "Status has been successfully received:",
-                   "\t* Result: #{response.code} - #{response.message}",
-                   "\t* Queue Length: #{response.queue_length}",
-                   "\t* Support ID: #{response.support_id}"
-                 ]
-               elsif response.is_a? AkamaiApi::Ccu::PurgeStatus::SuccessfulResponse
-                 output = [
-                   "Status has been successfully received:",
-                   "\t* Result: #{response.code} - #{response.status}",
-                   "\t* Purge ID: #{response.purge_id}",
-                   "\t* Support ID: #{response.support_id}",
-                   "\t* Submitted by '#{response.submitted_by}' on #{response.submitted_at}"
-                 ]
-                 if response.completed_at
-                   output << "\t* Completed on: #{response.completed_at}"
-                 else
-                   output.concat [
-                     "\t* Estimated time: #{response.estimated_time} secs.",
-                     "\t* Queue length: #{response.queue_length}",
-                     "\t* Time to wait before next check: #{response.time_to_wait} secs."
-                   ]
-                 end
-               elsif response.is_a? AkamaiApi::Ccu::PurgeStatus::NotFoundResponse
-                 output = [
-                   "No request found with the given data:",
-                   "\t* Result: #{response.code} - #{response.message}",
-                   "\t* Purge ID: #{response.purge_id}",
-                   "\t* Support ID: #{response.support_id}",
-                   "\t* Time to wait before next check: #{response.time_to_wait} secs."
-                 ]
-               end
-        rows.join "\n"
+        [
+          "Status has been successfully received:",
+          "\t* Result: #{response.code} - #{response.message}",
+          "\t* Queue Length: #{response.queue_length}",
+          "\t* Support ID: #{response.support_id}"
+        ].join "\n"
+      end
+
+      def self.ccu_purge_status_response response
+        if response.is_a? AkamaiApi::Ccu::PurgeStatus::SuccessfulResponse
+          ccu_purge_status_successful_response response
+        else
+          ccu_purge_status_not_found_response response
+        end
+      end
+
+      def self.ccu_purge_status_successful_response response
+        output = [
+          "Status has been successfully received:",
+          "\t* Result: #{response.code} - #{response.status}",
+          "\t* Purge ID: #{response.purge_id}",
+          "\t* Support ID: #{response.support_id}",
+          "\t* Submitted by '#{response.submitted_by}' on #{response.submitted_at}"
+        ]
+        if response.completed_at
+          output << "\t* Completed on: #{response.completed_at}"
+        else
+          output.concat [
+            "\t* Estimated time: #{response.estimated_time} secs.",
+            "\t* Queue length: #{response.queue_length}",
+            "\t* Time to wait before next check: #{response.time_to_wait} secs."
+          ]
+        end
+        output.join "\n"
+      end
+
+      def self.ccu_purge_status_not_found_response response
+        [
+          "No request found with the given data:",
+          "\t* Result: #{response.code} - #{response.message}",
+          "\t* Purge ID: #{response.purge_id}",
+          "\t* Support ID: #{response.support_id}",
+          "\t* Time to wait before next check: #{response.time_to_wait} secs."
+        ].join "\n"
       end
 
       def self.ccu_response response
