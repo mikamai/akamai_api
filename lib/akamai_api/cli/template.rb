@@ -23,40 +23,38 @@ module AkamaiApi
       end
 
       def self.ccu_status_response response
-        output = ["Status has been successfully received:"]
         rows = if response.is_a? AkamaiApi::Ccu::StatusResponse
-                 output.concat [
+                 output = [
+                   "Status has been successfully received:",
                    "\t* Result: #{response.code} - #{response.message}",
                    "\t* Queue Length: #{response.queue_length}",
                    "\t* Support ID: #{response.support_id}"
                  ]
-               elsif response.is_a? AkamaiApi::Ccu::PurgeStatusResponse
-                 if response.submitted_at
-                   output.concat [
-                     "\t* Result: #{response.code} - #{response.status}",
-                     "\t* Purge ID: #{response.purge_id}",
-                     "\t* Support ID: #{response.support_id}",
-                     "\t* Submitted by '#{response.submitted_by}' on #{response.submitted_at}"
-                   ]
-                   if response.completed_at
-                     output.concat [
-                       "\t* Completed on: #{response.completed_at}"
-                     ]
-                   else
-                     output.concat [
-                       "\t* Estimated time: #{response.estimated_time} secs.",
-                       "\t* Queue length: #{response.queue_length}",
-                       "\t* Time to wait before next check: #{response.time_to_wait} secs."
-                     ]
-                   end
+               elsif response.is_a? AkamaiApi::Ccu::PurgeStatus::SuccessfulResponse
+                 output = [
+                   "Status has been successfully received:",
+                   "\t* Result: #{response.code} - #{response.status}",
+                   "\t* Purge ID: #{response.purge_id}",
+                   "\t* Support ID: #{response.support_id}",
+                   "\t* Submitted by '#{response.submitted_by}' on #{response.submitted_at}"
+                 ]
+                 if response.completed_at
+                   output << "\t* Completed on: #{response.completed_at}"
                  else
                    output.concat [
-                     "\t* Result: #{response.code} - #{response.message}",
-                     "\t* Purge ID: #{response.purge_id}",
-                     "\t* Support ID: #{response.support_id}",
+                     "\t* Estimated time: #{response.estimated_time} secs.",
+                     "\t* Queue length: #{response.queue_length}",
                      "\t* Time to wait before next check: #{response.time_to_wait} secs."
                    ]
                  end
+               elsif response.is_a? AkamaiApi::Ccu::PurgeStatus::NotFoundResponse
+                 output = [
+                   "No request found with the given data:",
+                   "\t* Result: #{response.code} - #{response.message}",
+                   "\t* Purge ID: #{response.purge_id}",
+                   "\t* Support ID: #{response.support_id}",
+                   "\t* Time to wait before next check: #{response.time_to_wait} secs."
+                 ]
                end
         rows.join "\n"
       end

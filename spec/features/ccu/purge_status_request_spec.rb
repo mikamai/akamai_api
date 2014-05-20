@@ -7,7 +7,7 @@ describe "Given I request a purge status" do
     let(:progress_uri) { '/ccu/v2/purges/12345678-1234-5678-1234-123456789012' }
 
     it "responds with a PurgeStatusResponse object" do
-      expect(subject.status progress_uri).to be_a AkamaiApi::Ccu::PurgeStatusResponse
+      expect(subject.status progress_uri).to be_a AkamaiApi::Ccu::PurgeStatus::SuccessfulResponse
     end
   end
 
@@ -25,7 +25,7 @@ describe "Given I request a purge status" do
 
   context "when the given progress uri is invalid", vcr: { cassette_name: "ccu/purge_status/invalid" } do
     it "returns a correct response" do
-      expect(subject.status 'foobarbaz').to be_a AkamaiApi::Ccu::PurgeStatusResponse
+      expect(subject.status 'foobarbaz').to be_a AkamaiApi::Ccu::PurgeStatus::NotFoundResponse
     end
   end
 end

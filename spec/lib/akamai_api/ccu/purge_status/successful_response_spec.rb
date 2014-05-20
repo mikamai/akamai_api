@@ -1,21 +1,22 @@
 require 'spec_helper'
 
-describe AkamaiApi::Ccu::PurgeStatusResponse do
-  subject do
-    AkamaiApi::Ccu::PurgeStatusResponse.new({
-                                              'originalEstimatedSeconds' => 480,
-                                              'progressUri'              => '/ccu/v2/purges/12345678-1234-5678-1234-123456789012',
-                                              'originalQueueLength'      => 6,
-                                              'purgeId'                  => '12345678-1234-5678-1234-123456789012',
-                                              'supportId'                => '12345678901234567890-123456789',
-                                              'httpStatus'               => 200,
-                                              'completionTime'           => '2014-02-19T22:16:20Z',
-                                              'submittedBy'              => 'test1',
-                                              'purgeStatus'              => 'In-Progress',
-                                              'submissionTime'           => '2014-02-19T21:16:20Z',
-                                              'pingAfterSeconds'         => 60
-                                            })
+describe AkamaiApi::Ccu::PurgeStatus::SuccessfulResponse do
+  let(:raw) do
+    {
+      'originalEstimatedSeconds' => 480,
+      'progressUri'              => '/ccu/v2/purges/12345678-1234-5678-1234-123456789012',
+      'originalQueueLength'      => 6,
+      'purgeId'                  => '12345678-1234-5678-1234-123456789012',
+      'supportId'                => '12345678901234567890-123456789',
+      'httpStatus'               => 200,
+      'completionTime'           => '2014-02-19T22:16:20Z',
+      'submittedBy'              => 'test1',
+      'purgeStatus'              => 'In-Progress',
+      'submissionTime'           => '2014-02-19T21:16:20Z',
+      'pingAfterSeconds'         => 60
+    }
   end
+  subject { AkamaiApi::Ccu::PurgeStatus::SuccessfulResponse.new raw }
 
   it '#estimated_time returns estimatedSeconds attribute' do
     expect(subject.estimated_time).to eq 480
@@ -62,11 +63,6 @@ describe AkamaiApi::Ccu::PurgeStatusResponse do
 
   it '#status returns purgeStatus attribute' do
     expect(subject.status).to eq 'In-Progress'
-  end
-
-  it '#message returns detail attribute' do
-    subject.raw_body['detail'] = 'asd'
-    expect(subject.message).to eq 'asd'
   end
 
   describe '#submitted_at' do

@@ -66,7 +66,7 @@ describe AkamaiApi::Ccu do
     context "when a progress uri is passed as argument" do
       it "delegates to PurgeStatus request instance" do
         fake_instance = double
-        expect(AkamaiApi::Ccu::PurgeStatusRequest).to receive(:new).and_return fake_instance
+        expect(AkamaiApi::Ccu::PurgeStatus::Request).to receive(:new).and_return fake_instance
         expect(fake_instance).to receive(:execute).with('foo').and_return 'asd'
         expect(subject.status 'foo').to eq 'asd'
       end

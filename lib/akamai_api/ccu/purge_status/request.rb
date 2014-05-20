@@ -1,5 +1,5 @@
-module AkamaiApi::Ccu
-  class PurgeStatusRequest
+module AkamaiApi::Ccu::PurgeStatus
+  class Request
     include HTTParty
     format :json
     base_uri 'https://api.ccu.akamai.com'
@@ -17,7 +17,7 @@ module AkamaiApi::Ccu
 
     def parse_response response
       raise AkamaiApi::Ccu::Unauthorized if response.code == 401
-      AkamaiApi::Ccu::PurgeStatusResponse.new response.parsed_response
+      AkamaiApi::Ccu::PurgeStatus.build_response response.parsed_response
     end
 
     def normalize_progress_uri progress_uri

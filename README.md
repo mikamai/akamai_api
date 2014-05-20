@@ -156,7 +156,7 @@ When no argument is given, this command will return a `AkamaiApi::Ccu::StatusRes
     AkamaiApi::Ccu.status
 ```
 
-When you pass a `progress_uri` or a `purge_id`, this command will return a `AkamaiApi::Ccu::PurgeStatusResponse` object describing the status of the given Akamai CCU request. E.g.
+When you pass a `progress_uri` or a `purge_id`, this command will check the given Akamai CCU request. It will request a `AkamaiApi::Ccu::PurgeStatus::SuccessfulResponse` object when a purge request is found, or a `Akamai::Ccu::PurgeStatus::NotFoundResponse` when no request can be found. E.g.
 
 ```ruby
     AkamaiApi::Ccu.status 'foobarbaz'
