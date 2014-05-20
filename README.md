@@ -237,4 +237,4 @@ You can specify the following optional arguments in args: file_name, notes, vers
     })
   ```
 
-- Run specs with `thor spec` or use `guard`
+- Run specs using `guard`. Alternatively you can execute the specs with `thor spec` and cucumber features with `cucumber`

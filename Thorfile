@@ -27,4 +27,9 @@ class Default < Thor
   def spec
     exec "rspec --color --format=documentation spec"
   end
+
+  desc "features", "Run Cucumber features"
+  def features
+    exec "cucumber"
+  end
 end
