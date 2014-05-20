@@ -35,7 +35,7 @@ describe AkamaiApi::Ccu::PurgeStatus::NotFoundResponse do
   end
 
   it '#message returns detail attribute' do
-    subject.raw_body['detail'] = 'asd'
+    raw['detail'] = 'asd'
     expect(subject.message).to eq 'asd'
   end
 end

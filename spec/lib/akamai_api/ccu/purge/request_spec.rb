@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe AkamaiApi::Ccu::PurgeRequest do
+describe AkamaiApi::Ccu::Purge::Request do
   it "includes httparty" do
     expect(subject.class.included_modules).to include HTTParty
   end
@@ -118,7 +118,7 @@ describe AkamaiApi::Ccu::PurgeRequest do
     it "returns a response built with the resulted json" do
       fake_response = double code: 201, parsed_response: { a: 'b' }
       subject.class.stub post: fake_response
-      expect(subject.execute(sample_arl).raw_body).to eq a: 'b'
+      expect(subject.execute(sample_arl).raw).to eq a: 'b'
     end
   end
 end

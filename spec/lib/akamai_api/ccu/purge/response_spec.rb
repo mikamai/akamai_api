@@ -1,19 +1,20 @@
 require 'spec_helper'
 
-describe AkamaiApi::Ccu::PurgeResponse do
-  subject do
-    AkamaiApi::Ccu::PurgeResponse.new({
-                                        'describedBy' => 'foo',
-                                        'title' => 'bar',
-                                        'pingAfterSeconds' => 100,
-                                        'purgeId' => '120',
-                                        'supportId' => '130',
-                                        'detail' => 'baz',
-                                        'httpStatus' => 201,
-                                        'estimatedSeconds' => 90,
-                                        'progressUri' => 'http://asd.com'
-                                      })
+describe AkamaiApi::Ccu::Purge::Response do
+  let(:raw) do
+    {
+      'describedBy' => 'foo',
+      'title' => 'bar',
+      'pingAfterSeconds' => 100,
+      'purgeId' => '120',
+      'supportId' => '130',
+      'detail' => 'baz',
+      'httpStatus' => 201,
+      'estimatedSeconds' => 90,
+      'progressUri' => 'http://asd.com'
+    }
   end
+  subject { AkamaiApi::Ccu::Purge::Response.new raw }
 
   it '#described_by returns the describedBy attribute' do
     expect(subject.described_by).to eq 'foo'

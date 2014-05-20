@@ -32,10 +32,10 @@ describe AkamaiApi::Ccu do
   end
 
   describe '#purge' do
-    it 'delegates to PurgeRequest' do
+    it 'delegates to Purge::Request' do
       fake_request = double
       expect(fake_request).to receive(:execute).with('baz').and_return 'quiz'
-      expect(AkamaiApi::Ccu::PurgeRequest).to receive(:new).with('foo', 'bar', domain: 'asd').
+      expect(AkamaiApi::Ccu::Purge::Request).to receive(:new).with('foo', 'bar', domain: 'asd').
                                                and_return fake_request
       expect(subject.purge 'foo', 'bar', 'baz', domain: 'asd').to eq 'quiz'
     end
@@ -58,7 +58,7 @@ describe AkamaiApi::Ccu do
   describe '#status' do
     context "when no argument is given" do
       it "delegates to Status request instance" do
-        expect(AkamaiApi::Ccu::StatusRequest).to receive(:new).and_return double execute: 'foo'
+        expect(AkamaiApi::Ccu::Status::Request).to receive(:new).and_return double execute: 'foo'
         expect(subject.status).to eq 'foo'
       end
     end

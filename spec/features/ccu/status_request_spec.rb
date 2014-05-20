@@ -3,7 +3,7 @@ require 'spec_helper'
 describe 'Given I request the current status' do
   context 'and given my login credentials are correct', vcr: { cassette_name: 'ccu/status/successful' } do
     it 'I receive a successful response object' do
-      expect(AkamaiApi::Ccu.status).to be_a AkamaiApi::Ccu::StatusResponse
+      expect(AkamaiApi::Ccu.status).to be_a AkamaiApi::Ccu::Status::Response
     end
   end
 

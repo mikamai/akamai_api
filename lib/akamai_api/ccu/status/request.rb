@@ -1,5 +1,5 @@
-module AkamaiApi::Ccu
-  class StatusRequest
+module AkamaiApi::Ccu::Status
+  class Request
     include HTTParty
     format :json
     base_uri 'https://api.ccu.akamai.com/ccu/v2/queues/default'
@@ -17,7 +17,7 @@ module AkamaiApi::Ccu
 
     def parse_response response
       raise AkamaiApi::Ccu::Unauthorized if response.code == 401
-      AkamaiApi::Ccu::StatusResponse.new response.parsed_response
+      AkamaiApi::Ccu::Status::Response.new response.parsed_response
     end
   end
 end

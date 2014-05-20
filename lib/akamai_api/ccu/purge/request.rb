@@ -1,5 +1,5 @@
-module AkamaiApi::Ccu
-  class PurgeRequest
+module AkamaiApi::Ccu::Purge
+  class Request
     include HTTParty
     format :json
     base_uri 'https://api.ccu.akamai.com/ccu/v2/queues/default'
@@ -45,20 +45,20 @@ module AkamaiApi::Ccu
     private
 
     def parse_response response
-      raise AkamaiApi::Ccu::Unauthorized if response.code == 401
-      AkamaiApi::Ccu::PurgeResponse.new response.parsed_response
+      raise ::AkamaiApi::Ccu::Unauthorized if response.code == 401
+      Response.new response.parsed_response
     end
 
     def raise_unrecognized_action bad_action
-      raise UnrecognizedOption, "Unknown action '#{bad_action}' (allowed values: invalidate, remove)"
+      raise ::AkamaiApi::Ccu::UnrecognizedOption, "Unknown action '#{bad_action}' (allowed values: invalidate, remove)"
     end
 
     def raise_unrecognized_type bad_type
-      raise UnrecognizedOption, "Unknown type '#{bad_type}' (allowed values: arl, cpcode)"
+      raise ::AkamaiApi::Ccu::UnrecognizedOption, "Unknown type '#{bad_type}' (allowed values: arl, cpcode)"
     end
 
     def raise_unrecognized_domain bad_domain
-      raise UnrecognizedOption, "Unknown domain '#{bad_domain}' (allowed_values: production, staging)"
+      raise ::AkamaiApi::Ccu::UnrecognizedOption, "Unknown domain '#{bad_domain}' (allowed_values: production, staging)"
     end
 
     def valid_action? action

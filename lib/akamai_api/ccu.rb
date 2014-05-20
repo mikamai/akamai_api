@@ -1,9 +1,8 @@
 require 'httparty'
 require 'active_support/core_ext'
-require 'akamai_api/ccu/purge_response'
-require 'akamai_api/ccu/purge_request'
-require 'akamai_api/ccu/status_response'
-require 'akamai_api/ccu/status_request'
+require 'akamai_api/ccu/response'
+require 'akamai_api/ccu/purge'
+require 'akamai_api/ccu/status'
 require 'akamai_api/ccu/purge_status'
 
 module AkamaiApi
@@ -30,7 +29,7 @@ module AkamaiApi
     end
 
     def purge action, type, items, args = {}
-      request = PurgeRequest.new action, type, domain: args[:domain]
+      request = Purge::Request.new action, type, domain: args[:domain]
       request.execute items
     end
 
@@ -38,7 +37,7 @@ module AkamaiApi
       if progress_uri
         PurgeStatus::Request.new.execute progress_uri
       else
-        StatusRequest.new.execute
+        Status::Request.new.execute
       end
     end
 

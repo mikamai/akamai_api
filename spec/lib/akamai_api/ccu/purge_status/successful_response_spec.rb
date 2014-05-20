@@ -52,7 +52,7 @@ describe AkamaiApi::Ccu::PurgeStatus::SuccessfulResponse do
     end
 
     it 'can return nil' do
-      subject.raw_body['completionTime'] = nil
+      raw['completionTime'] = nil
       expect(subject.completed_at).to be_nil
     end
   end
@@ -71,7 +71,7 @@ describe AkamaiApi::Ccu::PurgeStatus::SuccessfulResponse do
     end
 
     it 'can return nil' do
-      subject.raw_body['submissionTime'] = nil
+      raw['submissionTime'] = nil
       expect(subject.submitted_at).to be_nil
     end
 
