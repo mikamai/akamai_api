@@ -18,7 +18,7 @@ module AkamaiApi
           puts AkamaiApi::Cli::Template.ccu_purge_status_response res
         end
         puts '------------'
-      rescue AkamaiApi::Ccu::Unauthorized
+      rescue AkamaiApi::Unauthorized
         puts 'Your login credentials are invalid.'
       end
     end

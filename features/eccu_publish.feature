@@ -78,7 +78,7 @@ Feature: akamai_api eccu publish
       """
     And the output should contain:
       """
-      * Property: www.foo.com (hostheader)
+      * Property: foo.com (hostheader)
       """
     And the output should contain:
       """
