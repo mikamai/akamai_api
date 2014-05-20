@@ -10,7 +10,6 @@ module AkamaiApi
     extend self
 
     class UnrecognizedOption < StandardError; end
-    class Unauthorized < StandardError; end
 
     [:invalidate, :remove].each do |action|
       send :define_method, action do |*params|

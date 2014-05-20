@@ -11,7 +11,7 @@ describe AkamaiApi::Ccu::Status::Request do
   it 'raises an unauthorized error if code is 401' do
     fake_response = double code: 401, parsed_response: {}
     expect(AkamaiApi::Ccu::Status::Request).to receive(:get).and_return fake_response
-    expect { subject.execute }.to raise_error AkamaiApi::Ccu::Unauthorized
+    expect { subject.execute }.to raise_error AkamaiApi::Unauthorized
   end
 
   it 'returns a StatusResponse' do

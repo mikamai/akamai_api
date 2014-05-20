@@ -112,7 +112,7 @@ describe AkamaiApi::Ccu::Purge::Request do
     it "raises an exception when the response code is 401" do
       fake_response = double code: 401
       subject.class.stub post: fake_response
-      expect { subject.execute sample_arl }.to raise_error AkamaiApi::Ccu::Unauthorized
+      expect { subject.execute sample_arl }.to raise_error AkamaiApi::Unauthorized
     end
 
     it "returns a response built with the resulted json" do

@@ -12,6 +12,8 @@ module AkamaiApi
           puts AkamaiApi::Cli::Template.eccu_request request
         end
         puts '------------'
+      rescue ::AkamaiApi::Unauthorized
+        puts "Your login credentials are invalid."
       end
 
       desc 'last_request', 'Print the last request made to ECCU'
@@ -23,6 +25,8 @@ module AkamaiApi
         puts '------------'
         puts AkamaiApi::Cli::Template.eccu_request request
         puts '------------'
+      rescue ::AkamaiApi::Unauthorized
+        puts "Your login credentials are invalid."
       end
 
       desc 'publish_xml path/to/request.xml john.com', 'Publish a request made in XML for the specified Digital Property (usually the Host Header)'
@@ -49,6 +53,10 @@ module AkamaiApi
         puts '------------'
         puts AkamaiApi::Cli::Template.eccu_request AkamaiApi::EccuRequest.find id, :verbose => true
         puts '------------'
+      rescue ::AkamaiApi::Unauthorized
+        puts "Your login credentials are invalid."
+      rescue Savon::SOAPFault
+        puts $!.message
       end
     end
   end

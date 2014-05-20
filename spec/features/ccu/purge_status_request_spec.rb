@@ -19,7 +19,7 @@ describe "Given I request a purge status" do
     end
 
     it "raises an error" do
-      expect { subject.status progress_uri }.to raise_error AkamaiApi::Ccu::Unauthorized
+      expect { subject.status progress_uri }.to raise_error AkamaiApi::Unauthorized
     end
   end
 

@@ -17,6 +17,9 @@ module AkamaiApi
       resp = client.call :set_notes, :message => body.to_s
       self.notes = notes
       resp.body[:set_notes_response][:success]
+    rescue Savon::HTTPError => e
+      raise ::AkamaiApi::Unauthorized if e.http.code == 401
+      raise
     end
 
     def update_email! email
@@ -29,6 +32,9 @@ module AkamaiApi
       successful = response.body[:set_status_change_email_response][:success]
       self.email = email if successful
       successful
+    rescue Savon::HTTPError => e
+      raise ::AkamaiApi::Unauthorized if e.http.code == 401
+      raise
     end
 
     def destroy
@@ -38,11 +44,17 @@ module AkamaiApi
       end
       response = client.call :delete, :message => body.to_s
       response.body[:delete_response][:success]
+    rescue Savon::HTTPError => e
+      raise ::AkamaiApi::Unauthorized if e.http.code == 401
+      raise
     end
 
     class << self
       def all_ids
         client.call(:get_ids).body[:get_ids_response][:file_ids][:file_ids]
+      rescue Savon::HTTPError => e
+        raise ::AkamaiApi::Unauthorized if e.http.code == 401
+        raise
       end
 
       def all args = {}
@@ -89,6 +101,9 @@ module AkamaiApi
           :uploaded_by => get_if_kind(response_body[:uploaded_by], String),
           :version_string => get_if_kind(response_body[:version_string], String)
         })
+      rescue Savon::HTTPError => e
+        raise ::AkamaiApi::Unauthorized if e.http.code == 401
+        raise
       end
 
       def publish_file property, file_name, args = {}
@@ -100,6 +115,9 @@ module AkamaiApi
         body = build_publish_soap_body property, content, args
         resp = client.call :upload, :message_tag => 'upload', :message => body.to_s
         resp.body[:upload_response][:file_id].to_i
+      rescue Savon::HTTPError => e
+        raise ::AkamaiApi::Unauthorized if e.http.code == 401
+        raise
       end
 
       private

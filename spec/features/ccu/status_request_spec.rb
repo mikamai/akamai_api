@@ -11,7 +11,7 @@ describe 'Given I request the current status' do
     before { AkamaiApi::Ccu.stub auth: { username: 'foo', password: 'bar' } }
 
     it 'an error is raised' do
-      expect { AkamaiApi::Ccu.status }.to raise_error AkamaiApi::Ccu::Unauthorized
+      expect { AkamaiApi::Ccu.status }.to raise_error AkamaiApi::Unauthorized
     end
   end
 end

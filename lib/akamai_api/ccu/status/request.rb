@@ -16,7 +16,7 @@ module AkamaiApi::Ccu::Status
     end
 
     def parse_response response
-      raise AkamaiApi::Ccu::Unauthorized if response.code == 401
+      raise AkamaiApi::Unauthorized if response.code == 401
       AkamaiApi::Ccu::Status::Response.new response.parsed_response
     end
   end

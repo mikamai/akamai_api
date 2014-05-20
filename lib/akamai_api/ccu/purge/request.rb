@@ -45,7 +45,7 @@ module AkamaiApi::Ccu::Purge
     private
 
     def parse_response response
-      raise ::AkamaiApi::Ccu::Unauthorized if response.code == 401
+      raise ::AkamaiApi::Unauthorized if response.code == 401
       Response.new response.parsed_response
     end
 
