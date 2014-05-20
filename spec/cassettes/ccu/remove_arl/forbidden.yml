@@ -28,7 +28,7 @@ http_interactions:
       - application/api-problem+json
     body:
       encoding: UTF-8
-      string: '{"supportId": "17PY1400136670456141-247956576", "title": "unauthorized
+      string: '{"supportId": "12345678901234567890-123456789", "title": "unauthorized
         arl", "httpStatus": 403, "detail": "http://www.foo.bar/t.txt", "describedBy":
         "https://api.ccu.akamai.com/ccu/v2/errors/unauthorized-arl"}'
     http_version:

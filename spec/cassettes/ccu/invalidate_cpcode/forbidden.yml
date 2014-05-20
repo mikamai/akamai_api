@@ -28,7 +28,7 @@ http_interactions:
       - application/api-problem+json
     body:
       encoding: UTF-8
-      string: '{"supportId": "17PY1400136661652453-315647072", "title": "unauthorized
+      string: '{"supportId": "12345678901234567890-123456789", "title": "unauthorized
         cpcode", "httpStatus": 403, "detail": "12345", "describedBy": "https://api.ccu.akamai.com/ccu/v2/errors/unauthorized-cpcode"}'
     http_version:
   recorded_at: Thu, 15 May 2014 06:51:02 GMT

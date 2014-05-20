@@ -21,7 +21,7 @@ http_interactions:
       Content-Length:
       - '268'
       Content-Location:
-      - /ccu/v2/purges/5108b3c8-dac2-11e3-98cb-61c318cb61c3
+      - /ccu/v2/purges/12345678-1234-5678-1234-123456789012
       Allow:
       - GET, HEAD, POST
       Vary:
