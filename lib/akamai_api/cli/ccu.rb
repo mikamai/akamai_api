@@ -7,10 +7,10 @@ module AkamaiApi
       desc 'arl', 'ARL CCU actions'
       subcommand 'arl', CcuArl
 
-      desc 'status', 'Show the CCU Status'
-      def status
+      desc 'status [progress_uri]', 'Show the CCU queue status if no progress_uri is given, or show a CCU Purge request status if a progress uri is given'
+      def status progress_uri = nil
         load_config
-        res = AkamaiApi::Ccu.status
+        res = AkamaiApi::Ccu.status progress_uri
         puts '------------'
         puts AkamaiApi::Cli::Template.ccu_status_response res
         puts '------------'

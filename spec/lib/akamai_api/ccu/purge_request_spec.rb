@@ -55,24 +55,6 @@ describe AkamaiApi::Ccu::PurgeRequest do
     end
   end
 
-  pending "#items=" do
-    it "accepts a single element" do
-      expect { subject.items = '12345' }.to change(subject, :items).to ['12345']
-    end
-
-    it "accepts multiple elements" do
-      expect { subject.items = ['a', 'b'] }.to change(subject, :items).to ['a', 'b']
-    end
-
-    it "raises error if given element is nil" do
-      expect { subject.items = nil }.to raise_error ArgumentError
-    end
-
-    it "raises error if given array is empty" do
-      expect { subject.items = [] }.to raise_error ArgumentError
-    end
-  end
-
   describe "#execute" do
     let(:fake_response) { double code: 201, parsed_response: {} }
     let(:sample_arl) { 'http://www.foo.bar/t.txt' }

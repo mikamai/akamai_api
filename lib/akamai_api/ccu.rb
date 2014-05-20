@@ -4,6 +4,8 @@ require 'akamai_api/ccu/purge_response'
 require 'akamai_api/ccu/purge_request'
 require 'akamai_api/ccu/status_response'
 require 'akamai_api/ccu/status_request'
+require 'akamai_api/ccu/purge_status_response'
+require 'akamai_api/ccu/purge_status_request'
 
 module AkamaiApi
   module Ccu
@@ -33,8 +35,12 @@ module AkamaiApi
       request.execute items
     end
 
-    def status
-      StatusRequest.new.execute
+    def status progress_uri = nil
+      if progress_uri
+        PurgeStatusRequest.new.execute progress_uri
+      else
+        StatusRequest.new.execute
+      end
     end
 
     def self.auth
