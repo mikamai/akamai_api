@@ -34,7 +34,7 @@ module AkamaiApi
     end
 
     def status progress_uri = nil
-      if progress_uri
+      if progress_uri.present?
         PurgeStatus::Request.new.execute progress_uri
       else
         Status::Request.new.execute

@@ -24,10 +24,10 @@ module AkamaiApi
 
       def self.ccu_status_response response
         [
-          "Status has been successfully received:",
+          "Akamai CCU Queue Status",
           "\t* Result: #{response.code} - #{response.message}",
-          "\t* Queue Length: #{response.queue_length}",
-          "\t* Support ID: #{response.support_id}"
+          "\t* Support ID: #{response.support_id}",
+          "\t* Queue Length: #{response.queue_length}"
         ].join "\n"
       end
 
@@ -40,12 +40,16 @@ module AkamaiApi
       end
 
       def self.ccu_purge_status_successful_response response
-        output = [
-          "Status has been successfully received:",
+        output = []
+        if response.completed_at
+          output << "Purge request has been successfully completed:"
+        else
+          output << "Purge request is currently enqueued:"
+        end
+        output.concat [
           "\t* Result: #{response.code} - #{response.status}",
-          "\t* Purge ID: #{response.purge_id}",
-          "\t* Support ID: #{response.support_id}",
-          "\t* Submitted by '#{response.submitted_by}' on #{response.submitted_at}"
+          "\t* Purge ID: #{response.purge_id} | Support ID: #{response.support_id}",
+          "\t* Submitted by: #{response.submitted_by} on #{response.submitted_at}"
         ]
         if response.completed_at
           output << "\t* Completed on: #{response.completed_at}"
@@ -61,10 +65,9 @@ module AkamaiApi
 
       def self.ccu_purge_status_not_found_response response
         [
-          "No request found with the given data:",
+          "No purge request found using #{response.progress_uri}:",
           "\t* Result: #{response.code} - #{response.message}",
-          "\t* Purge ID: #{response.purge_id}",
-          "\t* Support ID: #{response.support_id}",
+          "\t* Purge ID: #{response.purge_id} | Support ID: #{response.support_id}",
           "\t* Time to wait before next check: #{response.time_to_wait} secs."
         ].join "\n"
       end
@@ -87,16 +90,15 @@ module AkamaiApi
 
       def self.ccu_successful_response response
         result = [
-          "Request has been submitted successfully:",
+          "Purge request successfully submitted:",
           "\t* Result: #{response.code} - #{response.message}",
-          "\t* Purge ID: #{response.purge_id}",
-          "\t* Support ID: #{response.support_id}"
+          "\t* Purge ID: #{response.purge_id} | Support ID: #{response.support_id}"
         ]
         if response.time_to_wait
           result.concat [
-            "\t* Time to wait before check: #{response.time_to_wait} secs.",
             "\t* Estimated time: #{response.estimated_time} secs.",
-            "\t* Progress URI: #{response.uri}"
+            "\t* Progress URI: #{response.uri}",
+            "\t* Time to wait before check: #{response.time_to_wait} secs.",
           ]
         end
         result.join "\n"

@@ -75,8 +75,8 @@ $ akamai_api ccu status
 ------------
 Status has been successfully received:
 	* Result: 200 - The queue may take a minute to reflect new or removed requests.
-	* Queue Length: 0
 	* Support ID: 12345678901234567890-123456789
+	* Queue Length: 0
 ------------
 ```
 

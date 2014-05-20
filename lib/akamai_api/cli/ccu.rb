@@ -12,14 +12,14 @@ module AkamaiApi
         load_config
         res = AkamaiApi::Ccu.status progress_uri
         puts '------------'
-        if res.is_a? AkamaiApi::Ccu::StatusResponse
+        if res.is_a? AkamaiApi::Ccu::Status::Response
           puts AkamaiApi::Cli::Template.ccu_status_response res
         else
           puts AkamaiApi::Cli::Template.ccu_purge_status_response res
         end
         puts '------------'
       rescue AkamaiApi::Ccu::Unauthorized
-        puts 'Your login credentials are invalid'
+        puts 'Your login credentials are invalid.'
       end
     end
   end

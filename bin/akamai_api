@@ -1,5 +1,4 @@
 #!/usr/bin/env ruby
-require 'thor'
 require 'active_support/core_ext'
 require 'akamai_api'
 require 'akamai_api/cli'

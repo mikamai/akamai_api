@@ -23,8 +23,9 @@ Gem::Specification.new do |gem|
   gem.add_dependency 'savon',          '~> 2.3.0'
   gem.add_dependency 'builder',        '~> 3.0'
 
-  gem.add_development_dependency 'rspec'
   gem.add_development_dependency 'guard-rspec'
+  gem.add_development_dependency 'guard-cucumber'
+  gem.add_development_dependency 'aruba'
   gem.add_development_dependency 'webmock'
   gem.add_development_dependency 'vcr'
 end

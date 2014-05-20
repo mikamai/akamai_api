@@ -1,5 +1,3 @@
-require 'spec_helper'
-
 module AkamaiApi::Ccu
   class Response
     attr_reader :raw
