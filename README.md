@@ -1,22 +1,22 @@
 # AkamaiApi
 
-AkamaiApi is a ruby library and command line utility to interact with Akamai CCU (Content Control Utility) and ECCU (Enhanced Content Control Utility) services.
+__Now with CCU REST support!__
 
-__Note__: If you need ruby 1.8 compatibility or if you have any problem with the current release, try to use the [savon1](https://github.com/nicolaracco/akamai_api/tree/savon1) branch (or [version 0.0.7](https://github.com/nicolaracco/akamai_api/tree/v0.0.7))... and open a pull request, of course :-)
+AkamaiApi is a ruby library and command line utility to interact with Akamai CCU (Content Control Utility) and ECCU (Enhanced Content Control Utility) services.
 
 # Using the CLI
 
 After gem installation you will have a CLI utility to execute operations on Akamai. Each method requires authentication. You can provide auth info using one of the following methods:
 
 - Passing --username (-u) and --password (-p) arguments at each invocation
-- Set ENV variables: AKAMAI_USERNAME and AKAMAI_PASSWORD
-- Creating a config file in your HOME directory named .akamai_api.yml with the following format:
+- Set ENV variables: `AKAMAI_USERNAME` and `AKAMAI_PASSWORD`
+- Creating a config file in your HOME directory named `.akamai_api.yml` with the following format:
 
 ```yaml
     auth:
       - user
       - pass
-    log: true # optional for enabling logging. false by default
+    log: true # optional for enabling logging in ECCU requests. false by default
 ```
 
 ## Tasks
@@ -64,7 +64,6 @@ When removing or invalidating a CP Code you can provide the following optional a
 When removing or invalidating an ARL you can provide the following optional arguments:
 
 - *--domain*, *-d*: Specify if you want to work with *production* or *staging*. This is a completely optional argument and usually you don't need to set it.
-- *--emails*, *-e*: Specify the list of email used by Akamai to send notifications about the purge request.
 
 ### Status
 
@@ -156,12 +155,14 @@ When no argument is given, this command will return a `AkamaiApi::Ccu::StatusRes
     AkamaiApi::Ccu.status
 ```
 
-When you pass a `progress_uri` or a `purge_id`, this command will check the given Akamai CCU request. It will request a `AkamaiApi::Ccu::PurgeStatus::SuccessfulResponse` object when a purge request is found, or a `Akamai::Ccu::PurgeStatus::NotFoundResponse` when no request can be found. E.g.
+When you pass a `progress_uri` or a `purge_id`, this command will check the given Akamai CCU request. E.g.
 
 ```ruby
     AkamaiApi::Ccu.status 'foobarbaz'
     AkamaiApi::Ccu.status '/ccu/v2/purges/foobarbaz'
 ```
+
+It will return a `AkamaiApi::Ccu::PurgeStatus::SuccessfulResponse` object when a purge request is found, or a `Akamai::Ccu::PurgeStatus::NotFoundResponse` when no request can be found.
 
 ### ::purge
 
@@ -226,7 +227,7 @@ You can specify the following optional arguments in args: file_name, notes, vers
 # Contributing
 
 - Clone this repository
-- Run 'bundle install --binstubs=bin/stubs'
+- Run 'bundle install'
 - To run the specs, create the file spec/auth.rb with the following content:
 
    ```ruby
