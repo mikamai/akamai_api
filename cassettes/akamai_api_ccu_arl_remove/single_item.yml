@@ -1,0 +1,38 @@
+---
+http_interactions:
+- request:
+    method: post
+    uri: https://USERNAME:PASSWORD@api.ccu.akamai.com/ccu/v2/queues/default/
+    body:
+      encoding: UTF-8
+      string: '{"type":"arl","action":"remove","objects":["http://www.foo.com/bar.txt"]}'
+    headers:
+      Content-Type:
+      - application/json
+  response:
+    status:
+      code: 201
+      message: Created
+    headers:
+      Date:
+      - Tue, 13 May 2014 15:37:48 GMT
+      Server:
+      - Apache
+      Content-Length:
+      - '268'
+      Content-Location:
+      - /ccu/v2/purges/12345678-1234-5678-1234-123456789012
+      Allow:
+      - GET, HEAD, POST
+      Vary:
+      - Authorization
+      Content-Type:
+      - application/json
+    body:
+      encoding: UTF-8
+      string: '{"estimatedSeconds": 420, "progressUri": "/ccu/v2/purges/12345678-1234-5678-1234-123456789012",
+        "purgeId": "12345678-1234-1234-1234-123456789012", "supportId": "12345678901234567890-123456789",
+        "httpStatus": 201, "detail": "Request accepted.", "pingAfterSeconds": 420}'
+    http_version:
+  recorded_at: Tue, 13 May 2014 15:37:49 GMT
+recorded_with: VCR 2.9.0

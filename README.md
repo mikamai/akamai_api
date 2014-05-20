@@ -35,9 +35,10 @@ Use *akamai_api help* to view the help of the CLI.
 In the CCU interface you can work with CP Codes and ARLs.
 
 ```
-    akamai_api ccu cpcode          # CP Code CCU actions
-    akamai_api ccu help [COMMAND]  # Describe subcommands or one specific subcommand
-    akamai_api ccu arl             # ARL CCU actions
+    akamai_api ccu cpcode                 # CP Code CCU actions
+    akamai_api ccu help [COMMAND]         # Describe subcommands or one specific subcommand
+    akamai_api ccu arl                    # ARL CCU actions
+    akamai_api ccu status [progress_uri]  # Show the CCU queue status if no progress_uri is given, or show a CCU Purge request status if a progress uri is given
 ```
 
 ### CP Code
@@ -45,14 +46,12 @@ In the CCU interface you can work with CP Codes and ARLs.
 ```
     akamai_api ccu cpcode help [COMMAND]                  # Describe subcommands or one specific subcommand
     akamai_api ccu cpcode invalidate CPCODE1 CPCODE2 ...  # Purge CP Code(s) marking their cache as expired
-    akamai_api ccu cpcode list                            # Print the list of CP Codes
     akamai_api ccu cpcode remove CPCODE1 CPCODE2 ...      # Purge CP Code(s) removing them from the cache
 ```
 
 When removing or invalidating a CP Code you can provide the following optional arguments:
 
 - *--domain*, *-d*: Specify if you want to work with *production* or *staging*. This is a completely optional argument and usually you don't need to set it.
-- *--emails*, *-e*: Specify the list of email used by Akamai to send notifications about the purge request.
 
 ### ARL
 
@@ -66,6 +65,34 @@ When removing or invalidating an ARL you can provide the following optional argu
 
 - *--domain*, *-d*: Specify if you want to work with *production* or *staging*. This is a completely optional argument and usually you don't need to set it.
 - *--emails*, *-e*: Specify the list of email used by Akamai to send notifications about the purge request.
+
+### Status
+
+If you don't provide a `progress_uri` this command will print the CCU queue status. E.g.
+
+```bash
+$ akamai_api ccu status
+------------
+Status has been successfully received:
+	* Result: 200 - The queue may take a minute to reflect new or removed requests.
+	* Support ID: 12345678901234567890-123456789
+	* Queue Length: 0
+------------
+```
+
+When you provide a `progress_uri` or a `purge_id` this command will print the CCU request status. E.g.
+
+```bash
+$ akamai_api ccu status 12345678-1234-5678-1234-123456789012 # or you can pass /ccu/v2/purges/12345678-1234-5678-1234-123456789012
+------------
+Status has been successfully received:
+	* Result: 200 - Done
+	* Purge ID: 12345678-1234-5678-1234-123456789012
+	* Support ID: 12345678901234567890-123456789
+	* Submitted by 'gawaine' on 2014-05-20 08:19:21 UTC
+	* Completed on: 2014-05-20 08:22:20 UTC
+------------
+```
 
 ## ECCU
 
@@ -121,6 +148,21 @@ Remember to init the AkamaiApi gem with your login credentials. You can set your
 
 ## Ccu
 
+### ::status
+
+When no argument is given, this command will return a `AkamaiApi::Ccu::StatusResponse` object describing the status of the Akamai CCU queue. E.g.
+
+```ruby
+    AkamaiApi::Ccu.status
+```
+
+When you pass a `progress_uri` or a `purge_id`, this command will check the given Akamai CCU request. It will request a `AkamaiApi::Ccu::PurgeStatus::SuccessfulResponse` object when a purge request is found, or a `Akamai::Ccu::PurgeStatus::NotFoundResponse` when no request can be found. E.g.
+
+```ruby
+    AkamaiApi::Ccu.status 'foobarbaz'
+    AkamaiApi::Ccu.status '/ccu/v2/purges/foobarbaz'
+```
+
 ### ::purge
 
 ```ruby
@@ -132,12 +174,12 @@ Remember to init the AkamaiApi gem with your login credentials. You can set your
 - action: symbol or string. It should be *remove* or *invalidate*. See the CLI documentation for more details
 - type: symbol or string. It should be *arl* or *cpcode*. Use arl to purge a list of urls, and cpcodes to purge a list of cp codes
 - items: the list of the resources to clean
-- args: additional options (email, domain)
+- args: additional options (domain)
 
 e.g.
 
 ```ruby
-    AkamaiApi::Ccu.purge :remove, :arl, ['http://www.foo.com/a.txt'], :email => ['foo@foo.com']
+    AkamaiApi::Ccu.purge :remove, :arl, ['http://www.foo.com/a.txt'], :domain => 'staging'
 ```
 
 ### Helpers

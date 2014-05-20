@@ -1,86 +1,74 @@
 require 'spec_helper'
 
-module AkamaiApi
-  describe Ccu do
-    include Savon::SpecHelper
+describe AkamaiApi::Ccu do
+  subject { AkamaiApi::Ccu }
 
-    before(:all) { savon.mock! }
-    after(:all)  { savon.unmock! }
+  %w(invalidate remove).each do |action|
+    describe "##{action}" do
+      it 'raises error if less than 2 arguments are given' do
+        expect { subject.send action, 'foo' }.to raise_error ArgumentError
+      end
 
-    let(:fixture) { File.read 'spec/fixtures/ccu/successful_purge.xml' }
-
-    def soap_body method, *uris
-      method_parts = method.split('_')
-      options = ["action=#{method_parts.first}", "type=#{method_parts.last}"]
-      SoapBody.new do
-        string :name,    AkamaiApi.config[:auth].first
-        string :pwd,     AkamaiApi.config[:auth].last
-        string :network, ''
-        array  :opt,     options
-        array  :uri,     uris
+      it 'delegates to #purge with the given type' do
+        expect(subject).to receive(:purge).with(action.to_sym, :cpcode, 'foo', domain: 'asd').and_return 'bar'
+        expect(subject.send action, :cpcode, 'foo', domain: 'asd').to eq 'bar'
       end
     end
 
-    shared_examples 'purge helper' do
-      before do
-        body = soap_body(method, '12345').to_s
-        savon.expects(:purge_request).with(:message => body).returns(fixture)
-      end
+    %w(arl cpcode).each do |type|
+      describe "##{action}_#{type}" do
+        let(:method) { "#{action}_#{type}" }
 
-      it 'responds with a CcuResponse object' do
-        Ccu.send(method, '12345').should be_a CcuResponse
-      end
-
-      context 'when data are correct' do
-        it 'returns the expected response code' do
-          Ccu.send(method, '12345').code.should == 100
+        it 'raises error if less than 1 argument is given' do
+          expect { subject.send method }.to raise_error ArgumentError
         end
 
-        it 'returns a successful message' do
-          Ccu.send(method, '12345').message.should == 'Success.'
-        end
-
-        it 'returns a unique session id' do
-          Ccu.send(method, '12345').session_id.should == '97870328-018c-11e2-aabc-489beabc489b'
-        end
-
-        it 'returns the estimated time in seconds' do
-          Ccu.send(method, '12345').estimated_time.should == 420
+        it 'delegates to #purge with the given items' do
+          expect(subject).to receive(:purge).with(action.to_sym, type.to_sym, 'foo', domain: 'asd').and_return 'bar'
+          expect(subject.send method, 'foo', domain: 'asd').to eq 'bar'
         end
       end
     end
+  end
 
-    context '#invalidate_arl' do
-      let(:method) { 'invalidate_arl' }
-      it_should_behave_like 'purge helper'
+  describe '#purge' do
+    it 'delegates to Purge::Request' do
+      fake_request = double
+      expect(fake_request).to receive(:execute).with('baz').and_return 'quiz'
+      expect(AkamaiApi::Ccu::Purge::Request).to receive(:new).with('foo', 'bar', domain: 'asd').
+                                               and_return fake_request
+      expect(subject.purge 'foo', 'bar', 'baz', domain: 'asd').to eq 'quiz'
     end
 
-    context '#invalidate_cpcode' do
-      let(:method) { 'invalidate_cpcode' }
-      it_should_behave_like 'purge helper'
-    end
-
-    context '#remove_arl' do
-      let(:method) { 'remove_arl' }
-      it_should_behave_like 'purge helper'
-    end
-
-    context '#remove_cpcode' do
-      let(:method) { 'remove_cpcode' }
-      it_should_behave_like 'purge helper'
-    end
-
-    describe '#purge raises an error when' do
+    describe 'raises an error when' do
       it 'action is not allowed' do
-        expect { Ccu.purge :sss, :cpcode, '12345' }.to raise_error Ccu::UnrecognizedOption
+        expect { subject.purge :sss, :cpcode, '12345' }.to raise_error AkamaiApi::Ccu::UnrecognizedOption
       end
 
       it 'type is not allowed' do
-        expect { Ccu.purge :remove, :foo, '12345' }.to raise_error Ccu::UnrecognizedOption
+        expect { subject.purge :remove, :foo, '12345' }.to raise_error AkamaiApi::Ccu::UnrecognizedOption
       end
 
       it 'domain is specified and not allowed' do
-        expect { Ccu.purge :remove, :arl, 'foo', :domain => :foo }.to raise_error
+        expect { subject.purge :remove, :arl, 'foo', :domain => :foo }.to raise_error
+      end
+    end
+  end
+
+  describe '#status' do
+    context "when no argument is given" do
+      it "delegates to Status request instance" do
+        expect(AkamaiApi::Ccu::Status::Request).to receive(:new).and_return double execute: 'foo'
+        expect(subject.status).to eq 'foo'
+      end
+    end
+
+    context "when a progress uri is passed as argument" do
+      it "delegates to PurgeStatus request instance" do
+        fake_instance = double
+        expect(AkamaiApi::Ccu::PurgeStatus::Request).to receive(:new).and_return fake_instance
+        expect(fake_instance).to receive(:execute).with('foo').and_return 'asd'
+        expect(subject.status 'foo').to eq 'asd'
       end
     end
   end

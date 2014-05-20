@@ -1,0 +1,36 @@
+---
+http_interactions:
+- request:
+    method: post
+    uri: https://USERNAME:PASSWORD@api.ccu.akamai.com/ccu/v2/queues/default/
+    body:
+      encoding: UTF-8
+      string: '{"type":"cpcode","action":"remove","objects":["12345"]}'
+    headers:
+      Content-Type:
+      - application/json
+  response:
+    status:
+      code: 403
+      message: Forbidden
+    headers:
+      Date:
+      - Thu, 15 May 2014 06:51:09 GMT
+      Server:
+      - Apache
+      Content-Length:
+      - '209'
+      Allow:
+      - GET, HEAD, POST
+      Vary:
+      - Authorization
+      Content-Type:
+      - application/api-problem+json
+    body:
+      encoding: UTF-8
+      string: '{"supportId": "12345678901234567890-123456789", "title": "unauthorized
+        cpcode", "httpStatus": 403, "detail": "12345", "describedBy":
+        "https://api.ccu.akamai.com/ccu/v2/errors/unauthorized-cpcode"}'
+    http_version:
+  recorded_at: Thu, 15 May 2014 06:51:12 GMT
+recorded_with: VCR 2.9.0

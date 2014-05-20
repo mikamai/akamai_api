@@ -22,14 +22,86 @@ module AkamaiApi
         "#{cpcode.code}\t#{cpcode.description}"
       end
 
+      def self.ccu_status_response response
+        [
+          "Akamai CCU Queue Status",
+          "\t* Result: #{response.code} - #{response.message}",
+          "\t* Support ID: #{response.support_id}",
+          "\t* Queue Length: #{response.queue_length}"
+        ].join "\n"
+      end
+
+      def self.ccu_purge_status_response response
+        if response.is_a? AkamaiApi::Ccu::PurgeStatus::SuccessfulResponse
+          ccu_purge_status_successful_response response
+        else
+          ccu_purge_status_not_found_response response
+        end
+      end
+
+      def self.ccu_purge_status_successful_response response
+        output = []
+        if response.completed_at
+          output << "Purge request has been successfully completed:"
+        else
+          output << "Purge request is currently enqueued:"
+        end
+        output.concat [
+          "\t* Result: #{response.code} - #{response.status}",
+          "\t* Purge ID: #{response.purge_id} | Support ID: #{response.support_id}",
+          "\t* Submitted by: #{response.submitted_by} on #{response.submitted_at}"
+        ]
+        if response.completed_at
+          output << "\t* Completed on: #{response.completed_at}"
+        else
+          output.concat [
+            "\t* Estimated time: #{response.estimated_time} secs.",
+            "\t* Queue length: #{response.queue_length}",
+            "\t* Time to wait before next check: #{response.time_to_wait} secs."
+          ]
+        end
+        output.join "\n"
+      end
+
+      def self.ccu_purge_status_not_found_response response
+        [
+          "No purge request found using #{response.progress_uri}:",
+          "\t* Result: #{response.code} - #{response.message}",
+          "\t* Purge ID: #{response.purge_id} | Support ID: #{response.support_id}",
+          "\t* Time to wait before next check: #{response.time_to_wait} secs."
+        ].join "\n"
+      end
+
       def self.ccu_response response
-        res = ['#### Response Details ####',
-               "* Request ID: #{response.session_id}",
-               "* Code: #{response.code} (#{response.status})",
-               "* Message: #{response.message}"]
-        res << "* Estimate Time: #{response.estimated_time} secs.;" if response.estimated_time > 0
-        res << "* Error caused by: #{response.uri};" if response.uri
-        res.join "\n"
+        if response.code == 201
+          ccu_successful_response response
+        else
+          ccu_error_response response
+        end
+      end
+
+      def self.ccu_error_response response
+        [
+          "There was an error processing your request:",
+          "\t* Result: #{response.code} - #{response.title} (#{response.message})",
+          "\t* Described by: #{response.described_by}"
+        ].join "\n"
+      end
+
+      def self.ccu_successful_response response
+        result = [
+          "Purge request successfully submitted:",
+          "\t* Result: #{response.code} - #{response.message}",
+          "\t* Purge ID: #{response.purge_id} | Support ID: #{response.support_id}"
+        ]
+        if response.time_to_wait
+          result.concat [
+            "\t* Estimated time: #{response.estimated_time} secs.",
+            "\t* Progress URI: #{response.uri}",
+            "\t* Time to wait before check: #{response.time_to_wait} secs.",
+          ]
+        end
+        result.join "\n"
       end
     end
   end

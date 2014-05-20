@@ -1,4 +1,9 @@
+require 'httparty'
 require 'active_support/core_ext'
+require 'akamai_api/ccu/response'
+require 'akamai_api/ccu/purge'
+require 'akamai_api/ccu/status'
+require 'akamai_api/ccu/purge_status'
 
 module AkamaiApi
   module Ccu
@@ -23,61 +28,20 @@ module AkamaiApi
     end
 
     def purge action, type, items, args = {}
-      validate_action action
-      validate_type type
-      options = ["action=#{action}", "type=#{type}"]
-      add_domain args[:domain], options
-      add_email args[:email], options
-      body = SoapBody.new do
-        string :name,    AkamaiApi.config[:auth].first
-        string :pwd,     AkamaiApi.config[:auth].last
-        string :network, ''
-        array  :opt,     options
-        array  :uri,     Array.wrap(items)
-      end
-      response = client.call :purge_request, :message => body.to_s
-      CcuResponse.new response, items
+      request = Purge::Request.new action, type, domain: args[:domain]
+      request.execute items
     end
 
-    private
-
-    def validate_action action
-      unless %w[invalidate remove].include? action.to_s
-        raise UnrecognizedOption, "Unknown type '#{action}' (only 'remove' and 'invalidate' are allowed)"
+    def status progress_uri = nil
+      if progress_uri.present?
+        PurgeStatus::Request.new.execute progress_uri
+      else
+        Status::Request.new.execute
       end
     end
 
-    def validate_type type
-      unless %w[cpcode arl].include? type.to_s
-        raise UnrecognizedOption, "Unknown type '#{type}' (only 'cpcode' and 'arl' are allowed)"
-      end
-    end
-
-    def add_domain domain, options
-      if domain.present?
-        unless %w[production staging].include? domain.to_s
-          raise "Unknown domain type '#{domain}' (only :production and :staging are allowed)"
-        end
-        options << "domain=#{domain}"
-      end
-    end
-
-    def add_email email, options
-      if email.present?
-        emails = Array.wrap(email).join ','
-        options << "email-notification=#{emails}"
-      end
-    end
-
-    def client
-      savon_args = {
-        :wsdl => File.expand_path('../../../wsdls/ccuapi.wsdl', __FILE__),
-        :namespaces => {
-          'xmlns:soapenc' => 'http://schemas.xmlsoap.org/soap/encoding/'
-        },
-        :log => AkamaiApi.config[:log]
-      }
-      Savon.client savon_args
+    def self.auth
+      { username: AkamaiApi.config[:auth].first, password: AkamaiApi.config[:auth].last }
     end
   end
 end
