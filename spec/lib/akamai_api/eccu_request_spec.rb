@@ -52,7 +52,7 @@ module AkamaiApi
 
     describe '::last' do
       it 'find the most recent entry' do
-        EccuRequest.stub! :all_ids => %w(a b)
+        EccuRequest.stub :all_ids => %w(a b)
         EccuRequest.should_receive(:find).with('b', anything()).and_return :a
         EccuRequest.last.should == :a
       end
@@ -60,7 +60,7 @@ module AkamaiApi
 
     describe '::first' do
       it 'find the oldest entry' do
-        EccuRequest.stub! :all_ids => %w(a b)
+        EccuRequest.stub :all_ids => %w(a b)
         EccuRequest.should_receive(:find).with('a', anything()).and_return :a
         EccuRequest.first.should == :a
       end
@@ -68,13 +68,13 @@ module AkamaiApi
 
     describe '::all' do
       it 'returns the detail for each enlisted id' do
-        EccuRequest.stub! :all_ids => %w(a b)
+        EccuRequest.stub :all_ids => %w(a b)
         EccuRequest.should_receive(:find).with('a', anything()).and_return(:a)
         EccuRequest.should_receive(:find).with('b', anything()).and_return(:b)
         EccuRequest.all.should =~ [:a, :b]
       end
       it 'returns the detail for each enlisted id even if only one id is returned' do
-        EccuRequest.stub! :all_ids => "a"
+        EccuRequest.stub :all_ids => "a"
         EccuRequest.should_receive(:find).with('a', anything()).and_return(:a)
         EccuRequest.all.should =~ [:a]
       end
