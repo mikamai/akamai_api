@@ -148,7 +148,7 @@ AkamaiApi.config.merge! :auth => ['user', 'pass']
 
 ### ::status
 
-When no argument is given, this command will return a [`AkamaiApi::Ccu::Status::Response`](lib/akamai_api/ccu/status/response) object describing the status of the Akamai CCU queue. E.g.
+When no argument is given, this command will return a [`AkamaiApi::Ccu::Status::Response`](lib/akamai_api/ccu/status/response.rb) object describing the status of the Akamai CCU queue. E.g.
 
 ```ruby
 AkamaiApi::Ccu.status
@@ -174,7 +174,7 @@ AkamaiApi::Ccu.status '/ccu/v2/purges/foobarbaz' # you can pass only 'foobarbaz'
 #    "pingAfterSeconds"=>60}>
 ```
 
-It will return a [`AkamaiApi::Ccu::PurgeStatus::SuccessfulResponse`](lib/akamai_api/ccu/purge_status/successful_response) object when a purge request is found, or a [`Akamai::Ccu::PurgeStatus::NotFoundResponse`](lib/akamai_api/ccu/purge_status/not_found_response) when no request can be found.
+It will return a [`AkamaiApi::Ccu::PurgeStatus::SuccessfulResponse`](lib/akamai_api/ccu/purge_status/successful_response.rb) object when a purge request is found, or a [`Akamai::Ccu::PurgeStatus::NotFoundResponse`](lib/akamai_api/ccu/purge_status/not_found_response.rb) when no request can be found.
 
 ### ::purge
 
@@ -191,7 +191,7 @@ end
 - `items`: the list of the resources to clean
 - `args`: additional options (domain)
 
-It will return a [`AkamaiApi::Ccu::Purge::Response`](lib/akamai_api/ccu/purge/response) object that you can use to retrieve the `progress_uri` (or the `purge_id`) of the request.
+It will return a [`AkamaiApi::Ccu::Purge::Response`](lib/akamai_api/ccu/purge/response.rb) object that you can use to retrieve the `progress_uri` (or the `purge_id`) of the request.
 
 E.g.
 

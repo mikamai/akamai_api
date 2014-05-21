@@ -7,11 +7,7 @@ module AkamaiApi
       def requests
         load_config
         requests = AkamaiApi::EccuRequest.all :verbose => options[:content]
-        requests.each do |request|
-          puts '------------'
-          puts AkamaiApi::Cli::Template.eccu_request request
-        end
-        puts '------------'
+        puts EntryRenderer.render requests
       rescue ::AkamaiApi::Unauthorized
         puts "Your login credentials are invalid."
       end
@@ -21,10 +17,8 @@ module AkamaiApi
                     :desc => 'Print request content too'
       def last_request
         load_config
-        request = AkamaiApi::EccuRequest.last :verbose => options[:content]
-        puts '------------'
-        puts AkamaiApi::Cli::Template.eccu_request request
-        puts '------------'
+        request = AkamaiApi::EccuRequest.last verbose: options[:content]
+        puts EntryRenderer.new(request).render
       rescue ::AkamaiApi::Unauthorized
         puts "Your login credentials are invalid."
       end
@@ -50,10 +44,8 @@ module AkamaiApi
           :emails => options[:emails]
         }
         id = AkamaiApi::EccuRequest.publish_file property, source, args
-        puts 'Request correctly published. Details:'
-        puts '------------'
-        puts AkamaiApi::Cli::Template.eccu_request AkamaiApi::EccuRequest.find id, :verbose => true
-        puts '------------'
+        puts "Request correctly published:"
+        puts EntryRenderer.new(AkamaiApi::EccuRequest.find(id, :verbose => true)).render
       rescue ::AkamaiApi::Unauthorized
         puts "Your login credentials are invalid."
       rescue Savon::SOAPFault
@@ -62,3 +54,5 @@ module AkamaiApi
     end
   end
 end
+
+require File.expand_path '../eccu/entry_renderer', __FILE__

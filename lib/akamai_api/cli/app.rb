@@ -2,7 +2,7 @@ module AkamaiApi
   module Cli
     class App < Thor
       desc 'ccu', 'CCU Interface'
-      subcommand 'ccu', AkamaiApi::Cli::Ccu
+      subcommand 'ccu', AkamaiApi::Cli::Ccu::Base
 
       desc 'eccu', 'ECCU Interface'
       subcommand 'eccu', AkamaiApi::Cli::Eccu
