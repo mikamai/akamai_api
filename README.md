@@ -86,8 +86,7 @@ $ akamai_api ccu status 12345678-1234-5678-1234-123456789012 # or you can pass /
 ------------
 Status has been successfully received:
 	* Result: 200 - Done
-	* Purge ID: 12345678-1234-5678-1234-123456789012
-	* Support ID: 12345678901234567890-123456789
+	* Purge ID: 12345678-1234-5678-1234-123456789012 | Support ID: 12345678901234567890-123456789
 	* Submitted by 'gawaine' on 2014-05-20 08:19:21 UTC
 	* Completed on: 2014-05-20 08:22:20 UTC
 ------------
@@ -98,10 +97,10 @@ Status has been successfully received:
 In the ECCU interface you can see the requestes already published and publish your own requests.
 
 ```
-    akamai_api eccu help [COMMAND]                           # Describe subcommands or one specific subcommand
-    akamai_api eccu last_request                             # Print the last request made to ECCU
+    akamai_api eccu help [COMMAND]                            # Describe subcommands or one specific subcommand
+    akamai_api eccu last_request                              # Print the last request made to ECCU
     akamai_api eccu publish_xml path/to/request.xml john.com  # Publish a request made in XML for the specified Digital Property (usually the Host Header)
-    akamai_api eccu requests                                 # Print the list of the last requests made to ECCU
+    akamai_api eccu requests                                  # Print the list of the last requests made to ECCU
 ```
 
 ### Viewing Requests
@@ -138,7 +137,7 @@ The command takes two arguments:
 Remember to init the AkamaiApi gem with your login credentials. You can set your credentials with the following statement:
 
 ```ruby
-    AkamaiApi.config.merge! :auth => ['user', 'pass']
+AkamaiApi.config.merge! :auth => ['user', 'pass']
 ```
 
 - CpCode: model representing a CP Code. Use the ::all method to retrieve the list of available CpCode.
@@ -149,58 +148,86 @@ Remember to init the AkamaiApi gem with your login credentials. You can set your
 
 ### ::status
 
-When no argument is given, this command will return a `AkamaiApi::Ccu::StatusResponse` object describing the status of the Akamai CCU queue. E.g.
+When no argument is given, this command will return a [`AkamaiApi::Ccu::Status::Response`](lib/akamai_api/ccu/status/response) object describing the status of the Akamai CCU queue. E.g.
 
 ```ruby
-    AkamaiApi::Ccu.status
+AkamaiApi::Ccu.status
+# => #<AkamaiApi::Ccu::Status::Response:0x00000101167978 @raw={"supportId"=>"12345678901234567890-123456789", "httpStatus"=>200, "detail"=>"The queue may take a minute to reflect new or removed requests.", "queueLength"=>0}>
 ```
 
 When you pass a `progress_uri` or a `purge_id`, this command will check the given Akamai CCU request. E.g.
 
 ```ruby
-    AkamaiApi::Ccu.status 'foobarbaz'
-    AkamaiApi::Ccu.status '/ccu/v2/purges/foobarbaz'
+AkamaiApi::Ccu.status '/ccu/v2/purges/foobarbaz' # you can pass only 'foobarbaz' (the purge request id) as argument
+# => #<AkamaiApi::Ccu::PurgeStatus::SuccessfulResponse:0x000001014da088
+#  @raw=
+#   {"originalEstimatedSeconds"=>480,
+#    "progressUri"=>"/ccu/v2/purges/12345678-1234-5678-1234-123456789012",
+#    "originalQueueLength"=>6,
+#    "purgeId"=>"12345678-1234-5678-1234-123456789012",
+#    "supportId"=>"12345678901234567890-123456789",
+#    "httpStatus"=>200,
+#    "completionTime"=>"2014-02-19T22:16:20Z",
+#    "submittedBy"=>"test1",
+#    "purgeStatus"=>"In-Progress",
+#    "submissionTime"=>"2014-02-19T21:16:20Z",
+#    "pingAfterSeconds"=>60}>
 ```
 
-It will return a `AkamaiApi::Ccu::PurgeStatus::SuccessfulResponse` object when a purge request is found, or a `Akamai::Ccu::PurgeStatus::NotFoundResponse` when no request can be found.
+It will return a [`AkamaiApi::Ccu::PurgeStatus::SuccessfulResponse`](lib/akamai_api/ccu/purge_status/successful_response) object when a purge request is found, or a [`Akamai::Ccu::PurgeStatus::NotFoundResponse`](lib/akamai_api/ccu/purge_status/not_found_response) when no request can be found.
 
 ### ::purge
 
 ```ruby
-    def purge action, type, items, args = {}
-      ...
-    end
+module AkamaiApi::Ccu
+  def purge action, type, items, args = {}
+    ...
+  end
+end
 ```
 
-- action: symbol or string. It should be *remove* or *invalidate*. See the CLI documentation for more details
-- type: symbol or string. It should be *arl* or *cpcode*. Use arl to purge a list of urls, and cpcodes to purge a list of cp codes
-- items: the list of the resources to clean
-- args: additional options (domain)
+- `action`: symbol or string. It should be *remove* or *invalidate*. See the CLI documentation for more details
+- `type`: symbol or string. It should be *arl* or *cpcode*. Use arl to purge a list of urls, and cpcodes to purge a list of cp codes
+- `items`: the list of the resources to clean
+- `args`: additional options (domain)
 
-e.g.
+It will return a [`AkamaiApi::Ccu::Purge::Response`](lib/akamai_api/ccu/purge/response) object that you can use to retrieve the `progress_uri` (or the `purge_id`) of the request.
+
+E.g.
 
 ```ruby
-    AkamaiApi::Ccu.purge :remove, :arl, ['http://www.foo.com/a.txt'], :domain => 'staging'
+AkamaiApi::Ccu.purge :remove, :arl, ['http://www.foo.com/a.txt'], :domain => 'staging'
+# => #<AkamaiApi::Ccu::Purge::Response:0x00000101bf2848
+#  @raw=
+#   {"describedBy"=>"foo",
+#    "title"=>"bar",
+#    "pingAfterSeconds"=>100,
+#    "purgeId"=>"1234",
+#    "supportId"=>"130",
+#    "detail"=>"baz",
+#    "httpStatus"=>201,
+#    "estimatedSeconds"=>90,
+#    "progressUri"=>"/ccu/v2/purges/1234"}>
 ```
 
-### Helpers
+### Purge Helpers
 
 ```ruby
-    ccu = AkamaiApi::Ccu
+ccu = AkamaiApi::Ccu
 
-    ccu.invalidate_cpcode cpcodes # => wrapper to call .purge :invalidate, :cpcode
-    ccu.invalidate_arl arls          # => wrapper to call .purge :invalidate, :arl
-    ccu.invalidate :arl, arls        # => wrapper to call .purge :invalidate
+ccu.invalidate_cpcode cpcodes    # => wrapper to call .purge :invalidate, :cpcode
+ccu.invalidate_arl arls          # => wrapper to call .purge :invalidate, :arl
+ccu.invalidate :arl, arls        # => wrapper to call .purge :invalidate
 
-    ccu.remove_cpcodes cpcodes # => wrapper to call .purge :remove, :cpcode
-    ccu.remove_arl arls          # => wrapper to call .purge :remove, :arl
-    ccu.remove :arl              # => wrapper to call .purge :remove
+ccu.remove_cpcodes cpcodes   # => wrapper to call .purge :remove, :cpcode
+ccu.remove_arl arls          # => wrapper to call .purge :remove, :arl
+ccu.remove :arl              # => wrapper to call .purge :remove
 ```
 
 ## EccuRequest
 
-An EccuRequest is an object representing an ECCU Request. To see all the published requests use the ::all method.
-To retrieve only the last request, you can use the ::last method.
+An EccuRequest is an object representing an ECCU Request. To see all the published requests use the `::all` method.
+To retrieve only the last request, you can use the `::last` method.
 The following code should be self explaining about both class methods and instance methods:
 
 ```ruby
