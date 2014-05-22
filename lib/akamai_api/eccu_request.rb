@@ -3,6 +3,10 @@ require "active_support"
 require "active_support/core_ext/array"
 require "active_support/core_ext/object/blank"
 
+require "akamai_api/eccu/soap_body"
+require "akamai_api/eccu/update_notes_request"
+
+SoapBody = AkamaiApi::Eccu::SoapBody
 module AkamaiApi
   class EccuRequest
     attr_accessor :file, :status, :code, :notes, :property, :email, :upload_date, :uploaded_by, :version_string
@@ -14,17 +18,10 @@ module AkamaiApi
     end
 
     def update_notes! notes
-      code = self.code.to_i
-      body = SoapBody.new do
-        integer :fileId, code
-        string  :notes,  notes
+      response = AkamaiApi::Eccu::UpdateNotesRequest.new(code).execute(notes)
+      response.tap do |successful|
+        self.notes = notes if successful
       end
-      resp = client.call :set_notes, :message => body.to_s
-      self.notes = notes
-      resp.body[:set_notes_response][:success]
-    rescue Savon::HTTPError => e
-      raise ::AkamaiApi::Unauthorized if e.http.code == 401
-      raise
     end
 
     def update_email! email

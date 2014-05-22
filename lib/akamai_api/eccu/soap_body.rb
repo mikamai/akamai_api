@@ -1,6 +1,6 @@
 require "builder"
 
-module AkamaiApi
+module AkamaiApi::Eccu
   class SoapBody
     TAG_TYPES = {
       :boolean => 'xsd:boolean',

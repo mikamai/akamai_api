@@ -175,30 +175,69 @@ module AkamaiApi
       end
 
       describe '#update_notes!' do
-        let(:fixture) { File.read 'spec/fixtures/eccu/set_notes/successful.xml' }
+        subject { EccuRequest.new code: '1234' }
 
-        it 'updates the notes field' do
-          savon.expects(:set_notes).with(:message => :any).returns(fixture)
-          req = EccuRequest.new :code => '1234'
-          expect {
-            req.update_notes! 'foo'
-          }.to change(req, :notes).to 'foo'
+        it 'delegates to UpdateNotesRequest' do
+          fake_request = double
+          expect(fake_request).to receive(:execute).with('foo').and_return true
+          expect(AkamaiApi::Eccu::UpdateNotesRequest).to receive(:new).with('1234').and_return fake_request
+          subject.update_notes! 'foo'
         end
 
-        it 'calls the ECCU service using code and notes' do
-          body = SoapBody.new do
-            integer :fileId, 1234
-            string  :notes,  'foo'
+        context 'when the update is successful' do
+          before do
+            expect_any_instance_of(AkamaiApi::Eccu::UpdateNotesRequest).to receive(:execute).and_return true
           end
-          savon.expects(:set_notes).with(:message => body.to_s).returns(fixture)
-          EccuRequest.new(:code => '1234').update_notes! 'foo'
+
+          it "returns true" do
+            expect(subject.update_notes! 'foo').to be_true
+          end
+
+          it "updates notes attribute" do
+            expect { subject.update_notes! 'foo' }.to change(subject, :notes).to 'foo'
+          end
         end
 
-        it 'calls the ECCU service and return the service boolean response' do
-          savon.expects(:set_notes).with(:message => :any).returns(fixture)
-          EccuRequest.new(:code => '1234').update_notes!('foo').should be_true
+        context 'when the update is not successful' do
+          before do
+            expect_any_instance_of(AkamaiApi::Eccu::UpdateNotesRequest).to receive(:execute).and_return false
+          end
+
+          it "returns false" do
+            expect(subject.update_notes! 'foo').to be_false
+          end
+
+          it "does not update the notes attribute" do
+            expect { subject.update_notes! 'foo' }.to_not change(subject, :notes).to 'foo'
+          end
         end
       end
+
+      # describe '#update_notes!' do
+      #   let(:fixture) { File.read 'spec/fixtures/eccu/set_notes/successful.xml' }
+
+      #   it 'updates the notes field' do
+      #     savon.expects(:set_notes).with(:message => :any).returns(fixture)
+      #     req = EccuRequest.new :code => '1234'
+      #     expect {
+      #       req.update_notes! 'foo'
+      #     }.to change(req, :notes).to 'foo'
+      #   end
+
+      #   it 'calls the ECCU service using code and notes' do
+      #     body = SoapBody.new do
+      #       integer :fileId, 1234
+      #       string  :notes,  'foo'
+      #     end
+      #     savon.expects(:set_notes).with(:message => body.to_s).returns(fixture)
+      #     EccuRequest.new(:code => '1234').update_notes! 'foo'
+      #   end
+
+      #   it 'calls the ECCU service and return the service boolean response' do
+      #     savon.expects(:set_notes).with(:message => :any).returns(fixture)
+      #     EccuRequest.new(:code => '1234').update_notes!('foo').should be_true
+      #   end
+      # end
 
       describe '#update_email' do
         let(:fixture) { File.read 'spec/fixtures/eccu/set_status_change_email/successful.xml' }
