@@ -1,3 +1,8 @@
+require "savon"
+require "active_support"
+require "active_support/core_ext/array"
+require "active_support/core_ext/object/blank"
+
 module AkamaiApi
   class EccuRequest
     attr_accessor :file, :status, :code, :notes, :property, :email, :upload_date, :uploaded_by, :version_string

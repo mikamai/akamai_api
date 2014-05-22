@@ -1,6 +1,11 @@
 require File.expand_path '../../lib/akamai_api', __FILE__
 require File.expand_path '../../lib/akamai_api/cli', __FILE__
-require File.expand_path '../auth.rb', __FILE__
+
+begin
+  require File.expand_path '../auth.rb', __FILE__
+rescue LoadError
+  AkamaiApi.config[:auth] = ['test_username', 'test_password']
+end
 
 require 'savon/mock/spec_helper'
 require 'webmock/rspec'

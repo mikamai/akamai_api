@@ -1,3 +1,6 @@
+require 'active_support'
+require 'active_support/core_ext/module'
+
 # This patch is needed for adding an option to not check every time the arguments of a request
 module Savon
   class MockExpectation

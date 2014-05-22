@@ -1,3 +1,6 @@
+require "active_support"
+require "active_support/core_ext/object/blank"
+
 module AkamaiApi::CLI::Eccu
   class EntryRenderer
     def self.render entries

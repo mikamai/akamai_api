@@ -1,5 +1,6 @@
 require 'httparty'
-require 'active_support/core_ext'
+require 'active_support'
+require 'active_support/core_ext/object/blank'
 require 'akamai_api/ccu/purge'
 require 'akamai_api/ccu/status'
 require 'akamai_api/ccu/purge_status'

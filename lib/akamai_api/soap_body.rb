@@ -1,3 +1,5 @@
+require "builder"
+
 module AkamaiApi
   class SoapBody
     TAG_TYPES = {
