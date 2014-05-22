@@ -124,16 +124,16 @@ module AkamaiApi
 
       def build_publish_soap_body property, content, args
         SoapBody.new do
-          string :filename,                args[:file_name] || ''
+          string :filename,                args.fetch(:file_name, '')
           text   :contents,                content
-          string :notes,                   args[:notes] || 'ECCU Request using AkamaiApi gem'
-          string :versionString,           args[:version] || ''
+          string :notes,                   args.fetch(:notes, 'ECCU Request using AkamaiApi gem')
+          string :versionString,           args.fetch(:version,  '')
           if args[:emails]
             string :statusChangeEmail,     Array.wrap(args[:emails]).join(' ')
           end
           string :propertyName,            property
-          string :propertyType,            args[:property_type] || 'hostheader'
-          boolean :propertyNameExactMatch, args[:property_exact_match].nil? && true || args[:property_exact_match]
+          string :propertyType,            args.fetch(:property_type, 'hostheader')
+          boolean :propertyNameExactMatch, args.fetch(:property_exact_match,  true)
         end
       end
 
