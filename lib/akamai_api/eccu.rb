@@ -1,9 +1,13 @@
 module AkamaiApi::Eccu
   def self.client
-    @client ||= Savon.client client_args
+    @client ||= build_client
   end
 
   private
+
+  def self.build_client
+    Savon.client client_args
+  end
 
   def self.client_args
     {

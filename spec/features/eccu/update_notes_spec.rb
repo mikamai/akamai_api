@@ -6,7 +6,7 @@ describe "Given I want to update the notes of a request" do
   context "when login credentials are invalid", vcr: { cassette_name: "akamai_api_eccu_update_notes/invalid_credentials" } do
     before do
       AkamaiApi.stub config: { auth: ['foo', 'bar'] }
-      AkamaiApi::Eccu.instance_variable_set '@client', nil
+      AkamaiApi::Eccu.stub client: AkamaiApi::Eccu.send(:build_client)
     end
 
     it "raises Unauthorized" do
