@@ -1,4 +1,5 @@
 # AkamaiApi
+[![Build Status](https://travis-ci.org/mikamai/akamai_api.svg?branch=master)](https://travis-ci.org/mikamai/akamai_api)
 
 __Now with CCU REST support!__
 
