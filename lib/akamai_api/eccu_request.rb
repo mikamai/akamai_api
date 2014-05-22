@@ -1,3 +1,5 @@
+require "savon"
+
 module AkamaiApi
   class EccuRequest
     attr_accessor :file, :status, :code, :notes, :property, :email, :upload_date, :uploaded_by, :version_string
