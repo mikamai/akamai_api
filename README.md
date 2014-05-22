@@ -1,5 +1,5 @@
 # AkamaiApi
-[![Gem Version](https://badge.fury.io/rb/akamai_api.svg)](http://badge.fury.io/rb/akamai_api) [![Build Status](https://travis-ci.org/mikamai/akamai_api.svg?branch=master)](https://travis-ci.org/mikamai/akamai_api)
+[![Gem Version](https://badge.fury.io/rb/akamai_api.svg)](http://badge.fury.io/rb/akamai_api) [![Build Status](https://travis-ci.org/mikamai/akamai_api.svg?branch=master)](https://travis-ci.org/mikamai/akamai_api) [![Code Climate](https://codeclimate.com/github/mikamai/akamai_api.png)](https://codeclimate.com/github/mikamai/akamai_api)
 
 __Now with CCU REST support!__
 
