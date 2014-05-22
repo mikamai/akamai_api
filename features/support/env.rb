@@ -5,6 +5,8 @@ require 'aruba/cucumber'
 require 'aruba/in_process'
 require 'vcr'
 require 'webmock'
+require 'coveralls'
+Coveralls.wear_merged!
 
 begin
   require File.expand_path '../auth.rb', __FILE__

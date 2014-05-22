@@ -6,10 +6,11 @@ begin
 rescue LoadError
   AkamaiApi.config[:auth] = ['test_username', 'test_password']
 end
-
 require 'savon/mock/spec_helper'
 require 'webmock/rspec'
 require 'vcr'
+require 'coveralls'
+Coveralls.wear_merged!
 
 VCR.configure do |c|
   c.cassette_library_dir = 'cassettes'

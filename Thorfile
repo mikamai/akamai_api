@@ -32,4 +32,10 @@ class Default < Thor
   def features
     exec "cucumber"
   end
+
+  desc "coveralls", "Push coveralls stats"
+  def coveralls
+    require 'coveralls'
+    Coveralls.push!
+  end
 end

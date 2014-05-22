@@ -9,3 +9,4 @@ matrix:
 script:
   - bundle exec thor spec
   - bundle exec thor features
+after_script: bundle exec thor coveralls
