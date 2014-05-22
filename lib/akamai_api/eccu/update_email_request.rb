@@ -5,16 +5,16 @@ require "akamai_api/eccu/not_found"
 require "akamai_api/eccu/soap_body"
 
 module AkamaiApi::Eccu
-  class UpdateNotesRequest
+  class UpdateEmailRequest
     attr_reader :code
 
     def initialize code
       @code = code
     end
 
-    def execute notes
-      response = client.call :set_notes, message: request_body(notes).to_s
-      response.body[:set_notes_response][:success]
+    def execute email
+      response = client.call :set_status_change_email, :message => request_body(email).to_s
+      response.body[:set_status_change_email_response][:success]
     rescue Savon::HTTPError => e
       e = ::AkamaiApi::Unauthorized if e.http.code == 401
       raise e
@@ -23,10 +23,10 @@ module AkamaiApi::Eccu
       raise e
     end
 
-    def request_body notes
-      SoapBody.new.tap do |block|
-        block.integer :fileId, code
-        block.string  :notes,  notes
+    def request_body email
+      SoapBody.new.tap do |body|
+        body.integer :fileId, code
+        body.string  :statusChangeEmail, email
       end
     end
 

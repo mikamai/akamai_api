@@ -5,6 +5,7 @@ require "active_support/core_ext/object/blank"
 
 require "akamai_api/eccu/soap_body"
 require "akamai_api/eccu/update_notes_request"
+require "akamai_api/eccu/update_email_request"
 
 SoapBody = AkamaiApi::Eccu::SoapBody
 module AkamaiApi
@@ -25,18 +26,10 @@ module AkamaiApi
     end
 
     def update_email! email
-      code = self.code.to_i
-      body = SoapBody.new do
-        integer :fileId, code
-        string  :statusChangeEmail, email
+      response = AkamaiApi::Eccu::UpdateEmailRequest.new(code).execute(email)
+      response.tap do |successful|
+        self.email = email if successful
       end
-      response = client.call :set_status_change_email, :message => body.to_s
-      successful = response.body[:set_status_change_email_response][:success]
-      self.email = email if successful
-      successful
-    rescue Savon::HTTPError => e
-      raise ::AkamaiApi::Unauthorized if e.http.code == 401
-      raise
     end
 
     def destroy
