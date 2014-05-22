@@ -1,3 +1,7 @@
+require "thor"
+require "akamai_api/cli/ccu"
+require "akamai_api/cli/eccu"
+
 module AkamaiApi
   module Cli
     class App < Thor
@@ -5,7 +9,7 @@ module AkamaiApi
       subcommand 'ccu', AkamaiApi::Cli::Ccu::Base
 
       desc 'eccu', 'ECCU Interface'
-      subcommand 'eccu', AkamaiApi::Cli::Eccu
+      subcommand 'eccu', AkamaiApi::Cli::Eccu::Base
 
       def help *args
         puts

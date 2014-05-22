@@ -15,7 +15,7 @@ describe "Given I request a purge status" do
     let(:progress_uri) { '/ccu/v2/purges/12345678-1234-5678-1234-123456789012' }
 
     before do
-      AkamaiApi::Ccu.stub auth: { username: 'foo', password: 'bar' }
+      AkamaiApi.stub auth: { username: 'foo', password: 'bar' }
     end
 
     it "raises an error" do

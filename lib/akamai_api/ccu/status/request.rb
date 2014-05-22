@@ -1,3 +1,7 @@
+require "httparty"
+require "akamai_api/unauthorized"
+require "akamai_api/ccu/status/response"
+
 module AkamaiApi::Ccu::Status
   class Request
     include HTTParty
@@ -5,15 +9,11 @@ module AkamaiApi::Ccu::Status
     base_uri 'https://api.ccu.akamai.com/ccu/v2/queues/default'
 
     def execute
-      response = self.class.get('/', basic_auth: auth)
+      response = self.class.get('/', basic_auth: AkamaiApi.auth)
       parse_response response
     end
 
     private
-
-    def auth
-      AkamaiApi::Ccu.auth
-    end
 
     def parse_response response
       raise AkamaiApi::Unauthorized if response.code == 401

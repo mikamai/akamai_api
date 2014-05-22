@@ -5,7 +5,9 @@ require 'savon'
 end
 
 module AkamaiApi
-  class Unauthorized < StandardError; end
-
   def self.config; @config ||= { :auth => ['', ''], :log => false }; end
+
+  def self.auth
+    { username: config[:auth].first, password: config[:auth].last }
+  end
 end

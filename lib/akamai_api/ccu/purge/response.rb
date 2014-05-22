@@ -1,3 +1,5 @@
+require "akamai_api/ccu/response"
+
 module AkamaiApi::Ccu::Purge
   class Response < ::AkamaiApi::Ccu::Response
     def described_by

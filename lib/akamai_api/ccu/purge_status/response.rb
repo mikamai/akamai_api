@@ -1,3 +1,5 @@
+require "akamai_api/ccu/response"
+
 module AkamaiApi::Ccu::PurgeStatus
   class Response < ::AkamaiApi::Ccu::Response
     def progress_uri

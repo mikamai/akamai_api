@@ -1,6 +1,5 @@
-class AkamaiApi::Cli::Eccu
+module AkamaiApi::Cli::Eccu
   class EntryRenderer
-
     def self.render entries
       output = ["----------"]
       entries.each do |e|

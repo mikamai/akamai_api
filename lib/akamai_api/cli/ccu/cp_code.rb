@@ -1,3 +1,7 @@
+require "akamai_api/ccu"
+require "akamai_api/cli/command"
+require "akamai_api/cli/ccu/purge_renderer"
+
 module AkamaiApi::Cli::Ccu
   class CpCode < AkamaiApi::Cli::Command
     namespace 'ccu cpcode'

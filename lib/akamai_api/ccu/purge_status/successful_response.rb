@@ -1,4 +1,4 @@
-require File.expand_path '../response', __FILE__
+require "akamai_api/ccu/purge_status/response"
 
 module AkamaiApi::Ccu::PurgeStatus
   class SuccessfulResponse < Response

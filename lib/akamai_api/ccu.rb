@@ -1,6 +1,5 @@
 require 'httparty'
 require 'active_support/core_ext'
-require 'akamai_api/ccu/response'
 require 'akamai_api/ccu/purge'
 require 'akamai_api/ccu/status'
 require 'akamai_api/ccu/purge_status'
@@ -8,8 +7,6 @@ require 'akamai_api/ccu/purge_status'
 module AkamaiApi
   module Ccu
     extend self
-
-    class UnrecognizedOption < StandardError; end
 
     [:invalidate, :remove].each do |action|
       send :define_method, action do |*params|
@@ -38,10 +35,6 @@ module AkamaiApi
       else
         Status::Request.new.execute
       end
-    end
-
-    def self.auth
-      { username: AkamaiApi.config[:auth].first, password: AkamaiApi.config[:auth].last }
     end
   end
 end

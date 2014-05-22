@@ -1,3 +1,5 @@
+require "akamai_api/ccu/response"
+
 module AkamaiApi::Ccu::Status
   class Response < ::AkamaiApi::Ccu::Response
     def queue_length

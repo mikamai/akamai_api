@@ -21,7 +21,7 @@ describe AkamaiApi::Ccu::PurgeStatus::Request do
     end
 
     it "sets the auth in the request" do
-      AkamaiApi::Ccu.stub auth: 'foo'
+      AkamaiApi.stub auth: 'foo'
       expect(AkamaiApi::Ccu::PurgeStatus::Request).to receive :get do |uri, args|
         expect(args).to eq basic_auth: 'foo'
         fake_response

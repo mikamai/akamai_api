@@ -1,3 +1,5 @@
+require "thor"
+
 module AkamaiApi
   module Cli
     class Command < Thor

@@ -1,3 +1,8 @@
+require "httparty"
+require "akamai_api/unauthorized"
+require "akamai_api/ccu/unrecognized_option"
+require "akamai_api/ccu/purge/response"
+
 module AkamaiApi::Ccu::Purge
   class Request
     include HTTParty
@@ -30,12 +35,8 @@ module AkamaiApi::Ccu::Purge
 
     def execute *items
       items = Array.wrap(items.first) if items.length == 1
-      response = self.class.post('/', basic_auth: auth, body: request_body(items))
+      response = self.class.post('/', basic_auth: AkamaiApi.auth, body: request_body(items))
       parse_response response
-    end
-
-    def auth
-      AkamaiApi::Ccu.auth
     end
 
     def request_body items

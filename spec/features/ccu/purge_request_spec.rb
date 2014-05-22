@@ -14,7 +14,7 @@ describe 'Given I request to purge an asset' do
 
     it 'raises error when user is not authorized' do
       VCR.use_cassette "akamai_api_ccu_#{type}_#{action}/invalid_credentials" do
-        AkamaiApi::Ccu.stub auth: { username: 'foo', password: 'bar' }
+        AkamaiApi.stub auth: { username: 'foo', password: 'bar' }
         expect { subject.send(method, items) }.to raise_error AkamaiApi::Unauthorized
       end
     end

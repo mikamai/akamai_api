@@ -68,7 +68,7 @@ describe AkamaiApi::Ccu::Purge::Request do
     end
 
     it "sets the auth in the post" do
-      subject.stub auth: 'foo'
+      AkamaiApi.stub auth: 'foo'
       expect(subject.class).to receive :post do |path, args|
         expect(args[:basic_auth]).to eq 'foo'
         fake_response

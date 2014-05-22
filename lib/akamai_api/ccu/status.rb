@@ -1,2 +1,4 @@
-require File.expand_path '../status/request', __FILE__
-require File.expand_path '../status/response', __FILE__
+require "akamai_api/ccu/status/request"
+
+module AkamaiApi::Ccu::Status
+end

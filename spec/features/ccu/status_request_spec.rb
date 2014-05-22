@@ -8,7 +8,7 @@ describe 'Given I request the current status' do
   end
 
   context 'and given my login credentials are wrong', vcr: { cassette_name: 'akamai_api_ccu_status/invalid_credentials' } do
-    before { AkamaiApi::Ccu.stub auth: { username: 'foo', password: 'bar' } }
+    before { AkamaiApi.stub auth: { username: 'foo', password: 'bar' } }
 
     it 'an error is raised' do
       expect { AkamaiApi::Ccu.status }.to raise_error AkamaiApi::Unauthorized

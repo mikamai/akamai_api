@@ -3,7 +3,7 @@ require 'spec_helper'
 describe AkamaiApi::Ccu::Status::Request do
   it 'executes a get upon base url passing the basic auth' do
     fake_response = double code: 200, parsed_response: {}
-    AkamaiApi::Ccu.stub auth: 'foo'
+    AkamaiApi.stub auth: 'foo'
     expect(AkamaiApi::Ccu::Status::Request).to receive(:get).with('/', basic_auth: 'foo').and_return fake_response
     subject.execute
   end
