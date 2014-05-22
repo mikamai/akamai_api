@@ -1,4 +1,6 @@
 require "httparty"
+require 'active_support'
+require 'active_support/core_ext/array'
 require "akamai_api/unauthorized"
 require "akamai_api/ccu/unrecognized_option"
 require "akamai_api/ccu/purge/response"

@@ -1,4 +1,7 @@
 require "savon"
+require "active_support"
+require "active_support/core_ext/array"
+require "active_support/core_ext/object/blank"
 
 module AkamaiApi
   class EccuRequest

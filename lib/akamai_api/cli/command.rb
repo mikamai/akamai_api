@@ -1,4 +1,6 @@
 require "thor"
+require "active_support"
+require "active_support/core_ext/hash"
 
 module AkamaiApi::CLI
   class Command < Thor
