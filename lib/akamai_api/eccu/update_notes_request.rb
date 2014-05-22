@@ -1,11 +1,10 @@
 require "savon"
 
-require "akamai_api/unauthorized"
-require "akamai_api/eccu/not_found"
+require "akamai_api/eccu/base_request"
 require "akamai_api/eccu/soap_body"
 
 module AkamaiApi::Eccu
-  class UpdateNotesRequest
+  class UpdateNotesRequest < BaseRequest
     attr_reader :code
 
     def initialize code
@@ -13,14 +12,10 @@ module AkamaiApi::Eccu
     end
 
     def execute notes
-      response = client.call :set_notes, message: request_body(notes).to_s
-      response.body[:set_notes_response][:success]
-    rescue Savon::HTTPError => e
-      e = ::AkamaiApi::Unauthorized if e.http.code == 401
-      raise e
-    rescue Savon::SOAPFault => e
-      e = ::AkamaiApi::Eccu::NotFound if e.to_hash[:fault][:faultstring] =~ /fileId .* does not exist/
-      raise e
+      with_soap_error_handling do
+        response = client_call :set_notes, message: request_body(notes).to_s
+        response.body[:set_notes_response][:success]
+      end
     end
 
     def request_body notes
@@ -28,12 +23,6 @@ module AkamaiApi::Eccu
         block.integer :fileId, code
         block.string  :notes,  notes
       end
-    end
-
-    private
-
-    def client
-      AkamaiApi::Eccu.client
     end
   end
 end
