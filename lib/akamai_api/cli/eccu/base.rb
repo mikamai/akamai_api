@@ -1,8 +1,8 @@
 require "akamai_api/cli/command"
 require "akamai_api/cli/eccu/entry_renderer"
 
-module AkamaiApi::Cli::Eccu
-  class Base < AkamaiApi::Cli::Command
+module AkamaiApi::CLI::Eccu
+  class Base < AkamaiApi::CLI::Command
     desc 'requests', 'Print the list of the last requests made to ECCU'
     method_option :content, :type => :boolean, :aliases => '-c',
                   :desc => 'Print request content too'

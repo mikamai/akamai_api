@@ -1,4 +1,4 @@
-module AkamaiApi::Cli::Eccu
+module AkamaiApi::CLI::Eccu
   class EntryRenderer
     def self.render entries
       output = ["----------"]

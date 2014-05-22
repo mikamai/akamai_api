@@ -2,8 +2,8 @@ require "akamai_api/ccu"
 require "akamai_api/cli/command"
 require "akamai_api/cli/ccu/purge_renderer"
 
-module AkamaiApi::Cli::Ccu
-  class CpCode < AkamaiApi::Cli::Command
+module AkamaiApi::CLI::Ccu
+  class CpCode < AkamaiApi::CLI::Command
     namespace 'ccu cpcode'
 
     desc 'remove CPCODE1 CPCODE2 ...', 'Purge CP Code(s) removing them from the cache'
@@ -34,7 +34,7 @@ module AkamaiApi::Cli::Ccu
         end
         load_config
         res = AkamaiApi::Ccu.purge type, :cpcode, cpcodes, :domain => options[:domain]
-        puts ::AkamaiApi::Cli::Ccu::PurgeRenderer.new(res).render
+        puts PurgeRenderer.new(res).render
       rescue AkamaiApi::Unauthorized
         puts "Your login credentials are invalid."
       end

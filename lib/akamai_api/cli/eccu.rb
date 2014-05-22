@@ -1,4 +1,4 @@
 require "akamai_api/cli/eccu/base"
 
-module AkamaiApi::Cli::Eccu
+module AkamaiApi::CLI::Eccu
 end

@@ -37,7 +37,7 @@ class VcrFriendlyCLI
   def execute!
     $stdin = @stdin
     $stdout = @stdout
-    @kernel.exit AkamaiApi::Cli::App.start(@argv.dup)
+    @kernel.exit AkamaiApi::CLI::App.start(@argv.dup)
   end
 end
 

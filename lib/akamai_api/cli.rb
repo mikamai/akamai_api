@@ -1,4 +1,6 @@
 require "akamai_api/cli/app"
 
-module AkamaiApi::Cli
+module AkamaiApi::CLI
 end
+
+AkamaiApi::Cli = AkamaiApi::CLI

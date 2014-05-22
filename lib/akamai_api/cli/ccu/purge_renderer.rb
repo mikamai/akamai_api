@@ -1,4 +1,4 @@
-module AkamaiApi::Cli::Ccu
+module AkamaiApi::CLI::Ccu
   class PurgeRenderer
     attr_reader :response
 

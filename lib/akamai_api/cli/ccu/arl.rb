@@ -2,8 +2,8 @@ require "akamai_api/ccu"
 require "akamai_api/cli/command"
 require "akamai_api/cli/ccu/purge_renderer"
 
-module AkamaiApi::Cli::Ccu
-  class Arl < AkamaiApi::Cli::Command
+module AkamaiApi::CLI::Ccu
+  class Arl < AkamaiApi::CLI::Command
     namespace 'ccu arl'
 
     desc 'remove http://john.com/a.txt http://www.smith.com/b.txt ...', 'Purge ARL(s) removing them from the cache'
@@ -31,7 +31,7 @@ module AkamaiApi::Cli::Ccu
         raise 'You should provide at least one valid URL' if arls.blank?
         load_config
         res = AkamaiApi::Ccu.purge type, :arl, arls, :domain => options[:domain]
-        puts ::AkamaiApi::Cli::Ccu::PurgeRenderer.new(res).render
+        puts PurgeRenderer.new(res).render
       rescue AkamaiApi::Unauthorized
         puts 'Your login credentials are invalid.'
       end

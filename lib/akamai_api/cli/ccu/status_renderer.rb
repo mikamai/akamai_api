@@ -1,7 +1,7 @@
 require "akamai_api/ccu/status/response"
 require "akamai_api/ccu/purge_status/successful_response"
 
-module AkamaiApi::Cli::Ccu
+module AkamaiApi::CLI::Ccu
   class StatusRenderer
     attr_reader :response
 

@@ -1,8 +1,8 @@
 require 'spec_helper'
 
 module AkamaiApi
-  describe Cli::Ccu::StatusRenderer do
-    subject { Cli::Ccu::StatusRenderer.new Ccu::Status::Response.new({}) }
+  describe CLI::Ccu::StatusRenderer do
+    subject { CLI::Ccu::StatusRenderer.new Ccu::Status::Response.new({}) }
 
     describe '#render' do
       it 'returns a string' do
@@ -15,20 +15,20 @@ module AkamaiApi
       end
 
       it 'delegates to #render_purge_status if response is a PurgeStatus::Response' do
-        subject = Cli::Ccu::StatusRenderer.new Ccu::PurgeStatus::SuccessfulResponse.new({})
+        subject = CLI::Ccu::StatusRenderer.new Ccu::PurgeStatus::SuccessfulResponse.new({})
         expect(subject).to receive(:render_purge_status)
         subject.render
       end
     end
 
     it '#render_purge_status delegates to #render_successful_purge_status for success response' do
-      subject = Cli::Ccu::StatusRenderer.new Ccu::PurgeStatus::SuccessfulResponse.new({})
+      subject = CLI::Ccu::StatusRenderer.new Ccu::PurgeStatus::SuccessfulResponse.new({})
       expect(subject).to receive :render_successful_purge_status
       subject.render_purge_status
     end
 
     it '#render_purge_status delegates to #render_not_found_purge_status for not foundresponse' do
-      subject = Cli::Ccu::StatusRenderer.new Ccu::PurgeStatus::NotFoundResponse.new({})
+      subject = CLI::Ccu::StatusRenderer.new Ccu::PurgeStatus::NotFoundResponse.new({})
       expect(subject).to receive :render_not_found_purge_status
       subject.render_purge_status
     end
