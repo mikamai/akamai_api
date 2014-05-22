@@ -253,19 +253,33 @@ module AkamaiApi
       end
 
       describe '#destroy' do
-        let(:fixture) { File.read 'spec/fixtures/eccu/delete/successful.xml' }
+        subject { EccuRequest.new code: '1234' }
 
-        it 'calls the ECCU service using code' do
-          body = SoapBody.new do
-            integer :fileId, 1234
-          end
-          savon.expects(:delete).with(:message => body.to_s).returns(fixture)
-          EccuRequest.new(:code => '1234').destroy
+        it 'delegates to DestroyRequest' do
+          fake_request = double
+          expect(fake_request).to receive(:execute).and_return true
+          expect(AkamaiApi::Eccu::DestroyRequest).to receive(:new).with('1234').and_return fake_request
+          subject.destroy
         end
 
-        it 'calls the ECCU service and return the service boolean response' do
-          savon.expects(:delete).with(:message => :any).returns(fixture)
-          EccuRequest.new(:code => '1234').destroy.should be_true
+        context 'when the update is successful' do
+          before do
+            expect_any_instance_of(AkamaiApi::Eccu::DestroyRequest).to receive(:execute).and_return true
+          end
+
+          it "returns true" do
+            expect(subject.destroy).to be_true
+          end
+        end
+
+        context 'when the update is not successful' do
+          before do
+            expect_any_instance_of(AkamaiApi::Eccu::DestroyRequest).to receive(:execute).and_return false
+          end
+
+          it "returns false" do
+            expect(subject.destroy).to be_false
+          end
         end
       end
     end

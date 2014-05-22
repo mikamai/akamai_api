@@ -6,6 +6,7 @@ require "active_support/core_ext/object/blank"
 require "akamai_api/eccu/soap_body"
 require "akamai_api/eccu/update_notes_request"
 require "akamai_api/eccu/update_email_request"
+require "akamai_api/eccu/destroy_request"
 
 SoapBody = AkamaiApi::Eccu::SoapBody
 module AkamaiApi
@@ -33,15 +34,7 @@ module AkamaiApi
     end
 
     def destroy
-      code = self.code.to_i
-      body = SoapBody.new do
-        integer :fileId, code
-      end
-      response = client.call :delete, :message => body.to_s
-      response.body[:delete_response][:success]
-    rescue Savon::HTTPError => e
-      raise ::AkamaiApi::Unauthorized if e.http.code == 401
-      raise
+      AkamaiApi::Eccu::DestroyRequest.new(code).execute
     end
 
     class << self
