@@ -1,5 +1,11 @@
 module AkamaiApi
   class SoapBody
+    TAG_TYPES = {
+      :boolean => 'xsd:boolean',
+      :integer => 'xsd:int',
+      :string  => 'xsd:string'
+    }
+
     attr_reader :builder
 
     def initialize &block
@@ -11,16 +17,10 @@ module AkamaiApi
       builder.tag! name, Base64.encode64(value), 'xsi:type' => 'xsd:base64Binary'
     end
 
-    def boolean name, value
-      builder.tag! name, value, 'xsi:type' => 'xsd:boolean'
-    end
-
-    def integer name, value
-      builder.tag! name, value, 'xsi:type' => 'xsd:int'
-    end
-
-    def string name, value
-      builder.tag! name, value, 'xsi:type' => 'xsd:string'
+    TAG_TYPES.each do |type, type_code|
+      define_method type do |name, value|
+        builder.tag! name, value, 'xsi:type' => type_code
+      end
     end
 
     def array name, values
