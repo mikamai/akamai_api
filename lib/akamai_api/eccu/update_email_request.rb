@@ -5,12 +5,6 @@ require "akamai_api/eccu/soap_body"
 
 module AkamaiApi::Eccu
   class UpdateEmailRequest < BaseRequest
-    attr_reader :code
-
-    def initialize code
-      @code = code
-    end
-
     def execute email
       with_soap_error_handling do
         response = client_call :set_status_change_email, message: request_body(email).to_s

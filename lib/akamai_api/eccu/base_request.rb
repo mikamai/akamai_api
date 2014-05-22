@@ -5,6 +5,12 @@ require "akamai_api/eccu/not_found"
 
 module AkamaiApi::Eccu
   class BaseRequest
+    attr_reader :code
+
+    def initialize code
+      @code = code
+    end
+
     protected
 
     def with_soap_error_handling &block

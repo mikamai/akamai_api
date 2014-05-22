@@ -1,11 +1,5 @@
 module AkamaiApi::Eccu
   class DestroyRequest < BaseRequest
-    attr_reader :code
-
-    def initialize code
-      @code = code
-    end
-
     def execute
       with_soap_error_handling do
         response = client_call :delete, message: request_body.to_s
