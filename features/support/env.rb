@@ -6,7 +6,11 @@ require 'aruba/in_process'
 require 'vcr'
 require 'webmock'
 
-require File.expand_path '../../../spec/auth', __FILE__
+begin
+  require File.expand_path '../auth.rb', __FILE__
+rescue LoadError
+  AkamaiApi.config[:auth] = ['test_username', 'test_password']
+end
 ENV['AKAMAI_USERNAME'], ENV['AKAMAI_PASSWORD'] = AkamaiApi.config[:auth]
 
 VCR.cucumber_tags do |t|
