@@ -6,13 +6,13 @@ http_interactions:
     body:
       encoding: UTF-8
       string: |-
-        <?xml version="1.0" encoding="UTF-8"?><env:Envelope xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:akapubeccudt="https://control.akamai.com/2003/Sep/PublishECCU.xsd" xmlns:env="http://schemas.xmlsoap.org/soap/envelope/" xmlns:ins0="https://control.akamai.com/AWS.xsd" xmlns:ins1="https://control.akamai.com/Publish.xsd"><env:Body><akapubeccudt:upload><filename xsi:type="xsd:string">./publish.xml</filename><contents xsi:type="xsd:base64Binary">PD94bWwgdmVyc2lvbj0iMS4wIj8+CjxlY2N1PgogIDxtYXRjaDpicm9pa2Vu
-        LWRpcnMgdmFsdWU9ImZvbyIgPgogICAgPG1hdGNoOnJlY3Vyc2l2ZS1kaXJz
-        IHZhbHVlPSJiYXIiID4KICAgICAgPG1hdGNoOnJlY3Vyc2l2ZS1kaXJzIHZh
-        bHVlPSJiYXouanBnIiA+CiAgICAgICAgPHJldmFsaWRhdGU+bm93PC9yZXZh
-        bGlkYXRlPgogICAgICA8L21hdGNoOnJlY3Vyc2l2ZS1kaXJzPgogICAgPC9t
-        YXRjaDpyZWN1cnNpdmUtZGlycz4KICA8L21hdGNoOnJlY3Vyc2l2ZS1kaXJz
-        Pgo8L2VjY3U+
+        <?xml version="1.0" encoding="UTF-8"?><env:Envelope xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:akapubeccudt="https://control.akamai.com/2003/Sep/PublishECCU.xsd" xmlns:env="http://schemas.xmlsoap.org/soap/envelope/" xmlns:ins0="https://control.akamai.com/AWS.xsd" xmlns:ins1="https://control.akamai.com/Publish.xsd"><env:Body><akapubeccudt:upload><filename xsi:type="xsd:string">./publish.xml</filename><contents xsi:type="xsd:base64Binary">PD94bWwgdmVyc2lvbj0iMS4wIj8+CjxlY2N1PgogIDxtYXRjaDpyZWN1cnNp
+        dmUtZGlycyB2YWx1ZT0iZm9vIiA+CiAgICA8bWF0Y2g6cmVjdXJzaXZlLWRp
+        cnMgdmFsdWU9ImJhciIgPgogICAgICA8bWF0Y2g6cmVjdXJzaXZlLWRpcnMg
+        dmFsdWU9ImJhei5qcGciID4KICAgICAgICA8cmV2YWxpZGF0ZT5ub3c8L3Jl
+        dmFsaWRhdGU+CiAgICAgIDwvbWF0Y2g6cmVjdXJzaXZlLWRpcnM+CiAgICA8
+        L21hdGNoOnJlY3Vyc2l2ZS1kaXJzPgogIDwvbWF0Y2g6cmVjdXJzaXZlLWRp
+        cnM+CjwvZWNjdT4=
         </contents><notes xsi:type="xsd:string">ECCU Request using AkamaiApi gem</notes><versionString xsi:type="xsd:string"></versionString><propertyName xsi:type="xsd:string">foo.com</propertyName><propertyType xsi:type="xsd:string">hostheader</propertyType><propertyNameExactMatch xsi:type="xsd:boolean">true</propertyNameExactMatch></akapubeccudt:upload></env:Body></env:Envelope>
     headers:
       Soapaction:

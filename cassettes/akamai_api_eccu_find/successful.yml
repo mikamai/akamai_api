@@ -1,0 +1,70 @@
+---
+http_interactions:
+- request:
+    method: post
+    uri: https://USERNAME:PASSWORD@control.akamai.com/webservices/services/PublishECCU
+    body:
+      encoding: UTF-8
+      string: <?xml version="1.0" encoding="UTF-8"?><env:Envelope xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:akapubeccudt="https://control.akamai.com/2003/Sep/PublishECCU.xsd"
+        xmlns:env="http://schemas.xmlsoap.org/soap/envelope/" xmlns:ins0="https://control.akamai.com/AWS.xsd"
+        xmlns:ins1="https://control.akamai.com/Publish.xsd"><env:Body><akapubeccudt:getInfo><fileId
+        xsi:type="xsd:int">1234</fileId><retrieveContents xsi:type="xsd:boolean">true</retrieveContents></akapubeccudt:getInfo></env:Body></env:Envelope>
+    headers:
+      Soapaction:
+      - '"getInfo"'
+      Content-Type:
+      - text/xml;charset=UTF-8
+      Content-Length:
+      - '568'
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+      Accept:
+      - "*/*"
+      User-Agent:
+      - Ruby
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Server:
+      - Apache
+      Content-Type:
+      - text/xml;charset=utf-8
+      Content-Length:
+      - '1851'
+      Expires:
+      - Fri, 23 May 2014 09:08:45 GMT
+      Cache-Control:
+      - max-age=0, no-cache, no-store
+      Pragma:
+      - no-cache
+      Date:
+      - Fri, 23 May 2014 09:08:45 GMT
+      Connection:
+      - keep-alive
+      X-Frame-Options:
+      - SAMEORIGIN
+    body:
+      encoding: UTF-8
+      string: <?xml version="1.0" encoding="UTF-8"?><soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/"
+        xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"><soapenv:Body><ns1:getInfoResponse
+        soapenv:encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" xmlns:ns1="https://control.akamai.com/2003/Sep/PublishECCU.xsd"><EccuInfo
+        xsi:type="ns2:EccuInfo" xmlns:ns2="https://control.akamai.com/Publish.xsd"><contents
+        xsi:type="xsd:base64Binary">PD94bWwgdmVyc2lvbj0iMS4wIj8+CjwhLS0gU3VibWl0dGVkIGJ5IGd1ZXN0\nIG9uIDUvMjEvMjAxNCB2aWEgdGhlIEFrYW1haUFwaSBnZW0gLS0+CjxlY2N1\nPgogIDxyZXZhbGlkYXRlPm5vdzwvcmV2YWxpZGF0ZT4KPC9lY2N1Pgo=</contents><extendedStatusMessage
+        xsi:type="xsd:string">File successfully deployed to Akamai network (Succeeded)</extendedStatusMessage><fileId
+        xsi:type="xsd:int">1234</fileId><fileSize xsi:type="xsd:int">127</fileSize><filename
+        xsi:type="xsd:string" xsi:nil="true"/><md5Digest xsi:type="xsd:string">8e456fe0bdeba72532f852e4daec184b</md5Digest><notes
+        xsi:type="xsd:string">ECCU Request using EdgeControl</notes><propertyName
+        xsi:type="xsd:string">foo.bar</propertyName><propertyNameExactMatch
+        xsi:type="xsd:boolean">true</propertyNameExactMatch><propertyType xsi:type="xsd:string">hostheader</propertyType><statusChangeEmail
+        xsi:type="xsd:string">guest@mikamai.com</statusChangeEmail><statusCode
+        xsi:type="xsd:int">4000</statusCode><statusMessage xsi:type="xsd:string">File
+        successfully deployed to Akamai's network</statusMessage><statusUpdateDate
+        xsi:type="xsd:dateTime">2014-05-21T09:07:11.136Z</statusUpdateDate><uploadDate
+        xsi:type="xsd:dateTime">2014-05-21T08:41:55.136Z</uploadDate><uploadedBy xsi:type="xsd:string">test1</uploadedBy><versionString
+        xsi:type="xsd:string" xsi:nil="true"/></EccuInfo></ns1:getInfoResponse></soapenv:Body></soapenv:Envelope>
+    http_version:
+  recorded_at: Fri, 23 May 2014 09:08:45 GMT
+recorded_with: VCR 2.9.0

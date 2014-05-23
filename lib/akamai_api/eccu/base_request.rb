@@ -8,7 +8,7 @@ module AkamaiApi::Eccu
     attr_reader :code
 
     def initialize code
-      @code = code
+      @code = code.to_i
     end
 
     protected

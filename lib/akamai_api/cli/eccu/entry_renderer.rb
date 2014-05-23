@@ -30,7 +30,7 @@ module AkamaiApi::CLI::Eccu
       output = [
         "* Code    : #{entry.code}",
         entry_status,
-        "            #{entry.status[:update_date]}",
+        "            #{entry.status[:updated_at]}",
         entry_property
       ]
       output << "* Notes   : #{entry.notes}" if entry.notes.present?

@@ -4,7 +4,7 @@ Feature: akamai_api ccu arl invalidate
 
   @vcr
   Scenario: invalid credentials
-    When I run `akamai_api ccu arl invalidate http://www.foo.com/bar.txt -u foo -p bar`
+    When I run `akamai_api ccu arl invalidate http://www.foo.bar/t.txt -u foo -p bar`
     Then the output should contain:
       """
       Your login credentials are invalid.
@@ -12,7 +12,7 @@ Feature: akamai_api ccu arl invalidate
 
   @vcr
   Scenario: invalid item
-    When I run `akamai_api ccu arl invalidate http://www.foo.com/bar.txt`
+    When I run `akamai_api ccu arl invalidate http://www.foo.bar/t.txt`
     Then the output should contain:
       """
       There was an error processing your request:
@@ -28,7 +28,7 @@ Feature: akamai_api ccu arl invalidate
 
   @vcr
   Scenario: single item
-    When I run `akamai_api ccu arl invalidate http://www.foo.com/bar.txt`
+    When I run `akamai_api ccu arl invalidate http://www.foo.bar/t.txt`
     Then the output should contain:
       """
       Purge request successfully submitted:

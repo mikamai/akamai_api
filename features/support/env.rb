@@ -23,7 +23,8 @@ VCR.configure do |c|
   c.hook_into :webmock
   c.cassette_library_dir = 'cassettes'
   c.default_cassette_options = {
-    record: :once
+    record: :once,
+    match_requests_on: [:method, :uri, :body]
   }
   c.after_http_request do |request|
     request.uri.gsub! ENV['AKAMAI_USERNAME'], 'USERNAME'

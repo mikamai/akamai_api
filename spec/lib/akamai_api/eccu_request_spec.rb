@@ -19,34 +19,38 @@ module AkamaiApi
     end
 
     describe '::find' do
-      let(:fixture) { File.read 'spec/fixtures/eccu/get_info/successful.xml' }
+      subject { EccuRequest }
 
-      def soap_body id, verbose
-        SoapBody.new do
-          integer :fileId, id
-          boolean :retrieveContents, verbose
-        end
+      it 'delegates to FindRequest' do
+        fake_request = double
+        expect(fake_request).to receive(:execute).with(true).and_return AkamaiApi::Eccu::FindResponse.new({})
+        expect(AkamaiApi::Eccu::FindRequest).to receive(:new).with('1234').and_return fake_request
+        subject.find '1234'
       end
 
-      context 'when calling the ECCU service' do
-        it 'sets the specified code and verbosity' do
-          body = soap_body(1234567, false).to_s
-          savon.expects(:get_info).with(:message => body).returns(fixture)
-          EccuRequest.find('1234567')
-        end
-
-        it 'sets to return file content if verbose is specified' do
-          body = soap_body(1234567, true).to_s
-          savon.expects(:get_info).with(:message => body).returns(fixture)
-          EccuRequest.find('1234567', :verbose => true)
-        end
+      it "returns an EccuRequest" do
+        response = AkamaiApi::Eccu::FindResponse.new({})
+        expect_any_instance_of(AkamaiApi::Eccu::FindRequest).to receive(:execute).and_return response
+        subject.find '1234'
       end
 
-      it 'correctly assign the exact match' do
-        body = soap_body(1234567, false).to_s
-        savon.expects(:get_info).with(:message => body).returns(fixture)
-        r = EccuRequest.find('1234567')
-        r.property[:exact_match].should be_true
+      {
+        file:           :file,
+        status:         :status,
+        code:           :code,
+        notes:          :notes,
+        property:       :property,
+        email:          :email,
+        upload_date:    :uploaded_at,
+        uploaded_by:    :uploaded_by,
+        version_string: :version
+      }.each do |local_name, remote_name|
+        it "maps response '#{remote_name}' to '#{local_name}'" do
+          response = AkamaiApi::Eccu::FindResponse.new({})
+          response.stub remote_name => "foobarbaz"
+          expect_any_instance_of(AkamaiApi::Eccu::FindRequest).to receive(:execute).and_return response
+          expect(subject.find('1234').send local_name).to eq "foobarbaz"
+        end
       end
     end
 

@@ -44,7 +44,7 @@ describe AkamaiApi::Eccu::UpdateNotesRequest do
     end
 
     it "sets an integer value named 'fileId' with the given code" do
-      expect_any_instance_of(AkamaiApi::Eccu::SoapBody).to receive(:integer).with :fileId, '1234'
+      expect_any_instance_of(AkamaiApi::Eccu::SoapBody).to receive(:integer).with :fileId, 1234
       subject.request_body 'foo'
     end
 

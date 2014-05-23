@@ -5,7 +5,7 @@ http_interactions:
     uri: https://USERNAME:PASSWORD@api.ccu.akamai.com/ccu/v2/queues/default/
     body:
       encoding: UTF-8
-      string: '{"type":"cpcode","action":"remove","objects":["http://www.foo.com/bar.txt"]}'
+      string: '{"type":"cpcode","action":"remove","domain":"production","objects":["12345"]}'
     headers:
       Content-Type:
       - application/json

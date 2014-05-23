@@ -7,6 +7,7 @@ require "akamai_api/eccu/soap_body"
 require "akamai_api/eccu/update_notes_request"
 require "akamai_api/eccu/update_email_request"
 require "akamai_api/eccu/destroy_request"
+require "akamai_api/eccu/find_request"
 
 SoapBody = AkamaiApi::Eccu::SoapBody
 module AkamaiApi
@@ -57,41 +58,19 @@ module AkamaiApi
         find all_ids.first, args
       end
 
-      def find code, args = {}
-        body = SoapBody.new do
-          integer :fileId, code.to_i
-          boolean :retrieveContents, args[:verbose] == true
-        end
-        response = client.call(:get_info, :message => body.to_s)
-        response_body = response.body[:get_info_response][:eccu_info]
-        EccuRequest.new({
-          :file => {
-            :content    => Base64.decode64(get_if_kind(response_body[:contents], String) || ''),
-            :file_size  => response_body[:file_size].to_i,
-            :file_name  => get_if_kind(response_body[:filename], String),
-            :md5_digest => get_if_kind(response_body[:md5_digest], String)
-          },
-          :status => {
-            :extended    => get_if_kind(response_body[:extended_status_message], String),
-            :code        => response_body[:status_code].to_i,
-            :message     => get_if_kind(response_body[:status_message], String),
-            :update_date => get_if_kind(response_body[:status_update_date], String)
-          },
-          :code  => response_body[:file_id],
-          :notes => get_if_kind(response_body[:notes], String),
-          :property => {
-            :name => get_if_kind(response_body[:property_name], String),
-            :exact_match => (response_body[:property_name_exact_match] == true),
-            :type => get_if_kind(response_body[:property_type], String)
-          },
-          :email => get_if_kind(response_body[:status_change_email], String),
-          :upload_date => get_if_kind(response_body[:upload_date], String),
-          :uploaded_by => get_if_kind(response_body[:uploaded_by], String),
-          :version_string => get_if_kind(response_body[:version_string], String)
-        })
-      rescue Savon::HTTPError => e
-        raise ::AkamaiApi::Unauthorized if e.http.code == 401
-        raise
+      def find code, verbose: true
+        response = AkamaiApi::Eccu::FindRequest.new(code).execute verbose
+        new({
+              :file => response.file,
+              :status => response.status,
+              :code => response.code,
+              :notes => response.notes,
+              :property => response.property,
+              :email => response.email,
+              :upload_date => response.uploaded_at,
+              :uploaded_by => response.uploaded_by,
+              :version_string => response.version
+            })
       end
 
       def publish_file property, file_name, args = {}
