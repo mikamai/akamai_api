@@ -58,8 +58,8 @@ module AkamaiApi
         find all_ids.first, args
       end
 
-      def find code, verbose: true
-        response = AkamaiApi::Eccu::FindRequest.new(code).execute verbose
+      def find code, args = {}
+        response = AkamaiApi::Eccu::FindRequest.new(code).execute args.fetch(:verbose, true)
         new({
               :file => response.file,
               :status => response.status,
