@@ -11,21 +11,54 @@ module AkamaiApi::CLI
 
     no_tasks do
       def load_config
-        config = {}
-        config_file = File.expand_path '~/.akamai_api.yml'
-        if File::exists?( config_file )
-          config = YAML::load_file(config_file).symbolize_keys
+        load_config_from_file
+        load_config_from_env
+        load_config_from_options
+        if AkamaiApi.auth_empty?
+          render_auth_info
+          exit 1
         end
-        if ENV['AKAMAI_USERNAME'] && ENV['AKAMAI_PASSWORD']
-          config.merge! :auth => [ENV['AKAMAI_USERNAME'], ENV['AKAMAI_PASSWORD']]
+      end
+
+      def config_file
+        File.expand_path '~/.akamai_api.yml'
+      end
+
+      def load_config_from_file
+        if File.exists?(config_file)
+          AkamaiApi.config.merge! YAML::load_file(config_file).symbolize_keys
         end
-        if options[:username] && options[:password]
-          config.merge! :auth => [options[:username], options[:password]]
+      end
+
+      def load_config_from_options
+        AkamaiApi.config[:auth].tap do |auth|
+          auth[0] = options.fetch 'username', auth[0]
+          auth[1] = options.fetch 'password', auth[1]
         end
-        if config[:auth].nil? || config[:auth].compact.blank?
-          raise "#{config_file} does not exist OR doesn't contain auth info OR you didn't export environment variables OR you didn't specify username and password on the command line"
+      end
+
+      def load_config_from_env
+        AkamaiApi.config[:auth].tap do |auth|
+          auth[0] = ENV.fetch 'AKAMAI_USERNAME', auth[0]
+          auth[1] = ENV.fetch 'AKAMAI_PASSWORD', auth[1]
         end
-        AkamaiApi.config.merge! config
+      end
+
+      def render_auth_info
+        puts <<-OUTPUT
+No authentication config found. You can specify auth credentials with one of the following methods:"
+
+* Creating a file in your home directory named `.akamai_api.yml` with the following content:"
+  auth:"
+    - my_username"
+    - my_password"
+
+* Using the environment variables AKAMAI_USERNAME and AKAMAI_PASSWORD. E.g:"
+  AKAMAI_USERNAME=my_username AKAMAI_PASSWORD=my_password akamai_api eccu last_request"
+
+* Passing username and password options from command line. E.g.:"
+ akamai_api eccu last_request -u my_username -p my_password"
+OUTPUT
       end
     end
   end
