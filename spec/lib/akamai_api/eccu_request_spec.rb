@@ -140,16 +140,16 @@ module AkamaiApi
       describe '#update_notes!' do
         subject { EccuRequest.new code: '1234' }
 
-        it 'delegates to UpdateNotesRequest' do
+        it 'delegates to UpdateAttributeRequest' do
           fake_request = double
           expect(fake_request).to receive(:execute).with('foo').and_return true
-          expect(AkamaiApi::Eccu::UpdateNotesRequest).to receive(:new).with('1234').and_return fake_request
+          expect(AkamaiApi::Eccu::UpdateAttributeRequest).to receive(:new).with('1234', :notes).and_return fake_request
           subject.update_notes! 'foo'
         end
 
         context 'when the update is successful' do
           before do
-            expect_any_instance_of(AkamaiApi::Eccu::UpdateNotesRequest).to receive(:execute).and_return true
+            expect_any_instance_of(AkamaiApi::Eccu::UpdateAttributeRequest).to receive(:execute).and_return true
           end
 
           it "returns true" do
@@ -163,7 +163,7 @@ module AkamaiApi
 
         context 'when the update is not successful' do
           before do
-            expect_any_instance_of(AkamaiApi::Eccu::UpdateNotesRequest).to receive(:execute).and_return false
+            expect_any_instance_of(AkamaiApi::Eccu::UpdateAttributeRequest).to receive(:execute).and_return false
           end
 
           it "returns false" do
@@ -182,13 +182,13 @@ module AkamaiApi
         it 'delegates to UpdateEmailRequest' do
           fake_request = double
           expect(fake_request).to receive(:execute).with('foo').and_return true
-          expect(AkamaiApi::Eccu::UpdateEmailRequest).to receive(:new).with('1234').and_return fake_request
+          expect(AkamaiApi::Eccu::UpdateAttributeRequest).to receive(:new).with('1234', :status_change_email).and_return fake_request
           subject.update_email! 'foo'
         end
 
         context 'when the update is successful' do
           before do
-            expect_any_instance_of(AkamaiApi::Eccu::UpdateEmailRequest).to receive(:execute).and_return true
+            expect_any_instance_of(AkamaiApi::Eccu::UpdateAttributeRequest).to receive(:execute).and_return true
           end
 
           it "returns true" do
@@ -202,7 +202,7 @@ module AkamaiApi
 
         context 'when the update is not successful' do
           before do
-            expect_any_instance_of(AkamaiApi::Eccu::UpdateEmailRequest).to receive(:execute).and_return false
+            expect_any_instance_of(AkamaiApi::Eccu::UpdateAttributeRequest).to receive(:execute).and_return false
           end
 
           it "returns false" do

@@ -4,8 +4,7 @@ require "active_support/core_ext/array"
 require "active_support/core_ext/object/blank"
 
 require "akamai_api/eccu/soap_body"
-require "akamai_api/eccu/update_notes_request"
-require "akamai_api/eccu/update_email_request"
+require "akamai_api/eccu/update_attribute_request"
 require "akamai_api/eccu/destroy_request"
 require "akamai_api/eccu/find_request"
 require "akamai_api/eccu/publish_request"
@@ -22,17 +21,14 @@ module AkamaiApi
       end
     end
 
-    def update_notes! notes
-      response = AkamaiApi::Eccu::UpdateNotesRequest.new(code).execute(notes)
-      response.tap do |successful|
-        self.notes = notes if successful
-      end
-    end
-
-    def update_email! email
-      response = AkamaiApi::Eccu::UpdateEmailRequest.new(code).execute(email)
-      response.tap do |successful|
-        self.email = email if successful
+    {
+      notes: :notes,
+      email: :status_change_email
+    }.each do |name, attribute|
+      define_method "update_#{name}!" do |value|
+        successful = AkamaiApi::Eccu::UpdateAttributeRequest.new(code, attribute).execute(value)
+        send "#{name}=", value if successful
+        successful
       end
     end
 

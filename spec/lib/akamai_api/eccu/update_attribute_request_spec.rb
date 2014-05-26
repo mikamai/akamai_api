@@ -1,7 +1,13 @@
 require 'spec_helper'
 
-describe AkamaiApi::Eccu::UpdateNotesRequest do
-  subject { AkamaiApi::Eccu::UpdateNotesRequest.new '1234' }
+describe AkamaiApi::Eccu::UpdateAttributeRequest do
+  subject { AkamaiApi::Eccu::UpdateAttributeRequest.new '1234', :status_change_email }
+
+  describe '#attribute_for_soap' do
+    it 'returns a camelized symbol with first letter in downcase' do
+      expect(subject.attribute_for_soap).to eq :statusChangeEmail
+    end
+  end
 
   describe "#execute" do
     let(:fake_client) { double call: nil }
@@ -10,22 +16,22 @@ describe AkamaiApi::Eccu::UpdateNotesRequest do
       AkamaiApi::Eccu.stub client: fake_client
     end
 
-    it "calls 'set_notes' via savon with a message" do
-      fake_response = double body: { set_notes_response: { success: true } }
+    it "calls the appropriate soap method via savon with a message" do
+      fake_response = double body: { set_status_change_email_response: { success: true } }
       expect(subject).to receive(:request_body).with('foo').and_return double(to_s: 'asd')
-      expect(fake_client).to receive(:call).with(:set_notes, message: 'asd').and_return fake_response
+      expect(fake_client).to receive(:call).with(:set_status_change_email, message: 'asd').and_return fake_response
       subject.execute 'foo'
     end
 
     it "returns 'true' if response hash reports to be successful" do
       subject.stub request_body: 'example'
-      fake_client.stub call: double(body: { set_notes_response: { success: true } })
+      fake_client.stub call: double(body: { set_status_change_email_response: { success: true } })
       expect(subject.execute 'foo').to be_true
     end
 
     it "returns 'false' if response hash reports to be unsuccessful" do
       subject.stub request_body: 'example'
-      fake_client.stub call: double(body: { set_notes_response: { success: false } })
+      fake_client.stub call: double(body: { set_status_change_email_response: { success: false } })
       expect(subject.execute 'foo').to be_false
     end
 
@@ -64,13 +70,13 @@ describe AkamaiApi::Eccu::UpdateNotesRequest do
       subject.request_body 'foo'
     end
 
-    it "sets a string value named 'notes' with the given notes" do
-      expect_any_instance_of(AkamaiApi::Eccu::SoapBody).to receive(:string).with :notes, 'foo'
+    it "sets a string value named 'statusChangeEmails' with the given email" do
+      expect_any_instance_of(AkamaiApi::Eccu::SoapBody).to receive(:string).with :statusChangeEmail, 'foo'
       subject.request_body 'foo'
     end
 
-    it "sets only fileId and notes" do
-      expect(subject.request_body('foo').to_s).to eq "<fileId xsi:type=\"xsd:int\">1234</fileId><notes xsi:type=\"xsd:string\">foo</notes>"
+    it "sets only fileId and email" do
+      expect(subject.request_body('foo').to_s).to eq "<fileId xsi:type=\"xsd:int\">1234</fileId><statusChangeEmail xsi:type=\"xsd:string\">foo</statusChangeEmail>"
     end
   end
 end
