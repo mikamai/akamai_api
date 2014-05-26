@@ -27,7 +27,7 @@ module AkamaiApi::CLI::Eccu
 
     desc 'publish_xml path/to/request.xml john.com', 'Publish a request made in XML for the specified Digital Property (usually the Host Header)'
     long_desc 'Publish a request made in XML (ECCU Request Format) and apply it to the specified Digital Property (usually the Host Header)'
-    method_option :property_type, :type => :string, :aliases => '-pt',
+    method_option :property_type, :type => :string, :aliases => '-P',
                   :default => 'hostheader', :banner => 'type',
                   :desc => 'Type of enlisted properties'
     method_option :no_exact_match, :type => :boolean,

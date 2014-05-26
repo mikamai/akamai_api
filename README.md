@@ -121,7 +121,7 @@ Usage:
   akamai_api publish_xml path/to/request.xml john.com
 
 Options:
-  -pt, [--property-type=type]             # Type of enlisted properties
+  -P, [--property-type=type]              # Type of enlisted properties
                                           # Default: hostheader
       [--no-exact-match]                  # Do not do an exact match on property names
   -e, [--emails=foo@foo.com bar@bar.com]  # Email(s) to use to send notification on status change
