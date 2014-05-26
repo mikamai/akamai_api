@@ -1,5 +1,5 @@
 # AkamaiApi
-[![Gem Version](https://badge.fury.io/rb/akamai_api.svg)](http://badge.fury.io/rb/akamai_api) [![Build Status](https://travis-ci.org/mikamai/akamai_api.svg?branch=master)](https://travis-ci.org/mikamai/akamai_api) [![Code Climate](https://codeclimate.com/github/mikamai/akamai_api.png)](https://codeclimate.com/github/mikamai/akamai_api) [![Coverage Status](https://img.shields.io/coveralls/mikamai/akamai_api.svg)](https://coveralls.io/r/mikamai/akamai_api?branch=master)
+[![Gem Version](https://badge.fury.io/rb/akamai_api.svg)](http://badge.fury.io/rb/akamai_api) [![Build Status](https://travis-ci.org/mikamai/akamai_api.svg?branch=master)](https://travis-ci.org/mikamai/akamai_api) [![Code Climate](https://codeclimate.com/github/mikamai/akamai_api.png)](https://codeclimate.com/github/mikamai/akamai_api) [![Coverage Status](https://img.shields.io/coveralls/mikamai/akamai_api.svg)](https://coveralls.io/r/mikamai/akamai_api?branch=master) [![Dependency Status](https://gemnasium.com/mikamai/akamai_api.svg)](https://gemnasium.com/mikamai/akamai_api)
 
 __Now with CCU REST support!__
 
