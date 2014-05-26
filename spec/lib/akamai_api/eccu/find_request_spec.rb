@@ -4,21 +4,27 @@ describe AkamaiApi::Eccu::FindRequest do
   subject { AkamaiApi::Eccu::FindRequest.new '1234' }
 
   describe "#execute" do
+    let(:fake_client) { double call: nil }
+
+    before do
+      AkamaiApi::Eccu.stub client: fake_client
+    end
+
     it "calls 'get_info' via savon with a message" do
       fake_response = double body: { get_info_response: { success: true } }
       expect(subject).to receive(:request_body).with(true).and_return double(to_s: 'asd')
-      expect(AkamaiApi::Eccu.client).to receive(:call).with(:get_info, message: 'asd').and_return fake_response
+      expect(fake_client).to receive(:call).with(:get_info, message: 'asd').and_return fake_response
       subject.execute true
     end
 
     it "returns a FindResponse" do
       subject.stub request_body: 'example'
-      AkamaiApi::Eccu.client.stub call: double(body: { get_info_response: { eccu_info: {} } })
+      fake_client.stub call: double(body: { get_info_response: { eccu_info: {} } })
       expect(subject.execute 'foo').to be_a AkamaiApi::Eccu::FindResponse
     end
 
     it "raises NotFound if request raises a Savon::SOAPFault with particular message" do
-      expect(AkamaiApi::Eccu.client).to receive :call do
+      expect(fake_client).to receive :call do
         exc = Savon::SOAPFault.new({}, {})
         exc.stub to_hash: { fault: { faultstring: 'asdasd fileId xsxx does not exist' } }
         exc.stub to_s: ''
@@ -28,14 +34,14 @@ describe AkamaiApi::Eccu::FindRequest do
     end
 
     it "raises unauthorized if request raises a Savon::HTTPError with code 401" do
-      expect(AkamaiApi::Eccu.client).to receive :call do
+      expect(fake_client).to receive :call do
         raise Savon::HTTPError, double(code: 401)
       end
       expect { subject.execute true }.to raise_error AkamaiApi::Unauthorized
     end
 
     it "raises Savon:HTTPError if request raises this exception and its code differs from 401" do
-      expect(AkamaiApi::Eccu.client).to receive :call do
+      expect(fake_client).to receive :call do
         raise Savon::HTTPError, double(code: 402)
       end
       expect { subject.execute true }.to raise_error Savon::HTTPError

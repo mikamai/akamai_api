@@ -32,35 +32,41 @@ describe AkamaiApi::Eccu::PublishRequest do
   end
 
   describe '#execute' do
+    let(:fake_client) { double call: nil }
+
+    before do
+      AkamaiApi::Eccu.stub client: fake_client
+    end
+
     it "calls 'upload' via savon with a message and the message_tag 'upload'" do
       fake_response = double body: { upload_response: { file_id: 1 } }
       expect(subject).to receive(:request_body).with('foo', {}).and_return double(to_s: 'asd')
-      expect(AkamaiApi::Eccu.client).to receive(:call).with(:upload, message_tag: 'upload', message: 'asd').and_return fake_response
+      expect(fake_client).to receive(:call).with(:upload, message_tag: 'upload', message: 'asd').and_return fake_response
       subject.execute 'foo'
     end
 
     it "returns the request Id" do
       subject.stub request_body: 'example'
-      AkamaiApi::Eccu.client.stub call: double(body: { upload_response: { file_id: 1 } })
+      fake_client.stub call: double(body: { upload_response: { file_id: 1 } })
       expect(subject.execute 'foo').to be_a Fixnum
     end
 
     it "raises unauthorized if request raises a Savon::HTTPError with code 401" do
-      expect(AkamaiApi::Eccu.client).to receive :call do
+      expect(fake_client).to receive :call do
         raise Savon::HTTPError, double(code: 401)
       end
       expect { subject.execute 'foo' }.to raise_error AkamaiApi::Unauthorized
     end
 
     it "raises Savon:HTTPError if request raises this exception and its code differs from 401" do
-      expect(AkamaiApi::Eccu.client).to receive :call do
+      expect(fake_client).to receive :call do
         raise Savon::HTTPError, double(code: 402)
       end
       expect { subject.execute 'foo' }.to raise_error Savon::HTTPError
     end
 
     it "raises InvalidDomain if request raises a Savon::SOAPFault with particular message" do
-      expect(AkamaiApi::Eccu.client).to receive :call do
+      expect(fake_client).to receive :call do
         exc = Savon::SOAPFault.new({}, {})
         exc.stub to_hash: { fault: { faultstring: 'asdasd You are not authorized to specify this digital property.' } }
         exc.stub to_s: ''

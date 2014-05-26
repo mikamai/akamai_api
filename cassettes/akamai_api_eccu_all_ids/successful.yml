@@ -1,0 +1,72 @@
+---
+http_interactions:
+- request:
+    method: post
+    uri: https://USERNAME:PASSWORD@control.akamai.com/webservices/services/PublishECCU
+    body:
+      encoding: UTF-8
+      string: <?xml version="1.0" encoding="UTF-8"?><env:Envelope xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:akapubeccudt="https://control.akamai.com/2003/Sep/PublishECCU.xsd"
+        xmlns:env="http://schemas.xmlsoap.org/soap/envelope/" xmlns:ins0="https://control.akamai.com/AWS.xsd"
+        xmlns:ins1="https://control.akamai.com/Publish.xsd"><env:Body><akapubeccudt:getIds></akapubeccudt:getIds></env:Body></env:Envelope>
+    headers:
+      Soapaction:
+      - '"getIds"'
+      Content-Type:
+      - text/xml;charset=UTF-8
+      Content-Length:
+      - '457'
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+      Accept:
+      - '*/*'
+      User-Agent:
+      - Ruby
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Server:
+      - Apache
+      Content-Type:
+      - text/xml;charset=utf-8
+      Content-Length:
+      - '2023'
+      Expires:
+      - Mon, 26 May 2014 10:48:27 GMT
+      Cache-Control:
+      - max-age=0, no-cache, no-store
+      Pragma:
+      - no-cache
+      Date:
+      - Mon, 26 May 2014 10:48:27 GMT
+      Connection:
+      - keep-alive
+      X-Frame-Options:
+      - SAMEORIGIN
+    body:
+      encoding: UTF-8
+      string: <?xml version="1.0" encoding="UTF-8"?><soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/"
+        xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"><soapenv:Body><ns1:getIdsResponse
+        soapenv:encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" xmlns:ns1="https://control.akamai.com/2003/Sep/PublishECCU.xsd"><fileIds
+        soapenc:arrayType="xsd:int[31]" xsi:type="soapenc:Array" xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/"><fileIds
+        xsi:type="xsd:int">12341</fileIds><fileIds xsi:type="xsd:int">12342</fileIds><fileIds
+        xsi:type="xsd:int">12343</fileIds><fileIds xsi:type="xsd:int">12344</fileIds><fileIds
+        xsi:type="xsd:int">12345</fileIds><fileIds xsi:type="xsd:int">12346</fileIds><fileIds
+        xsi:type="xsd:int">12347</fileIds><fileIds xsi:type="xsd:int">12348</fileIds><fileIds
+        xsi:type="xsd:int">12349</fileIds><fileIds xsi:type="xsd:int">12350</fileIds><fileIds
+        xsi:type="xsd:int">12351</fileIds><fileIds xsi:type="xsd:int">12352</fileIds><fileIds
+        xsi:type="xsd:int">12353</fileIds><fileIds xsi:type="xsd:int">12354</fileIds><fileIds
+        xsi:type="xsd:int">12355</fileIds><fileIds xsi:type="xsd:int">12356</fileIds><fileIds
+        xsi:type="xsd:int">12357</fileIds><fileIds xsi:type="xsd:int">12358</fileIds><fileIds
+        xsi:type="xsd:int">12359</fileIds><fileIds xsi:type="xsd:int">12360</fileIds><fileIds
+        xsi:type="xsd:int">12361</fileIds><fileIds xsi:type="xsd:int">12362</fileIds><fileIds
+        xsi:type="xsd:int">12363</fileIds><fileIds xsi:type="xsd:int">12364</fileIds><fileIds
+        xsi:type="xsd:int">12365</fileIds><fileIds xsi:type="xsd:int">12366</fileIds><fileIds
+        xsi:type="xsd:int">12367</fileIds><fileIds xsi:type="xsd:int">12368</fileIds><fileIds
+        xsi:type="xsd:int">12369</fileIds><fileIds xsi:type="xsd:int">12370</fileIds><fileIds
+        xsi:type="xsd:int">12371</fileIds></fileIds></ns1:getIdsResponse></soapenv:Body></soapenv:Envelope>
+    http_version:
+  recorded_at: Mon, 26 May 2014 10:48:28 GMT
+recorded_with: VCR 2.9.0

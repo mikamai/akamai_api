@@ -9,11 +9,12 @@ require "akamai_api/eccu/update_email_request"
 require "akamai_api/eccu/destroy_request"
 require "akamai_api/eccu/find_request"
 require "akamai_api/eccu/publish_request"
+require "akamai_api/eccu/list_request"
 
 SoapBody = AkamaiApi::Eccu::SoapBody
 module AkamaiApi
   class EccuRequest
-    attr_accessor :file, :status, :code, :notes, :property, :email, :upload_date, :uploaded_by, :version_string
+    attr_accessor :file, :status, :code, :notes, :property, :email, :upload_date, :uploaded_by, :version
 
     def initialize attributes = {}
       attributes.each do |key, value|
@@ -41,14 +42,11 @@ module AkamaiApi
 
     class << self
       def all_ids
-        client.call(:get_ids).body[:get_ids_response][:file_ids][:file_ids]
-      rescue Savon::HTTPError => e
-        raise ::AkamaiApi::Unauthorized if e.http.code == 401
-        raise
+        AkamaiApi::Eccu::ListRequest.new.execute
       end
 
       def all args = {}
-        Array.wrap(all_ids).map { |v| EccuRequest.find v, args }
+        all_ids.map { |v| EccuRequest.find v, args }
       end
 
       def last args = {}
@@ -61,17 +59,15 @@ module AkamaiApi
 
       def find code, args = {}
         response = AkamaiApi::Eccu::FindRequest.new(code).execute args.fetch(:verbose, true)
-        new({
-              :file => response.file,
-              :status => response.status,
-              :code => response.code,
-              :notes => response.notes,
-              :property => response.property,
-              :email => response.email,
-              :upload_date => response.uploaded_at,
-              :uploaded_by => response.uploaded_by,
-              :version_string => response.version
-            })
+        new :file        => response.file,
+            :status      => response.status,
+            :code        => response.code,
+            :notes       => response.notes,
+            :property    => response.property,
+            :email       => response.email,
+            :upload_date => response.uploaded_at,
+            :uploaded_by => response.uploaded_by,
+            :version     => response.version
       end
 
       def publish_file property, file_name, args = {}
@@ -89,21 +85,6 @@ module AkamaiApi
       def extract_property_arguments args
         { type: args.delete(:property_type), exact_match: args.delete(:property_exact_match) }.reject { |k, v| v.nil? }
       end
-
-      def client
-        savon_args = {
-          :wsdl       => File.expand_path('../../../wsdls/eccu.wsdl', __FILE__),
-          :basic_auth => AkamaiApi.config[:auth],
-          :log        => AkamaiApi.config[:log]
-        }
-        Savon.client savon_args
-      end
-    end
-
-    private
-
-    def client
-      self.class.send(:client)
     end
   end
 end

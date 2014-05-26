@@ -1,6 +1,6 @@
 module AkamaiApi::Eccu
   def self.client
-    @client ||= build_client
+    build_client
   end
 
   private
