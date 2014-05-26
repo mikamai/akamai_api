@@ -8,6 +8,7 @@ require "akamai_api/eccu/update_notes_request"
 require "akamai_api/eccu/update_email_request"
 require "akamai_api/eccu/destroy_request"
 require "akamai_api/eccu/find_request"
+require "akamai_api/eccu/publish_request"
 
 SoapBody = AkamaiApi::Eccu::SoapBody
 module AkamaiApi
@@ -79,36 +80,14 @@ module AkamaiApi
       end
 
       def publish property, content, args = {}
-        body = build_publish_soap_body property, content, args
-        resp = client.call :upload, :message_tag => 'upload', :message => body.to_s
-        resp.body[:upload_response][:file_id].to_i
-      rescue Savon::HTTPError => e
-        raise ::AkamaiApi::Unauthorized if e.http.code == 401
-        raise
+        args = args.dup
+        AkamaiApi::Eccu::PublishRequest.new(property, extract_property_arguments(args)).execute content, args
       end
 
       private
 
-      def build_publish_soap_body property, content, args
-        SoapBody.new do
-          string :filename,                args.fetch(:file_name, '')
-          text   :contents,                content
-          string :notes,                   args.fetch(:notes, 'ECCU Request using AkamaiApi gem')
-          string :versionString,           args.fetch(:version,  '')
-          if args[:emails]
-            string :statusChangeEmail,     Array.wrap(args[:emails]).join(' ')
-          end
-          string :propertyName,            property
-          string :propertyType,            args.fetch(:property_type, 'hostheader')
-          boolean :propertyNameExactMatch, args.fetch(:property_exact_match,  true)
-        end
-      end
-
-      # This method is used because, for nil values, savon will respond with an hash containing all other attributes.
-      # If we check that the expected type is matched, we can
-      # prevent to retrieve wrong values
-      def get_if_kind value, kind
-        value.kind_of?(kind) && value || nil
+      def extract_property_arguments args
+        { type: args.delete(:property_type), exact_match: args.delete(:property_exact_match) }.reject { |k, v| v.nil? }
       end
 
       def client

@@ -13,7 +13,7 @@ http_interactions:
         dmFsaWRhdGU+CiAgICAgIDwvbWF0Y2g6cmVjdXJzaXZlLWRpcnM+CiAgICA8
         L21hdGNoOnJlY3Vyc2l2ZS1kaXJzPgogIDwvbWF0Y2g6cmVjdXJzaXZlLWRp
         cnM+CjwvZWNjdT4=
-        </contents><notes xsi:type="xsd:string">ECCU Request using AkamaiApi gem</notes><versionString xsi:type="xsd:string"></versionString><propertyName xsi:type="xsd:string">foo.com</propertyName><propertyType xsi:type="xsd:string">hostheader</propertyType><propertyNameExactMatch xsi:type="xsd:boolean">true</propertyNameExactMatch></akapubeccudt:upload></env:Body></env:Envelope>
+        </contents><notes xsi:type="xsd:string">ECCU Request using AkamaiApi VERSION</notes><versionString xsi:type="xsd:string"></versionString><propertyName xsi:type="xsd:string">foo.com</propertyName><propertyType xsi:type="xsd:string">hostheader</propertyType><propertyNameExactMatch xsi:type="xsd:boolean">true</propertyNameExactMatch></akapubeccudt:upload></env:Body></env:Envelope>
     headers:
       Soapaction:
       - '"upload"'

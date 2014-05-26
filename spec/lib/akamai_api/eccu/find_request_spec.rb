@@ -17,6 +17,16 @@ describe AkamaiApi::Eccu::FindRequest do
       expect(subject.execute 'foo').to be_a AkamaiApi::Eccu::FindResponse
     end
 
+    it "raises NotFound if request raises a Savon::SOAPFault with particular message" do
+      expect(AkamaiApi::Eccu.client).to receive :call do
+        exc = Savon::SOAPFault.new({}, {})
+        exc.stub to_hash: { fault: { faultstring: 'asdasd fileId xsxx does not exist' } }
+        exc.stub to_s: ''
+        raise exc
+      end
+      expect { subject.execute true }.to raise_error AkamaiApi::Eccu::NotFound
+    end
+
     it "raises unauthorized if request raises a Savon::HTTPError with code 401" do
       expect(AkamaiApi::Eccu.client).to receive :call do
         raise Savon::HTTPError, double(code: 401)

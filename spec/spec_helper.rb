@@ -23,10 +23,12 @@ VCR.configure do |c|
   c.after_http_request do |request|
     request.uri.gsub! AkamaiApi.config[:auth].first, 'USERNAME'
     request.uri.gsub! AkamaiApi.config[:auth].last, 'PASSWORD'
+    request.body.gsub! "AkamaiApi #{AkamaiApi::VERSION}", "AkamaiApi VERSION"
   end
   c.before_playback do |i|
     i.request.uri.gsub! 'USERNAME', AkamaiApi.config[:auth].first
     i.request.uri.gsub! 'PASSWORD', AkamaiApi.config[:auth].last
+    i.request.body.gsub! "AkamaiApi VERSION", "AkamaiApi #{AkamaiApi::VERSION}"
   end
 end
 

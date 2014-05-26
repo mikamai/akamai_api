@@ -97,74 +97,38 @@ module AkamaiApi
       end
 
       describe '::publish' do
-        context 'when there is an error' do
-          before do
-            fixture = File.read 'spec/fixtures/eccu/upload/fault.xml'
-            savon.expects(:upload).with(:message => :any).returns(fixture)
-          end
+        let(:subject) { EccuRequest }
 
-          it 'raises an error' do
-            expect { EccuRequest.publish '', xml_request_content }.to raise_error Savon::SOAPFault
-          end
+        it 'does not alter given arguments' do
+          expect_any_instance_of(AkamaiApi::Eccu::PublishRequest).to receive :execute
+          args = { property_type: 'asd' }
+          expect { subject.publish 'foo.com', 'asd', args }.to_not change args, :count
         end
 
-        context 'when there are no errors' do
-          let(:fixture) { File.read 'spec/fixtures/eccu/upload/successful.xml' }
+        it 'correctly builds a PublishRequest' do
+          expected_args = ['foo.com', { type: 'hostheader', exact_match: true }]
+          expect(AkamaiApi::Eccu::PublishRequest).to receive(:new).with(*expected_args).and_return double(execute: nil)
+          subject.publish 'foo.com', 'asd', property_type: 'hostheader', property_exact_match: true
+        end
 
-          it 'returns an EccuRequest instance' do
-            savon.expects(:upload).with(:message => :any).returns(fixture)
-            EccuRequest.publish('', xml_request_content).should be_a Fixnum
-          end
+        it 'does not pass nil values to constructor arguments' do
+          expect(AkamaiApi::Eccu::PublishRequest).to receive(:new).with('foo.com', {}).and_return double(execute: nil)
+          subject.publish 'foo.com', 'asd', property_type: nil, property_exact_match: nil
+        end
 
-          it 'assigns the fields correctly' do
-            content = xml_request_content
-            body = SoapBody.new do
-              string  :filename,          'eccu_request.xml'
-              text    :contents,          content
-              string  :notes,             'sample notes'
-              string  :versionString,     'v2'
-              string  :statusChangeEmail, 'foo@foo.com bar@bar.com'
-              string  :propertyName,      'foo.com'
-              string  :propertyType,      'prop'
-              boolean :propertyNameExactMatch, false
-            end
-            savon.expects(:upload).with(:message => body.to_s).returns(fixture)
-            EccuRequest.publish('foo.com', xml_request_content, {
-              :file_name => 'eccu_request.xml',
-              :notes     => 'sample notes',
-              :version   => 'v2',
-              :emails    => %w(foo@foo.com bar@bar.com),
-              :property_type => 'prop',
-              :property_exact_match => false
-            })
-          end
+        it 'delegates to PublishRequest#execute' do
+          expect_any_instance_of(AkamaiApi::Eccu::PublishRequest).to receive(:execute).and_return 1
+          expect(subject.publish 'foo.com', 'asd').to eq 1
+        end
 
-          it 'assigns a default notes field if no notes are specified' do
-            SoapBody.any_instance.stub :string => nil
-            SoapBody.any_instance.should_receive(:string).with(:notes, kind_of(String))
-            savon.expects(:upload).with(:message => :any).returns(fixture)
-            EccuRequest.publish '', xml_request_content
-          end
+        it 'pass content and given arguments to execute' do
+          expect_any_instance_of(AkamaiApi::Eccu::PublishRequest).to receive(:execute).with 'asd', emails: 'foo@bar.com'
+          subject.publish 'foo.com', 'asd', emails: 'foo@bar.com'
+        end
 
-          it 'assigns emails field if specified' do
-            SoapBody.any_instance.should_not_receive(:string).with(:statusChangeEmail, anything())
-            savon.expects(:upload).with(:message => :any).returns(fixture)
-            EccuRequest.publish '', xml_request_content
-          end
-
-          it 'assigns the property type to hostheader by default' do
-            SoapBody.any_instance.stub :string => nil
-            SoapBody.any_instance.should_receive(:string).with(:propertyType, 'hostheader')
-            savon.expects(:upload).with(:message => :any).returns(fixture)
-            EccuRequest.publish '', xml_request_content
-          end
-
-          it 'assigns the property exact match to true by default' do
-            SoapBody.any_instance.stub :boolean => nil
-            SoapBody.any_instance.should_receive(:boolean).with(:propertyNameExactMatch, true)
-            savon.expects(:upload).with(:message => :any).returns(fixture)
-            EccuRequest.publish '', xml_request_content
-          end
+        it 'removed unnecessary arguments when calling execute' do
+          expect_any_instance_of(AkamaiApi::Eccu::PublishRequest).to receive(:execute).with 'asd', emails: 'foo@bar.com'
+          subject.publish 'foo.com', 'asd', emails: 'foo@bar.com', property_exact_match: false
         end
       end
     end

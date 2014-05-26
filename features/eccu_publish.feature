@@ -4,19 +4,7 @@ Feature: akamai_api eccu publish
 
   @vcr
   Scenario: invalid credentials
-    Given a file named "publish.xml" with:
-      """
-      <?xml version="1.0"?>
-      <eccu>
-        <match:recursive-dirs value="foo" >
-          <match:recursive-dirs value="bar" >
-            <match:recursive-dirs value="baz.jpg" >
-              <revalidate>now</revalidate>
-            </match:recursive-dirs>
-          </match:recursive-dirs>
-        </match:recursive-dirs>
-      </eccu>
-      """
+    Given a file named "publish.xml" with the content of "spec/fixtures/eccu_request.xml"
     When I run `akamai_api eccu publish_xml ./publish.xml foo.com -u foo -p bar`
     Then the output should contain:
       """
@@ -25,40 +13,16 @@ Feature: akamai_api eccu publish
 
   @vcr
   Scenario: invalid domain
-    Given a file named "publish.xml" with:
-      """
-      <?xml version="1.0"?>
-      <eccu>
-        <match:recursive-dirs value="foo" >
-          <match:recursive-dirs value="bar" >
-            <match:recursive-dirs value="baz.jpg" >
-              <revalidate>now</revalidate>
-            </match:recursive-dirs>
-          </match:recursive-dirs>
-        </match:recursive-dirs>
-      </eccu>
-      """
-    When I run `akamai_api eccu publish_xml ./publish.xml john.smith.com`
+    Given a file named "publish.xml" with the content of "spec/fixtures/eccu_request.xml"
+    When I run `akamai_api eccu publish_xml ./publish.xml foobarbaz.com`
     Then the output should contain:
       """
-      ECCU validation failed: You are not authorized to specify this digital property
+      You are not authorized to specify this digital property
       """
 
   @vcr
   Scenario: successful
-    Given a file named "publish.xml" with:
-      """
-      <?xml version="1.0"?>
-      <eccu>
-        <match:recursive-dirs value="foo" >
-          <match:recursive-dirs value="bar" >
-            <match:recursive-dirs value="baz.jpg" >
-              <revalidate>now</revalidate>
-            </match:recursive-dirs>
-          </match:recursive-dirs>
-        </match:recursive-dirs>
-      </eccu>
-      """
+    Given a file named "publish.xml" with the content of "spec/fixtures/eccu_request.xml"
     When I run `akamai_api eccu publish_xml ./publish.xml foo.com`
     Then the output should contain:
       """
@@ -86,7 +50,7 @@ Feature: akamai_api eccu publish
       """
     And the output should contain:
       """
-      * Notes   : ECCU Request using AkamaiApi gem
+      * Notes   : ECCU Request using AkamaiApi
       """
     And the output should contain:
       """

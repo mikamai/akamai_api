@@ -13,14 +13,14 @@ http_interactions:
         dmFsaWRhdGU+CiAgICAgIDwvbWF0Y2g6cmVjdXJzaXZlLWRpcnM+CiAgICA8
         L21hdGNoOnJlY3Vyc2l2ZS1kaXJzPgogIDwvbWF0Y2g6cmVjdXJzaXZlLWRp
         cnM+CjwvZWNjdT4=
-        </contents><notes xsi:type="xsd:string">ECCU Request using AkamaiApi gem</notes><versionString xsi:type="xsd:string"></versionString><propertyName xsi:type="xsd:string">john.smith.com</propertyName><propertyType xsi:type="xsd:string">hostheader</propertyType><propertyNameExactMatch xsi:type="xsd:boolean">true</propertyNameExactMatch></akapubeccudt:upload></env:Body></env:Envelope>
+        </contents><notes xsi:type="xsd:string">ECCU Request using AkamaiApi VERSION</notes><versionString xsi:type="xsd:string"></versionString><propertyName xsi:type="xsd:string">foobarbaz.com</propertyName><propertyType xsi:type="xsd:string">hostheader</propertyType><propertyNameExactMatch xsi:type="xsd:boolean">true</propertyNameExactMatch></akapubeccudt:upload></env:Body></env:Envelope>
     headers:
       Soapaction:
       - '"upload"'
       Content-Type:
       - text/xml;charset=UTF-8
       Content-Length:
-      - '1269'
+      - '1198'
       Accept-Encoding:
       - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
       Accept:
@@ -37,13 +37,13 @@ http_interactions:
       Content-Type:
       - text/xml;charset=utf-8
       Expires:
-      - Tue, 20 May 2014 16:47:29 GMT
+      - Mon, 26 May 2014 08:05:51 GMT
       Cache-Control:
       - max-age=0, no-cache, no-store
       Pragma:
       - no-cache
       Date:
-      - Tue, 20 May 2014 16:47:29 GMT
+      - Mon, 26 May 2014 08:05:51 GMT
       Connection:
       - close
       X-Frame-Options:
@@ -54,7 +54,7 @@ http_interactions:
         xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"><soapenv:Body><soapenv:Fault><faultcode>soapenv:Server.generalException</faultcode><faultstring>ECCU
         validation failed: You are not authorized to specify this digital property</faultstring><detail><ns1:exceptionName
         xmlns:ns1="http://xml.apache.org/axis/">com.akamai.aws.util.AWSFault</ns1:exceptionName><ns2:hostname
-        xmlns:ns2="http://xml.apache.org/axis/">ext-tomapp1.extranet.akamai.com</ns2:hostname></detail></soapenv:Fault></soapenv:Body></soapenv:Envelope>'
-    http_version: 
-  recorded_at: Tue, 20 May 2014 16:47:29 GMT
+        xmlns:ns2="http://xml.apache.org/axis/">p1-tomapp08.extranet.akamai.com</ns2:hostname></detail></soapenv:Fault></soapenv:Body></soapenv:Envelope>'
+    http_version:
+  recorded_at: Mon, 26 May 2014 08:05:51 GMT
 recorded_with: VCR 2.9.0

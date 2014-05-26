@@ -36,7 +36,7 @@ module AkamaiApi::CLI::Eccu
                   :banner => "foo@foo.com bar@bar.com",
                   :desc => 'Email(s) to use to send notification on status change'
     method_option :notes, :type => :string, :aliases => '-n',
-                  :default => 'ECCU Request using AkamaiApi gem'
+                  :default => "ECCU Request using AkamaiApi #{AkamaiApi::VERSION}"
     def publish_xml(source, property)
       load_config
       args = {
@@ -50,6 +50,8 @@ module AkamaiApi::CLI::Eccu
       puts EntryRenderer.new(AkamaiApi::EccuRequest.find(id, :verbose => true)).render
     rescue ::AkamaiApi::Unauthorized
       puts "Your login credentials are invalid."
+    rescue ::AkamaiApi::Eccu::InvalidDomain
+      puts "You are not authorized to specify this digital property."
     rescue Savon::SOAPFault
       puts $!.message
     end
