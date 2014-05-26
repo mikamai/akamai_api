@@ -1,15 +1,10 @@
+require "akamai_api/eccu/base_edit_request"
+
 module AkamaiApi::Eccu
-  class DestroyRequest < BaseRequest
+  class DestroyRequest < BaseEditRequest
     def execute
       with_soap_error_handling do
-        response = client_call :delete, message: request_body.to_s
-        response[:success]
-      end
-    end
-
-    def request_body
-      SoapBody.new.tap do |body|
-        body.integer :fileId, code
+        client_call(:delete, message: request_body.to_s)[:success]
       end
     end
   end

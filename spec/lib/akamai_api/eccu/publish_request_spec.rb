@@ -4,10 +4,6 @@ describe AkamaiApi::Eccu::PublishRequest do
   subject { AkamaiApi::Eccu::PublishRequest.new 'foo.com', type: 'hostasd', exact_match: 'foo' }
 
   describe 'constructor' do
-    it 'sets code to 0' do
-      expect(subject.code).to eq 0
-    end
-
     it 'sets property_name to the given value' do
       expect(subject.property_name).to eq 'foo.com'
     end

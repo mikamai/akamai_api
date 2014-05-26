@@ -5,7 +5,6 @@ module AkamaiApi::Eccu
     attr_reader :property_name, :property_type, :property_exact_match
 
     def initialize property_name, args = {}
-      super nil
       @property_name = property_name
       @property_type = args.fetch(:type, 'hostheader')
       @property_exact_match = args.fetch(:exact_match, true) == true

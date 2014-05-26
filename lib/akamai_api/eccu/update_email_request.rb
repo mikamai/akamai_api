@@ -1,21 +1,17 @@
-require "savon"
-
-require "akamai_api/eccu/base_request"
+require "akamai_api/eccu/base_edit_request"
 require "akamai_api/eccu/soap_body"
 
 module AkamaiApi::Eccu
-  class UpdateEmailRequest < BaseRequest
+  class UpdateEmailRequest < BaseEditRequest
     def execute email
       with_soap_error_handling do
-        response = client_call :set_status_change_email, message: request_body(email).to_s
-        response[:success]
+        client_call(:set_status_change_email, message: request_body(email).to_s)[:success]
       end
     end
 
     def request_body email
-      SoapBody.new.tap do |body|
-        body.integer :fileId, code
-        body.string  :statusChangeEmail, email
+      super do |block|
+        block.string  :statusChangeEmail, email
       end
     end
   end
