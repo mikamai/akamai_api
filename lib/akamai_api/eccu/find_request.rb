@@ -7,7 +7,7 @@ module AkamaiApi::Eccu
     def execute retrieve_content
       with_soap_error_handling do
         response = client_call :get_info, message: request_body(retrieve_content).to_s
-        FindResponse.new response.body[:get_info_response][:eccu_info]
+        FindResponse.new response[:eccu_info]
       end
     end
 

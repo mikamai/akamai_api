@@ -14,7 +14,7 @@ module AkamaiApi::Eccu
     def execute content, args = {}
       with_soap_error_handling do
         response = client_call :upload, message_tag: 'upload', message: request_body(content, args).to_s
-        response.body[:upload_response][:file_id].to_i
+        response[:file_id].to_i
       end
     end
 

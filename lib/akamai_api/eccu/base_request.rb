@@ -1,5 +1,7 @@
 require "savon"
 
+require "active_support/core_ext/array/extract_options"
+
 require "akamai_api/unauthorized"
 require "akamai_api/eccu/not_found"
 
@@ -24,7 +26,7 @@ module AkamaiApi::Eccu
     end
 
     def client_call method, *args
-      client.call method, *args
+      client.call(method, *args).body["#{method}_response".to_sym]
     end
 
     def client

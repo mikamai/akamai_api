@@ -8,7 +8,7 @@ module AkamaiApi::Eccu
     def execute email
       with_soap_error_handling do
         response = client_call :set_status_change_email, message: request_body(email).to_s
-        response.body[:set_status_change_email_response][:success]
+        response[:success]
       end
     end
 

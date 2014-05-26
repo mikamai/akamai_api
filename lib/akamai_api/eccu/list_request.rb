@@ -9,7 +9,7 @@ module AkamaiApi::Eccu
 
     def execute
       with_soap_error_handling do
-        Array.wrap client_call(:get_ids).body[:get_ids_response][:file_ids][:file_ids]
+        Array.wrap client_call(:get_ids)[:file_ids][:file_ids]
       end
     end
   end

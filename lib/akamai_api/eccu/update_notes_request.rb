@@ -8,7 +8,7 @@ module AkamaiApi::Eccu
     def execute notes
       with_soap_error_handling do
         response = client_call :set_notes, message: request_body(notes).to_s
-        response.body[:set_notes_response][:success]
+        response[:success]
       end
     end
 

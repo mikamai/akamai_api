@@ -3,7 +3,7 @@ module AkamaiApi::Eccu
     def execute
       with_soap_error_handling do
         response = client_call :delete, message: request_body.to_s
-        response.body[:delete_response][:success]
+        response[:success]
       end
     end
 
