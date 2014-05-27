@@ -55,17 +55,21 @@ describe AkamaiApi::Eccu::DestroyRequest do
   end
 
   describe "#request_body" do
+    def subject_request_body
+      subject.send :request_body
+    end
+
     it "returns a SoapBody object" do
-      expect(subject.request_body).to be_a AkamaiApi::Eccu::SoapBody
+      expect(subject_request_body).to be_a AkamaiApi::Eccu::SoapBody
     end
 
     it "sets an integer value named 'fileId' with the given code" do
       expect_any_instance_of(AkamaiApi::Eccu::SoapBody).to receive(:integer).with :fileId, 1234
-      subject.request_body
+      subject_request_body
     end
 
     it "sets only fileId" do
-      expect(subject.request_body.to_s).to eq "<fileId xsi:type=\"xsd:int\">1234</fileId>"
+      expect(subject_request_body.to_s).to eq "<fileId xsi:type=\"xsd:int\">1234</fileId>"
     end
   end
 end

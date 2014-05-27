@@ -49,22 +49,26 @@ describe AkamaiApi::Eccu::FindRequest do
   end
 
   describe "#request_body" do
+    def subject_request_body value
+      subject.send :request_body, value
+    end
+
     it "returns a SoapBody object" do
-      expect(subject.request_body false).to be_a AkamaiApi::Eccu::SoapBody
+      expect(subject_request_body false).to be_a AkamaiApi::Eccu::SoapBody
     end
 
     it "sets an integer value named 'fileId' with the given code" do
       expect_any_instance_of(AkamaiApi::Eccu::SoapBody).to receive(:integer).with :fileId, 1234
-      subject.request_body false
+      subject_request_body false
     end
 
     it "sets a boolean value named 'retrieveContents' with the given value" do
       expect_any_instance_of(AkamaiApi::Eccu::SoapBody).to receive(:boolean).with :retrieveContents, false
-      subject.request_body '1'
+      subject_request_body '1'
     end
 
     it "sets only fileId" do
-      expect(subject.request_body(false).to_s).to eq "<fileId xsi:type=\"xsd:int\">1234</fileId><retrieveContents xsi:type=\"xsd:boolean\">false</retrieveContents>"
+      expect(subject_request_body(false).to_s).to eq "<fileId xsi:type=\"xsd:int\">1234</fileId><retrieveContents xsi:type=\"xsd:boolean\">false</retrieveContents>"
     end
   end
 end

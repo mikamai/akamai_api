@@ -72,58 +72,62 @@ describe AkamaiApi::Eccu::PublishRequest do
     end
   end
 
-  describe '#subject.request_body' do
+  describe '#subject_request_body' do
+    def subject_request_body *args
+      subject.send :request_body, *args
+    end
+
     it 'sets a string with the given file name' do
-      expect(subject.request_body('foo', file_name: 'asd').to_s).to include "<filename xsi:type=\"xsd:string\">asd</filename>"
+      expect(subject_request_body('foo', file_name: 'asd').to_s).to include "<filename xsi:type=\"xsd:string\">asd</filename>"
     end
 
     it 'sets an empty string if no file name is found' do
-      expect(subject.request_body('foo', {}).to_s).to include "<filename xsi:type=\"xsd:string\"></filename>"
+      expect(subject_request_body('foo', {}).to_s).to include "<filename xsi:type=\"xsd:string\"></filename>"
     end
 
     it 'sets a text with the given content' do
       expect_any_instance_of(SoapBody).to receive(:text).with :contents, 'asd'
-      subject.request_body 'asd', {}
+      subject_request_body 'asd', {}
     end
 
     it 'sets a string with the given version' do
-      expect(subject.request_body('asd', version: '1').to_s).to include "<versionString xsi:type=\"xsd:string\">1</versionString>"
+      expect(subject_request_body('asd', version: '1').to_s).to include "<versionString xsi:type=\"xsd:string\">1</versionString>"
     end
 
     it 'sets an empty string with there is no given version' do
-      expect(subject.request_body('asd', {}).to_s).to include "<versionString xsi:type=\"xsd:string\"></versionString>"
+      expect(subject_request_body('asd', {}).to_s).to include "<versionString xsi:type=\"xsd:string\"></versionString>"
     end
 
     it 'sets a string with the given notes' do
-      expect(subject.request_body('asd', notes: 'asdasd').to_s).to include "<notes xsi:type=\"xsd:string\">asdasd</notes>"
+      expect(subject_request_body('asd', notes: 'asdasd').to_s).to include "<notes xsi:type=\"xsd:string\">asdasd</notes>"
     end
 
     it 'sets a string with a default message if no notes are given' do
-      expect(subject.request_body('asd', {}).to_s).to include "<notes xsi:type=\"xsd:string\">ECCU Request using AkamaiApi #{AkamaiApi::VERSION}</notes>"
+      expect(subject_request_body('asd', {}).to_s).to include "<notes xsi:type=\"xsd:string\">ECCU Request using AkamaiApi #{AkamaiApi::VERSION}</notes>"
     end
 
     it 'sets a string with the given email' do
-      expect(subject.request_body('asd', emails: 'foo@bar.com').to_s).to include "<statusChangeEmail xsi:type=\"xsd:string\">foo@bar.com</statusChangeEmail>"
+      expect(subject_request_body('asd', emails: 'foo@bar.com').to_s).to include "<statusChangeEmail xsi:type=\"xsd:string\">foo@bar.com</statusChangeEmail>"
     end
 
     it 'sets a string with the given emails' do
-      expect(subject.request_body('asd', emails: ['foo@bar.com', 'asd@bar.com']).to_s).to include "<statusChangeEmail xsi:type=\"xsd:string\">foo@bar.com,asd@bar.com</statusChangeEmail>"
+      expect(subject_request_body('asd', emails: ['foo@bar.com', 'asd@bar.com']).to_s).to include "<statusChangeEmail xsi:type=\"xsd:string\">foo@bar.com,asd@bar.com</statusChangeEmail>"
     end
 
     it 'sets no string with emails if no email is given' do
-      expect(subject.request_body('asd', {}).to_s).to_not include "emails"
+      expect(subject_request_body('asd', {}).to_s).to_not include "emails"
     end
 
     it 'sets the property name' do
-      expect(subject.request_body('asd', {}).to_s).to include "<propertyName xsi:type=\"xsd:string\">foo.com</propertyName>"
+      expect(subject_request_body('asd', {}).to_s).to include "<propertyName xsi:type=\"xsd:string\">foo.com</propertyName>"
     end
 
     it 'sets the property type' do
-      expect(subject.request_body('asd', {}).to_s).to include "<propertyType xsi:type=\"xsd:string\">hostasd</propertyType>"
+      expect(subject_request_body('asd', {}).to_s).to include "<propertyType xsi:type=\"xsd:string\">hostasd</propertyType>"
     end
 
     it 'sets the exact match' do
-      expect(subject.request_body('asd', {}).to_s).to include "<propertyNameExactMatch xsi:type=\"xsd:boolean\">false</propertyNameExactMatch>"
+      expect(subject_request_body('asd', {}).to_s).to include "<propertyNameExactMatch xsi:type=\"xsd:boolean\">false</propertyNameExactMatch>"
     end
   end
 end

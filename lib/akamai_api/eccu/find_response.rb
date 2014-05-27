@@ -1,17 +1,41 @@
 require 'base64'
 
 module AkamaiApi::Eccu
+  # {FindResponse} exposes the response received when requesting the details of an Akamai ECCU request
   class FindResponse
+    # Raw response object
+    # @return [Hash] raw response object
     attr_reader :raw
 
+    # @param [Hash] raw raw response object
     def initialize raw
       @raw = raw
     end
 
+    # Request code
+    # @return [Fixnum] request code
     def code
       raw[:file_id]
     end
 
+    # @!method notes
+    #   Notes of the request
+    #   @return [String] notes of the request
+    # @!method email
+    #   Email to be notified when the request becomes completed
+    #   @return [String] email to be notified when the request becomes completed
+    # @!method updated_at
+    #   Last time the request was updated
+    #   @return [String] last time the request was updated
+    # @!method uploaded_by
+    #   User that submitted the request
+    #   @return [String] user name
+    # @!method uploaded_at
+    #   Time the request was uploaded
+    #   @return [String] time the request was uploaded
+    # @!method version
+    #   version of the request
+    #   @return [String] version of the request
     {
       :notes       => :notes,
       :email       => :status_change_email,
@@ -25,6 +49,17 @@ module AkamaiApi::Eccu
       end
     end
 
+    alias_method :status_change_email, :email
+    alias_method :update_date,         :updated_at
+    alias_method :upload_date,         :uploaded_at
+    alias_method :version_string,      :version
+
+    # Uploaded file details
+    # @return [Hash] file details
+    #   - :content [String] file content
+    #   - :size [Fixnum] file size
+    #   - :name [String] file name
+    #   - :md5 [String] MD5 digest of the file content
     def file
       content64 = get_if_string(raw[:contents])
       {
@@ -35,6 +70,12 @@ module AkamaiApi::Eccu
       }.reject { |k, v| v.nil? }
     end
 
+    # Request status
+    # @return [Hash] request status
+    #   - :extended [String] extended status message
+    #   - :code [Fixnum] status code
+    #   - :message [String] status message
+    #   - :updated_at [String] last time the status has been updated
     def status
       {
         :extended   => get_if_string(raw[:extended_status_message]),
@@ -44,6 +85,11 @@ module AkamaiApi::Eccu
       }.reject { |k, v| v.nil? }
     end
 
+    # Digital property details
+    # @return [Hash] property details
+    #   - :name [String]
+    #   - :exact_match [true,false]
+    #   - :type [String]
     def property
       {
         :name        => get_if_string(raw[:property_name]),

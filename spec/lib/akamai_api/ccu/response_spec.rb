@@ -12,4 +12,21 @@ describe AkamaiApi::Ccu::Response do
       expect(subject.send reader).to eq 201
     end
   end
+
+  describe "#successful?" do
+    it "returns true if the response code is 200" do
+      subject.stub code: 200
+      expect(subject).to be_successful
+    end
+
+    it "returns true if the response code is 201" do
+      subject.stub code: 201
+      expect(subject).to be_successful
+    end
+
+    it "returns false when the response code differs from 200 and 201" do
+      subject.stub code: 202
+      expect(subject).to_not be_successful
+    end
+  end
 end
