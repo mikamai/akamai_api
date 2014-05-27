@@ -22,13 +22,4 @@ Gem::Specification.new do |gem|
   gem.add_dependency 'thor',           '>= 0.14.0', '< 2.0'
   gem.add_dependency 'savon',          '~> 2.5.0'
   gem.add_dependency 'builder',        '~> 3.0'
-
-  gem.add_development_dependency 'guard-rspec'
-  gem.add_development_dependency 'guard-cucumber'
-  gem.add_development_dependency 'aruba'
-  gem.add_development_dependency 'webmock'
-  gem.add_development_dependency 'vcr'
-  gem.add_development_dependency 'coveralls'
-  gem.add_development_dependency 'yard'
-  gem.add_development_dependency 'redcarpet'
 end
