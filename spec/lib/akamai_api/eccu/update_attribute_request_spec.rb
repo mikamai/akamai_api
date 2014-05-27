@@ -5,7 +5,7 @@ describe AkamaiApi::Eccu::UpdateAttributeRequest do
 
   describe '#attribute_for_soap' do
     it 'returns a camelized symbol with first letter in downcase' do
-      expect(subject.attribute_for_soap).to eq :statusChangeEmail
+      expect(subject.send :attribute_for_soap).to eq :statusChangeEmail
     end
   end
 
@@ -61,22 +61,26 @@ describe AkamaiApi::Eccu::UpdateAttributeRequest do
   end
 
   describe "#request_body" do
+    def subject_request_body *args
+      subject.send :request_body, *args
+    end
+
     it "returns a SoapBody object" do
-      expect(subject.request_body 'foo').to be_a AkamaiApi::Eccu::SoapBody
+      expect(subject_request_body 'foo').to be_a AkamaiApi::Eccu::SoapBody
     end
 
     it "sets an integer value named 'fileId' with the given code" do
       expect_any_instance_of(AkamaiApi::Eccu::SoapBody).to receive(:integer).with :fileId, 1234
-      subject.request_body 'foo'
+      subject_request_body 'foo'
     end
 
     it "sets a string value named 'statusChangeEmails' with the given email" do
       expect_any_instance_of(AkamaiApi::Eccu::SoapBody).to receive(:string).with :statusChangeEmail, 'foo'
-      subject.request_body 'foo'
+      subject_request_body 'foo'
     end
 
     it "sets only fileId and email" do
-      expect(subject.request_body('foo').to_s).to eq "<fileId xsi:type=\"xsd:int\">1234</fileId><statusChangeEmail xsi:type=\"xsd:string\">foo</statusChangeEmail>"
+      expect(subject_request_body('foo').to_s).to eq "<fileId xsi:type=\"xsd:int\">1234</fileId><statusChangeEmail xsi:type=\"xsd:string\">foo</statusChangeEmail>"
     end
   end
 end
