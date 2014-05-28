@@ -9,7 +9,7 @@ module AkamaiApi
 
     describe '::all_ids' do
       before do
-        fixture = File.read 'spec/fixtures/ECCU/get_ids/successful.xml'
+        fixture = File.read 'spec/fixtures/eccu/get_ids/successful.xml'
         savon.expects(:get_ids).returns(fixture)
       end
 
@@ -80,7 +80,7 @@ module AkamaiApi
     end
 
     describe 'publishing' do
-      let(:xml_request) { File.expand_path "../../../fixtures/ECCU_request.xml", __FILE__ }
+      let(:xml_request) { File.expand_path "../../../fixtures/eccu_request.xml", __FILE__ }
       let(:xml_request_content) { File.read xml_request }
 
       describe '::publish_file' do
