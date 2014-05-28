@@ -1,13 +1,13 @@
 require 'spec_helper'
 
-describe AkamaiApi::Eccu::ListRequest do
-  subject { AkamaiApi::Eccu::ListRequest.new }
+describe AkamaiApi::ECCU::ListRequest do
+  subject { AkamaiApi::ECCU::ListRequest.new }
 
   describe "#execute" do
     let(:fake_client) { double call: nil }
 
     before do
-      AkamaiApi::Eccu.stub client: fake_client
+      AkamaiApi::ECCU.stub client: fake_client
     end
 
     it "calls 'get_ids' via savon" do

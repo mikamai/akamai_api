@@ -1,14 +1,14 @@
 require 'spec_helper'
 
 describe 'Given I request to purge an asset' do
-  subject { AkamaiApi::Ccu }
+  subject { AkamaiApi::CCU }
 
   shared_examples 'purge helper' do
     let(:method) { "#{action}_#{type}" }
 
     it 'responds with a PurgeResponse object' do
       VCR.use_cassette "akamai_api_ccu_#{type}_#{action}/single_item" do
-        subject.send(method, items).should be_a AkamaiApi::Ccu::Purge::Response
+        subject.send(method, items).should be_a AkamaiApi::CCU::Purge::Response
       end
     end
 
@@ -19,11 +19,9 @@ describe 'Given I request to purge an asset' do
       end
     end
 
-    it 'returns a different response when data are invalid' do
+    it 'raises an error when data request is invalid' do
       VCR.use_cassette "akamai_api_ccu_#{type}_#{action}/invalid_item" do
-        response = subject.send(method, items)
-        expect(response).to be_a AkamaiApi::Ccu::Purge::Response
-        expect(response.code).to eq 403
+        expect { subject.send method, items }.to raise_error AkamaiApi::CCU::Error
       end
     end
 

@@ -1,6 +1,6 @@
 require "builder"
 
-module AkamaiApi::Eccu
+module AkamaiApi::ECCU
   # Utility class used by the ECCU request classes to fill the request payload with the arguments
   # requested by a SOAP method.
   #

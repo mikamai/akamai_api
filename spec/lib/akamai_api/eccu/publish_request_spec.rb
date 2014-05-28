@@ -1,7 +1,7 @@
 require 'spec_helper'
 
-describe AkamaiApi::Eccu::PublishRequest do
-  subject { AkamaiApi::Eccu::PublishRequest.new 'foo.com', type: 'hostasd', exact_match: 'foo' }
+describe AkamaiApi::ECCU::PublishRequest do
+  subject { AkamaiApi::ECCU::PublishRequest.new 'foo.com', type: 'hostasd', exact_match: 'foo' }
 
   describe 'constructor' do
     it 'sets property_name to the given value' do
@@ -13,7 +13,7 @@ describe AkamaiApi::Eccu::PublishRequest do
     end
 
     it 'sets property_type to hostheader if no value is given' do
-      subject = AkamaiApi::Eccu::PublishRequest.new 'foo.com'
+      subject = AkamaiApi::ECCU::PublishRequest.new 'foo.com'
       expect(subject.property_type).to eq 'hostheader'
     end
 
@@ -22,7 +22,7 @@ describe AkamaiApi::Eccu::PublishRequest do
     end
 
     it 'sets property_exact_match to true if no value is given' do
-      subject = AkamaiApi::Eccu::PublishRequest.new 'foo.com'
+      subject = AkamaiApi::ECCU::PublishRequest.new 'foo.com'
       expect(subject.property_exact_match).to be_true
     end
   end
@@ -31,7 +31,7 @@ describe AkamaiApi::Eccu::PublishRequest do
     let(:fake_client) { double call: nil }
 
     before do
-      AkamaiApi::Eccu.stub client: fake_client
+      AkamaiApi::ECCU.stub client: fake_client
     end
 
     it "calls 'upload' via savon with a message and the message_tag 'upload'" do
@@ -68,7 +68,7 @@ describe AkamaiApi::Eccu::PublishRequest do
         exc.stub to_s: ''
         raise exc
       end
-      expect { subject.execute 'foo' }.to raise_error AkamaiApi::Eccu::InvalidDomain
+      expect { subject.execute 'foo' }.to raise_error AkamaiApi::ECCU::InvalidDomain
     end
   end
 
@@ -86,7 +86,7 @@ describe AkamaiApi::Eccu::PublishRequest do
     end
 
     it 'sets a text with the given content' do
-      expect_any_instance_of(SoapBody).to receive(:text).with :contents, 'asd'
+      expect_any_instance_of(AkamaiApi::ECCU::SoapBody).to receive(:text).with :contents, 'asd'
       subject_request_body 'asd', {}
     end
 

@@ -54,10 +54,10 @@ No authentication config found. You can specify auth credentials with one of the
     - my_password"
 
 * Using the environment variables AKAMAI_USERNAME and AKAMAI_PASSWORD. E.g:"
-  AKAMAI_USERNAME=my_username AKAMAI_PASSWORD=my_password akamai_api eccu last_request"
+  AKAMAI_USERNAME=my_username AKAMAI_PASSWORD=my_password akamai_api ECCU last_request"
 
 * Passing username and password options from command line. E.g.:"
- akamai_api eccu last_request -u my_username -p my_password"
+ akamai_api ECCU last_request -u my_username -p my_password"
 OUTPUT
       end
     end

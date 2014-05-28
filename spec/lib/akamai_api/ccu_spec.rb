@@ -1,7 +1,7 @@
 require 'spec_helper'
 
-describe AkamaiApi::Ccu do
-  subject { AkamaiApi::Ccu }
+describe AkamaiApi::CCU do
+  subject { AkamaiApi::CCU }
 
   %w(invalidate remove).each do |action|
     describe "##{action}" do
@@ -35,18 +35,18 @@ describe AkamaiApi::Ccu do
     it 'delegates to Purge::Request' do
       fake_request = double
       expect(fake_request).to receive(:execute).with('baz').and_return 'quiz'
-      expect(AkamaiApi::Ccu::Purge::Request).to receive(:new).with('foo', 'bar', domain: 'asd').
+      expect(AkamaiApi::CCU::Purge::Request).to receive(:new).with('foo', 'bar', domain: 'asd').
                                                and_return fake_request
       expect(subject.purge 'foo', 'bar', 'baz', domain: 'asd').to eq 'quiz'
     end
 
     describe 'raises an error when' do
       it 'action is not allowed' do
-        expect { subject.purge :sss, :cpcode, '12345' }.to raise_error AkamaiApi::Ccu::UnrecognizedOption
+        expect { subject.purge :sss, :cpcode, '12345' }.to raise_error AkamaiApi::CCU::UnrecognizedOption
       end
 
       it 'type is not allowed' do
-        expect { subject.purge :remove, :foo, '12345' }.to raise_error AkamaiApi::Ccu::UnrecognizedOption
+        expect { subject.purge :remove, :foo, '12345' }.to raise_error AkamaiApi::CCU::UnrecognizedOption
       end
 
       it 'domain is specified and not allowed' do
@@ -58,7 +58,7 @@ describe AkamaiApi::Ccu do
   describe '#status' do
     context "when no argument is given" do
       it "delegates to Status request instance" do
-        expect(AkamaiApi::Ccu::Status::Request).to receive(:new).and_return double execute: 'foo'
+        expect(AkamaiApi::CCU::Status::Request).to receive(:new).and_return double execute: 'foo'
         expect(subject.status).to eq 'foo'
       end
     end
@@ -66,7 +66,7 @@ describe AkamaiApi::Ccu do
     context "when a progress uri is passed as argument" do
       it "delegates to PurgeStatus request instance" do
         fake_instance = double
-        expect(AkamaiApi::Ccu::PurgeStatus::Request).to receive(:new).and_return fake_instance
+        expect(AkamaiApi::CCU::PurgeStatus::Request).to receive(:new).and_return fake_instance
         expect(fake_instance).to receive(:execute).with('foo').and_return 'asd'
         expect(subject.status 'foo').to eq 'asd'
       end

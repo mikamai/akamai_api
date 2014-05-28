@@ -1,7 +1,8 @@
 require "akamai_api/eccu/base_request"
 require "akamai_api/eccu/not_found"
+require "akamai_api/eccu/soap_body"
 
-module AkamaiApi::Eccu
+module AkamaiApi::ECCU
   # @abstract
   #
   # This class is intended as a generic superclass for all requests that operate on an existing
@@ -22,7 +23,7 @@ module AkamaiApi::Eccu
     #
     # The base implementation fills only the request code. If the request needs additional
     # arguments you'll want to overwrite it like the following:
-    #   class MyCustomRequest < AkamaiApi::Eccu::BaseEditRequest
+    #   class MyCustomRequest < AkamaiApi::ECCU::BaseEditRequest
     #     def request_body code, name, surname
     #       super code do |block|
     #         block.string(:name, name).string(:surname, surname)
@@ -38,11 +39,11 @@ module AkamaiApi::Eccu
 
     # Wrapper method that you can use inside your custom ECCU request to handle common errors
     # @raise [AkamaiApi::Unauthorized] when login credentials are invalid
-    # @raise [AkamaiApi::Eccu::NotFound] when no request can be found with the given code
+    # @raise [AkamaiApi::ECCU::NotFound] when no request can be found with the given code
     def with_soap_error_handling &block
       super
     rescue Savon::SOAPFault => e
-      e = ::AkamaiApi::Eccu::NotFound if e.to_hash[:fault][:faultstring] =~ /fileId .* does not exist/
+      e = ::AkamaiApi::ECCU::NotFound if e.to_hash[:fault][:faultstring] =~ /fileId .* does not exist/
       raise e
     end
   end

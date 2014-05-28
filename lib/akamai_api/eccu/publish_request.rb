@@ -1,13 +1,14 @@
 require 'akamai_api/eccu/invalid_domain'
 require 'akamai_api/eccu/soap_body'
+require "akamai_api/eccu/base_request"
 
-module AkamaiApi::Eccu
+module AkamaiApi::ECCU
   # {PublishRequest} is responsible of publishing a new ECCU request.
   #
   # @example
   #   content = File.read './publish.xml'
   #   begin
-  #     req = AkamaiApi::Eccu::PublishRequest.new 'http://foo.bar/t.txt'
+  #     req = AkamaiApi::ECCU::PublishRequest.new 'http://foo.bar/t.txt'
   #     code = req.execute content, file_name: 'publish.xml', emails: 'author@mikamai.com'
   #     puts "Request enqueued with code #{code}"
   #   rescue AkamaiApi::Unauthorized
@@ -65,7 +66,7 @@ module AkamaiApi::Eccu
     def with_soap_error_handling &block
       super
     rescue Savon::SOAPFault => e
-      e = AkamaiApi::Eccu::InvalidDomain if e.to_hash[:fault][:faultstring].include? 'You are not authorized to specify this digital property'
+      e = AkamaiApi::ECCU::InvalidDomain if e.to_hash[:fault][:faultstring].include? 'You are not authorized to specify this digital property'
       raise e
     end
   end

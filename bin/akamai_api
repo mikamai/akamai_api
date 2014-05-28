@@ -3,4 +3,4 @@ require 'active_support/core_ext'
 require 'akamai_api'
 require 'akamai_api/cli'
 
-AkamaiApi::Cli::App.start
+AkamaiApi::CLI::App.start

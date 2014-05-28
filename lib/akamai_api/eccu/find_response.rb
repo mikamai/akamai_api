@@ -1,6 +1,6 @@
 require 'base64'
 
-module AkamaiApi::Eccu
+module AkamaiApi::ECCU
   # {FindResponse} exposes the response received when requesting the details of an Akamai ECCU request
   class FindResponse
     # Raw response object

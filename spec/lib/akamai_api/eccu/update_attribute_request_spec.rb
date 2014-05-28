@@ -1,7 +1,7 @@
 require 'spec_helper'
 
-describe AkamaiApi::Eccu::UpdateAttributeRequest do
-  subject { AkamaiApi::Eccu::UpdateAttributeRequest.new '1234', :status_change_email }
+describe AkamaiApi::ECCU::UpdateAttributeRequest do
+  subject { AkamaiApi::ECCU::UpdateAttributeRequest.new '1234', :status_change_email }
 
   describe '#attribute_for_soap' do
     it 'returns a camelized symbol with first letter in downcase' do
@@ -13,7 +13,7 @@ describe AkamaiApi::Eccu::UpdateAttributeRequest do
     let(:fake_client) { double call: nil }
 
     before do
-      AkamaiApi::Eccu.stub client: fake_client
+      AkamaiApi::ECCU.stub client: fake_client
     end
 
     it "calls the appropriate soap method via savon with a message" do
@@ -42,7 +42,7 @@ describe AkamaiApi::Eccu::UpdateAttributeRequest do
         exc.stub to_s: ''
         raise exc
       end
-      expect { subject.execute 'foo' }.to raise_error AkamaiApi::Eccu::NotFound
+      expect { subject.execute 'foo' }.to raise_error AkamaiApi::ECCU::NotFound
     end
 
     it "raises unauthorized if request raises a Savon::HTTPError with code 401" do
@@ -66,16 +66,16 @@ describe AkamaiApi::Eccu::UpdateAttributeRequest do
     end
 
     it "returns a SoapBody object" do
-      expect(subject_request_body 'foo').to be_a AkamaiApi::Eccu::SoapBody
+      expect(subject_request_body 'foo').to be_a AkamaiApi::ECCU::SoapBody
     end
 
     it "sets an integer value named 'fileId' with the given code" do
-      expect_any_instance_of(AkamaiApi::Eccu::SoapBody).to receive(:integer).with :fileId, 1234
+      expect_any_instance_of(AkamaiApi::ECCU::SoapBody).to receive(:integer).with :fileId, 1234
       subject_request_body 'foo'
     end
 
     it "sets a string value named 'statusChangeEmails' with the given email" do
-      expect_any_instance_of(AkamaiApi::Eccu::SoapBody).to receive(:string).with :statusChangeEmail, 'foo'
+      expect_any_instance_of(AkamaiApi::ECCU::SoapBody).to receive(:string).with :statusChangeEmail, 'foo'
       subject_request_body 'foo'
     end
 

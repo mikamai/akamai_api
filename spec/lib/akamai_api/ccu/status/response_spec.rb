@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe AkamaiApi::Ccu::Status::Response do
+describe AkamaiApi::CCU::Status::Response do
   let(:raw) do
     {
       'httpStatus' => 201,
@@ -9,7 +9,7 @@ describe AkamaiApi::Ccu::Status::Response do
       'supportId' => '21'
     }
   end
-  subject { AkamaiApi::Ccu::Status::Response.new raw }
+  subject { AkamaiApi::CCU::Status::Response.new raw }
 
   it '#code returns the httpStatus property' do
     expect(subject.code).to eq 201

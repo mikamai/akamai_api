@@ -1,12 +1,12 @@
 require "akamai_api/eccu/base_edit_request"
 require "akamai_api/eccu/find_response"
 
-module AkamaiApi::Eccu
+module AkamaiApi::ECCU
   # The {FindRequest} class is used to get the details of an ECCU request.
   #
   # @example
   #   begin
-  #     res = AkamaiApi::Eccu::FindRequest.execute 12345, false
+  #     res = AkamaiApi::ECCU::FindRequest.execute 12345, false
   #     puts "Request found, in status #{res.status[:message]}"
   #   rescue AkamaiApi::Unauthorized
   #     puts "Invalid credentials"

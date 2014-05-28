@@ -1,6 +1,6 @@
 require "akamai_api/unauthorized"
 
-module AkamaiApi::Eccu
+module AkamaiApi::ECCU
   # @abstract
   #
   # This class is intended as a generic superclass for all the specific requests that can be used
@@ -26,7 +26,7 @@ module AkamaiApi::Eccu
     end
 
     def client
-      AkamaiApi::Eccu.client
+      AkamaiApi::ECCU.client
     end
   end
 end

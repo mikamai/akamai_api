@@ -2,7 +2,7 @@ require "akamai_api/ccu"
 require "akamai_api/cli/command"
 require "akamai_api/cli/ccu/purge_renderer"
 
-module AkamaiApi::CLI::Ccu
+module AkamaiApi::CLI::CCU
   class Arl < AkamaiApi::CLI::Command
     namespace 'ccu arl'
 
@@ -30,8 +30,10 @@ module AkamaiApi::CLI::Ccu
       def purge_action type, arls
         raise 'You should provide at least one valid URL' if arls.blank?
         load_config
-        res = AkamaiApi::Ccu.purge type, :arl, arls, :domain => options[:domain]
+        res = AkamaiApi::CCU.purge type, :arl, arls, :domain => options[:domain]
         puts PurgeRenderer.new(res).render
+      rescue AkamaiApi::CCU::Error
+        puts StatusRenderer.new($!).render_error
       rescue AkamaiApi::Unauthorized
         puts 'Your login credentials are invalid.'
       end

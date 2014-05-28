@@ -15,15 +15,11 @@ Feature: akamai_api ccu arl remove
     When I run `akamai_api ccu arl remove http://www.foo.bar/t.txt`
     Then the output should contain:
       """
-      There was an error processing your request:
+      Error 403: 'unauthorized arl' (http://www.foo.bar/t.txt)
       """
     And the output should contain:
       """
-      * Result: 403 - unauthorized arl (http://www.foo.bar/t.txt)
-      """
-    And the output should contain:
-      """
-      * Described by: https://api.ccu.akamai.com/ccu/v2/errors/unauthorized-arl
+      Described by: https://api.ccu.akamai.com/ccu/v2/errors/unauthorized-arl
       """
 
   @vcr

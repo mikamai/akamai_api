@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe AkamaiApi::Ccu::PurgeStatus::Request do
+describe AkamaiApi::CCU::PurgeStatus::Request do
   it "includes httparty" do
     expect(subject.class.included_modules).to include HTTParty
   end
@@ -10,10 +10,10 @@ describe AkamaiApi::Ccu::PurgeStatus::Request do
   end
 
   describe "#execute" do
-    let(:fake_response) { double code: 200, parsed_response: {} }
+    let(:fake_response) { double code: 200, parsed_response: { 'httpStatus' => 200, 'submissionTime' => 1 } }
 
     it "executes a GET request on the given progress_uri" do
-      expect(AkamaiApi::Ccu::PurgeStatus::Request).to receive :get do |uri, args|
+      expect(AkamaiApi::CCU::PurgeStatus::Request).to receive :get do |uri, args|
         expect(uri).to eq '/ccu/v2/purges/foo'
         fake_response
       end
@@ -22,7 +22,7 @@ describe AkamaiApi::Ccu::PurgeStatus::Request do
 
     it "sets the auth in the request" do
       AkamaiApi.stub auth: 'foo'
-      expect(AkamaiApi::Ccu::PurgeStatus::Request).to receive :get do |uri, args|
+      expect(AkamaiApi::CCU::PurgeStatus::Request).to receive :get do |uri, args|
         expect(args).to eq basic_auth: 'foo'
         fake_response
       end
@@ -31,19 +31,31 @@ describe AkamaiApi::Ccu::PurgeStatus::Request do
 
     it "raises an exception when the response code is 401" do
       fake_response.stub code: 401
-      expect(AkamaiApi::Ccu::PurgeStatus::Request).to receive(:get).and_return fake_response
+      expect(AkamaiApi::CCU::PurgeStatus::Request).to receive(:get).and_return fake_response
       expect { subject.execute '/ccu/v2/purges/foo' }.to raise_error AkamaiApi::Unauthorized
     end
 
     it "returns a response built with the received json" do
-      fake_response.stub parsed_response: {a: 'b'}
-      expect(AkamaiApi::Ccu::PurgeStatus::Request).to receive(:get).and_return fake_response
-      expect(subject.execute '/ccu/v2/purges/foo' ).to be_a AkamaiApi::Ccu::PurgeStatus::Response
+      fake_response.stub parsed_response: { 'httpStatus' => 201, 'submissionTime' => 1 }
+      expect(AkamaiApi::CCU::PurgeStatus::Request).to receive(:get).and_return fake_response
+      expect(subject.execute '/ccu/v2/purges/foo' ).to be_a AkamaiApi::CCU::PurgeStatus::Response
+    end
+
+    it "raises an error if json code in response is not valid" do
+      fake_response.stub parsed_response: { 'httpStatus' => 400, 'submissionTime' => 1 }
+      expect(AkamaiApi::CCU::PurgeStatus::Request).to receive(:get).and_return fake_response
+      expect { subject.execute '/ccu/v2/purges/foo' }.to raise_error AkamaiApi::CCU::Error
+    end
+
+    it "raises an error when json code in response has no submissionTime" do
+      fake_response = double code: 201, parsed_response: { 'httpStatus' => 201 }
+      expect(AkamaiApi::CCU::PurgeStatus::Request).to receive(:get).and_return fake_response
+      expect { subject.execute '/ccu/v2/purges/foo' }.to raise_error AkamaiApi::CCU::PurgeStatus::NotFound
     end
 
     context "when the given progressUri is the purgeId" do
       it "the progressUri prefix is appended" do
-        expect(AkamaiApi::Ccu::PurgeStatus::Request).to receive :get do |uri, args|
+        expect(AkamaiApi::CCU::PurgeStatus::Request).to receive :get do |uri, args|
           expect(uri).to eq '/ccu/v2/purges/foo'
           fake_response
         end
@@ -53,7 +65,7 @@ describe AkamaiApi::Ccu::PurgeStatus::Request do
 
     context "when the given progressUri isn't prefixed by a slash" do
       it "a slash is prefixed" do
-        expect(AkamaiApi::Ccu::PurgeStatus::Request).to receive :get do |uri, args|
+        expect(AkamaiApi::CCU::PurgeStatus::Request).to receive :get do |uri, args|
           expect(uri).to eq '/ccu/v2/purges/foo'
           fake_response
         end

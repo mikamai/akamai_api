@@ -1,4 +1,4 @@
-require "akamai_api/cli/ccu/base"
+require "akamai_api/cli/CCU/base"
 
-module AkamaiApi::CLI::Ccu
+module AkamaiApi::CLI::CCU
 end

@@ -1,7 +1,7 @@
 require "akamai_api/ccu/status/response"
-require "akamai_api/ccu/purge_status/successful_response"
+require "akamai_api/ccu/purge_status/response"
 
-module AkamaiApi::CLI::Ccu
+module AkamaiApi::CLI::CCU
   class StatusRenderer
     attr_reader :response
 
@@ -9,8 +9,16 @@ module AkamaiApi::CLI::Ccu
       @response = response
     end
 
+    def render_error
+      if response.is_a? AkamaiApi::CCU::PurgeStatus::NotFound
+        render_not_found
+      else
+        render_generic_error
+      end
+    end
+
     def render
-      res = response.is_a?(AkamaiApi::Ccu::Status::Response) ? queue_status : purge_status
+      res = response.is_a?(AkamaiApi::CCU::Status::Response) ? queue_status : purge_status
       [
         '----------',
         res,
@@ -28,14 +36,6 @@ module AkamaiApi::CLI::Ccu
     end
 
     def purge_status
-      if response.is_a? AkamaiApi::Ccu::PurgeStatus::SuccessfulResponse
-        successful_purge
-      else
-        not_found_purge
-      end
-    end
-
-    def successful_purge
       output = [
         purge_description,
         "\t* Result: #{response.code} - #{response.status}",
@@ -53,13 +53,25 @@ module AkamaiApi::CLI::Ccu
       end
     end
 
-    def not_found_purge
+    def render_not_found
       [
+        "----------",
         "No purge request found using #{response.progress_uri}:",
         "\t* Result: #{response.code} - #{response.message}",
-        "\t* Purge ID: #{response.purge_id} | Support ID: #{response.support_id}",
-        "\t* Time to wait before next check: #{response.time_to_wait} secs."
-      ]
+        "\t* Support ID: #{response.support_id}",
+        "\t* Time to wait before next check: #{response.time_to_wait} secs.",
+        "----------"
+      ].join "\n"
+    end
+
+    def render_generic_error
+      [
+        "----------",
+        "Error #{response.code}: '#{response.message}' (#{response.detail})",
+        "  Described by: #{response.described_by}",
+        "  Support ID: #{response.support_id}",
+        "----------"
+      ].join "\n"
     end
 
     def successful_completed_purge
@@ -68,8 +80,8 @@ module AkamaiApi::CLI::Ccu
 
     def successful_pending_purge
       [
-        "\t* Estimated time: #{response.estimated_time} secs.",
-        "\t* Queue length: #{response.queue_length}",
+        "\t* Estimated time was: #{response.original_estimated_time} secs.",
+        "\t* Queue length was: #{response.original_queue_length}",
         "\t* Time to wait before next check: #{response.time_to_wait} secs.",
       ]
     end

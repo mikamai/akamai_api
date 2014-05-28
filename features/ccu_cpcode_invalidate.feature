@@ -15,15 +15,11 @@ Feature: akamai_api ccu cpcode invalidate
     When I run `akamai_api ccu cpcode invalidate 12345`
     Then the output should contain:
       """
-      There was an error processing your request:
+      Error 403: 'unauthorized cpcode' (12345)
       """
     And the output should contain:
       """
-      * Result: 403 - unauthorized cpcode (12345)
-      """
-    And the output should contain:
-      """
-      * Described by: https://api.ccu.akamai.com/ccu/v2/errors/unauthorized-cpcode
+      Described by: https://api.ccu.akamai.com/ccu/v2/errors/unauthorized-cpcode
       """
 
   @vcr

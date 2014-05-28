@@ -1,13 +1,13 @@
 require 'spec_helper'
 
-describe AkamaiApi::Eccu::FindRequest do
-  subject { AkamaiApi::Eccu::FindRequest.new '1234' }
+describe AkamaiApi::ECCU::FindRequest do
+  subject { AkamaiApi::ECCU::FindRequest.new '1234' }
 
   describe "#execute" do
     let(:fake_client) { double call: nil }
 
     before do
-      AkamaiApi::Eccu.stub client: fake_client
+      AkamaiApi::ECCU.stub client: fake_client
     end
 
     it "calls 'get_info' via savon with a message" do
@@ -19,8 +19,8 @@ describe AkamaiApi::Eccu::FindRequest do
 
     it "returns a FindResponse" do
       subject.stub request_body: 'example'
-      fake_client.stub call: double(body: { get_info_response: { eccu_info: {} } })
-      expect(subject.execute 'foo').to be_a AkamaiApi::Eccu::FindResponse
+      fake_client.stub call: double(body: { get_info_response: { ECCU_info: {} } })
+      expect(subject.execute 'foo').to be_a AkamaiApi::ECCU::FindResponse
     end
 
     it "raises NotFound if request raises a Savon::SOAPFault with particular message" do
@@ -30,7 +30,7 @@ describe AkamaiApi::Eccu::FindRequest do
         exc.stub to_s: ''
         raise exc
       end
-      expect { subject.execute true }.to raise_error AkamaiApi::Eccu::NotFound
+      expect { subject.execute true }.to raise_error AkamaiApi::ECCU::NotFound
     end
 
     it "raises unauthorized if request raises a Savon::HTTPError with code 401" do
@@ -54,16 +54,16 @@ describe AkamaiApi::Eccu::FindRequest do
     end
 
     it "returns a SoapBody object" do
-      expect(subject_request_body false).to be_a AkamaiApi::Eccu::SoapBody
+      expect(subject_request_body false).to be_a AkamaiApi::ECCU::SoapBody
     end
 
     it "sets an integer value named 'fileId' with the given code" do
-      expect_any_instance_of(AkamaiApi::Eccu::SoapBody).to receive(:integer).with :fileId, 1234
+      expect_any_instance_of(AkamaiApi::ECCU::SoapBody).to receive(:integer).with :fileId, 1234
       subject_request_body false
     end
 
     it "sets a boolean value named 'retrieveContents' with the given value" do
-      expect_any_instance_of(AkamaiApi::Eccu::SoapBody).to receive(:boolean).with :retrieveContents, false
+      expect_any_instance_of(AkamaiApi::ECCU::SoapBody).to receive(:boolean).with :retrieveContents, false
       subject_request_body '1'
     end
 

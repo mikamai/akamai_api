@@ -67,7 +67,7 @@ Feature: akamai_api ccu purge status
     When I run `akamai_api ccu status foobarbaz`
     Then the output should contain:
       """
-      No purge request found using /ccu/v2/purges/foobarbaz:
+      No purge request found
       """
     And the output should contain:
       """
@@ -75,7 +75,7 @@ Feature: akamai_api ccu purge status
       """
     And the output should contain:
       """
-      * Purge ID: foobarbaz | Support ID: 12345678901234567890-123456789
+      * Support ID: 12345678901234567890-123456789
       """
     And the output should contain:
       """

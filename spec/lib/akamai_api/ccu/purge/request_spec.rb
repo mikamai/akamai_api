@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe AkamaiApi::Ccu::Purge::Request do
+describe AkamaiApi::CCU::Purge::Request do
   it "includes httparty" do
     expect(subject.class.included_modules).to include HTTParty
   end
@@ -14,8 +14,8 @@ describe AkamaiApi::Ccu::Purge::Request do
   end
 
   describe "#action" do
-    it "is 'remove' by default" do
-      expect(subject.action).to eq 'remove'
+    it "is :remove by default" do
+      expect(subject.action).to eq :remove
     end
 
     it "can be changed" do
@@ -23,13 +23,13 @@ describe AkamaiApi::Ccu::Purge::Request do
     end
 
     it "raises an error if an invalid value is set" do
-      expect { subject.action = 'foobar' }.to raise_error AkamaiApi::Ccu::UnrecognizedOption
+      expect { subject.action = 'foobar' }.to raise_error AkamaiApi::CCU::UnrecognizedOption
     end
   end
 
   describe "#type" do
-    it "is 'arl' by default" do
-      expect(subject.type).to eq 'arl'
+    it "is :arl by default" do
+      expect(subject.type).to eq :arl
     end
 
     it "can be changed" do
@@ -37,13 +37,13 @@ describe AkamaiApi::Ccu::Purge::Request do
     end
 
     it "raises an error if an invalid value is set" do
-      expect { subject.type = 'foobar' }.to raise_error AkamaiApi::Ccu::UnrecognizedOption
+      expect { subject.type = 'foobar' }.to raise_error AkamaiApi::CCU::UnrecognizedOption
     end
   end
 
   describe "#domain" do
-    it "is 'production' by default" do
-      expect(subject.domain).to eq 'production'
+    it "is :production by default" do
+      expect(subject.domain).to eq :production
     end
 
     it "can be changed" do
@@ -51,12 +51,12 @@ describe AkamaiApi::Ccu::Purge::Request do
     end
 
     it "raises an error if an invalid value is set" do
-      expect { subject.domain = 'foobar' }.to raise_error AkamaiApi::Ccu::UnrecognizedOption
+      expect { subject.domain = 'foobar' }.to raise_error AkamaiApi::CCU::UnrecognizedOption
     end
   end
 
   describe "#execute" do
-    let(:fake_response) { double code: 201, parsed_response: {} }
+    let(:fake_response) { double code: 201, parsed_response: { 'httpStatus' => 201, 'submissionTime' => 1 } }
     let(:sample_arl) { 'http://www.foo.bar/t.txt' }
 
     it "executes a post on the base url" do
@@ -116,9 +116,15 @@ describe AkamaiApi::Ccu::Purge::Request do
     end
 
     it "returns a response built with the resulted json" do
-      fake_response = double code: 201, parsed_response: { a: 'b' }
+      fake_response = double code: 201, parsed_response: { 'httpStatus' => 201 }
       subject.class.stub post: fake_response
-      expect(subject.execute(sample_arl).raw).to eq a: 'b'
+      expect(subject.execute(sample_arl).raw).to eq 'httpStatus' => 201
+    end
+
+    it "raises an error when json code in response is not successful" do
+      fake_response = double code: 201, parsed_response: { 'httpStatus' => 403 }
+      subject.class.stub post: fake_response
+      expect { subject.execute sample_arl }.to raise_error AkamaiApi::CCU::Error
     end
   end
 end

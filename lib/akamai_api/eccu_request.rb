@@ -10,9 +10,8 @@ require "akamai_api/eccu/find_request"
 require "akamai_api/eccu/publish_request"
 require "akamai_api/eccu/list_request"
 
-SoapBody = AkamaiApi::Eccu::SoapBody
 module AkamaiApi
-  class EccuRequest
+  class ECCURequest
     attr_accessor :file, :status, :code, :notes, :property, :email, :upload_date, :uploaded_by, :version
 
     def initialize attributes = {}
@@ -26,23 +25,23 @@ module AkamaiApi
       email: :status_change_email
     }.each do |name, attribute|
       define_method "update_#{name}!" do |value|
-        successful = AkamaiApi::Eccu::UpdateAttributeRequest.new(code, attribute).execute(value)
+        successful = AkamaiApi::ECCU::UpdateAttributeRequest.new(code, attribute).execute(value)
         send "#{name}=", value if successful
         successful
       end
     end
 
     def destroy
-      AkamaiApi::Eccu::DestroyRequest.new(code).execute
+      AkamaiApi::ECCU::DestroyRequest.new(code).execute
     end
 
     class << self
       def all_ids
-        AkamaiApi::Eccu::ListRequest.new.execute
+        AkamaiApi::ECCU::ListRequest.new.execute
       end
 
       def all args = {}
-        all_ids.map { |v| EccuRequest.find v, args }
+        all_ids.map { |v| ECCURequest.find v, args }
       end
 
       def last args = {}
@@ -54,7 +53,7 @@ module AkamaiApi
       end
 
       def find code, args = {}
-        response = AkamaiApi::Eccu::FindRequest.new(code).execute args.fetch(:verbose, true)
+        response = AkamaiApi::ECCU::FindRequest.new(code).execute args.fetch(:verbose, true)
         new :file        => response.file,
             :status      => response.status,
             :code        => response.code,
@@ -73,7 +72,7 @@ module AkamaiApi
 
       def publish property, content, args = {}
         args = args.dup
-        AkamaiApi::Eccu::PublishRequest.new(property, extract_property_arguments(args)).execute content, args
+        AkamaiApi::ECCU::PublishRequest.new(property, extract_property_arguments(args)).execute content, args
       end
 
       private

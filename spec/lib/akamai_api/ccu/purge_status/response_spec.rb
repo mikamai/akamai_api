@@ -1,10 +1,10 @@
 require 'spec_helper'
 
-describe AkamaiApi::Ccu::PurgeStatus::SuccessfulResponse do
+describe AkamaiApi::CCU::PurgeStatus::Response do
   let(:raw) do
     {
       'originalEstimatedSeconds' => 480,
-      'progressUri'              => '/ccu/v2/purges/12345678-1234-5678-1234-123456789012',
+      'progressUri'              => '/CCU/v2/purges/12345678-1234-5678-1234-123456789012',
       'originalQueueLength'      => 6,
       'purgeId'                  => '12345678-1234-5678-1234-123456789012',
       'supportId'                => '12345678901234567890-123456789',
@@ -16,18 +16,18 @@ describe AkamaiApi::Ccu::PurgeStatus::SuccessfulResponse do
       'pingAfterSeconds'         => 60
     }
   end
-  subject { AkamaiApi::Ccu::PurgeStatus::SuccessfulResponse.new raw }
+  subject { AkamaiApi::CCU::PurgeStatus::Response.new raw }
 
-  it '#estimated_time returns estimatedSeconds attribute' do
-    expect(subject.estimated_time).to eq 480
+  it '#original_estimated_time returns originalEstimatedSeconds attribute' do
+    expect(subject.original_estimated_time).to eq 480
   end
 
   it '#progress_uri returns progressUri attribute' do
-    expect(subject.progress_uri).to eq '/ccu/v2/purges/12345678-1234-5678-1234-123456789012'
+    expect(subject.progress_uri).to eq '/CCU/v2/purges/12345678-1234-5678-1234-123456789012'
   end
 
-  it '#queue_length returns originalQueueLength attribute' do
-    expect(subject.queue_length).to eq 6
+  it '#original_queue_length returns originalQueueLength attribute' do
+    expect(subject.original_queue_length).to eq 6
   end
 
   it '#purge_id returns purgeId attribute' do

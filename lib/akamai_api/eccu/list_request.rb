@@ -1,7 +1,7 @@
 require "akamai_api/eccu/soap_body"
 require "akamai_api/eccu/base_request"
 
-module AkamaiApi::Eccu
+module AkamaiApi::ECCU
   # Use the {ListRequest} class to get the list of the last submitted ECCU requests
   class ListRequest < BaseRequest
     # Returns the list of the last submitted ECCU requests

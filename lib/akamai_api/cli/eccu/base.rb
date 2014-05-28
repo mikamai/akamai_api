@@ -1,14 +1,14 @@
 require "akamai_api/cli/command"
-require "akamai_api/cli/eccu/entry_renderer"
+require "akamai_api/cli/Eccu/entry_renderer"
 
-module AkamaiApi::CLI::Eccu
+module AkamaiApi::CLI::ECCU
   class Base < AkamaiApi::CLI::Command
     desc 'requests', 'Print the list of the last requests made to ECCU'
     method_option :content, :type => :boolean, :aliases => '-c',
                   :desc => 'Print request content too'
     def requests
       load_config
-      requests = AkamaiApi::EccuRequest.all :verbose => options[:content]
+      requests = AkamaiApi::ECCURequest.all :verbose => options[:content]
       puts EntryRenderer.render requests
     rescue ::AkamaiApi::Unauthorized
       puts "Your login credentials are invalid."
@@ -19,7 +19,7 @@ module AkamaiApi::CLI::Eccu
                   :desc => 'Print request content too'
     def last_request
       load_config
-      request = AkamaiApi::EccuRequest.last verbose: options[:content]
+      request = AkamaiApi::ECCURequest.last verbose: options[:content]
       puts EntryRenderer.new(request).render
     rescue ::AkamaiApi::Unauthorized
       puts "Your login credentials are invalid."
@@ -45,12 +45,12 @@ module AkamaiApi::CLI::Eccu
         :property_type => options[:property_type],
         :emails => options[:emails]
       }
-      id = AkamaiApi::EccuRequest.publish_file property, source, args
+      id = AkamaiApi::ECCURequest.publish_file property, source, args
       puts "Request correctly published:"
-      puts EntryRenderer.new(AkamaiApi::EccuRequest.find(id, :verbose => true)).render
+      puts EntryRenderer.new(AkamaiApi::ECCURequest.find(id, :verbose => true)).render
     rescue ::AkamaiApi::Unauthorized
       puts "Your login credentials are invalid."
-    rescue ::AkamaiApi::Eccu::InvalidDomain
+    rescue ::AkamaiApi::ECCU::InvalidDomain
       puts "You are not authorized to specify this digital property."
     rescue Savon::SOAPFault
       puts $!.message

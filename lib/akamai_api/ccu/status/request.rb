@@ -2,8 +2,8 @@ require "httparty"
 require "akamai_api/unauthorized"
 require "akamai_api/ccu/status/response"
 
-module AkamaiApi::Ccu::Status
-  # This class can be used to check the status of the Akamai CCU queue
+module AkamaiApi::CCU::Status
+  # {Request} can be used to check the status of the Akamai CCU queue
   class Request
     include HTTParty
     format :json
@@ -11,6 +11,7 @@ module AkamaiApi::Ccu::Status
 
     # Checks the status of the Akamai CCU queue
     # @return [Response] a response object describing the status of the Akamai CCU queue
+    # @raise [AkamaiApi::CCU::Error] when there is an error in the request
     # @raise [AkamaiApi::Unauthorized] when login credentials are invalid
     def self.execute
       new.execute
@@ -18,6 +19,7 @@ module AkamaiApi::Ccu::Status
 
     # Checks the status of the Akamai CCU queue
     # @return [Response] a response object describing the status of the Akamai CCU queue
+    # @raise [AkamaiApi::CCU::Error] when there is an error in the request
     # @raise [AkamaiApi::Unauthorized] when login credentials are invalid
     def execute
       response = self.class.get('/', basic_auth: AkamaiApi.auth)
@@ -28,7 +30,7 @@ module AkamaiApi::Ccu::Status
 
     def parse_response response
       raise AkamaiApi::Unauthorized if response.code == 401
-      AkamaiApi::Ccu::Status::Response.new response.parsed_response
+      AkamaiApi::CCU::Status::Response.new response.parsed_response
     end
   end
 end

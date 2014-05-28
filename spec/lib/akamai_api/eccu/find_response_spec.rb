@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe AkamaiApi::Eccu::FindResponse do
+describe AkamaiApi::ECCU::FindResponse do
   let(:raw_data) do
     {
       file_id: '1234',
@@ -23,7 +23,7 @@ describe AkamaiApi::Eccu::FindResponse do
     }
   end
 
-  subject { AkamaiApi::Eccu::FindResponse.new raw_data }
+  subject { AkamaiApi::ECCU::FindResponse.new raw_data }
 
   describe "#code" do
     it "returns the 'file_id' property" do

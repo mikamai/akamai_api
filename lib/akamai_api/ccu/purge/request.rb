@@ -1,19 +1,19 @@
 require "httparty"
+
 require 'active_support'
 require 'active_support/core_ext/array'
+
 require "akamai_api/unauthorized"
 require "akamai_api/ccu/unrecognized_option"
 require "akamai_api/ccu/purge/response"
 
-module AkamaiApi::Ccu::Purge
-  # This class encapsulates the behavior needed to purge a resource from Akamai via CCU.
-  # When you build an instance of this class you specify what type of operation you want to do.
-  # Then each time you call {#execute} a request is made to Akamai to clean the specified resources
+module AkamaiApi::CCU::Purge
+  # {AkamaiApi::CCU::Purge} encapsulates the behavior needed to purge a resource from Akamai via CCU.
   #
   # @example Remove a single ARL
-  #     AkamaiApi::Ccu::Purge::Request.new.execute('http://foo.bar/t.txt')
+  #     AkamaiApi::CCU::Purge::Request.new.execute('http://foo.bar/t.txt')
   # @example Invalidate multiple CPCodes
-  #     AkamaiApi::Ccu::Purge::Request.new(:invalidate, :cpcode).execute(12345, 12346)
+  #     AkamaiApi::CCU::Purge::Request.new(:invalidate, :cpcode).execute(12345, 12346)
   class Request
     include HTTParty
     format :json
@@ -23,54 +23,52 @@ module AkamaiApi::Ccu::Purge
     attr_reader :type, :action, :domain
 
     # @param [String] action type of clean action. See {#action} for allowed values
-    # @param [String] type   type of resource to clean. See {#type} for allowed values
-    # @param [Hash]   args   optional arguments
-    # @option args [String] :domain Domain type to clean. See {#domain} for allowed values
-    def initialize action = 'remove', type = 'arl', args = {}
+    # @param [String] type resource type. See {#type} for allowed values
+    # @param [Hash<Symbol, String>] args   optional arguments
+    # @option args [String] :domain (:production) Domain type. See {#domain} for allowed values
+    def initialize action = :remove, type=:arl, args = {}
       self.action = action
       self.type   = type
-      self.domain = args[:domain] || 'production'
+      self.domain = args[:domain] || :production
     end
 
     # @!attribute [rw] action
-    #   Type of clean action. Allowed values are:
-    #   - :invalidate (to simply mark resources as invalid)
-    #   - :remove (to force resource removal)
-    #   @return [String,Symbol]
-    #   @raise [AkamaiApi::Ccu::UnrecognizedOption] if an invalid value is provided
+    #   Clean action type.
+    #   @return [:invalidate] when you want to simply mark resources as invalid
+    #   @return [:remove] when you want to force resources removal
+    #   @raise [AkamaiApi::CCU::UnrecognizedOption] if an invalid value is provided
     def action= value
       raise_unrecognized_action(value) unless valid_action?(value)
       @action = value
     end
 
     # @!attribute [rw] type
-    #   Type of resource to clean. Allowed values are:
-    #   - :cpcode (to clean a CPCode)
-    #   - :arl    (to clean a regular URL)
-    #   @return [String,Symbol]
-    #   @raise [AkamaiApi::Ccu::UnrecognizedOption] if an invalid value is provided
+    #   Resource type.
+    #   @return [:cpcode] when request targets entire CPCode(s)
+    #   @return [:arl] when request targets single ARL(s)
+    #   @raise [AkamaiApi::CCU::UnrecognizedOption] if an invalid value is provided
     def type= value
       raise_unrecognized_type(value) unless valid_type?(value)
       @type = value
     end
 
     # @!attribute [rw] domain
-    #   Domain type to clean. Allowed values are:
-    #   - :production
-    #   - :staging
-    #   @return [String,Symbol]
-    #   @raise [AkamaiApi::Ccu::UnrecognizedOption] if an invalid value is provided
+    #   Domain type to target.
+    #   @return [:production] production environment
+    #   @return [:staging] staging environment
+    #   @raise [AkamaiApi::CCU::UnrecognizedOption] if an invalid value is provided
     def domain= value
       raise_unrecognized_domain(value) unless valid_domain?(value)
       @domain = value
     end
 
-    # Clean the requested resources
-    # @param [Array] items One or more resources to clean
+    # Clean the requested resources.
+    # @param [Array<String>] items One or more resources to clean
     # @return [Response] an object representing the received response
+    # @raise [AkamaiApi::CCU::Error] when there is an error in the request
     # @raise [AkamaiApi::Unauthorized] when login credentials are invalid
     # @example Clean a single resource
-    #   request.execute 'http://foo.bar/t.txt
+    #   request.execute 'http://foo.bar/t.txt'
     # @example Clean multiple resources
     #   request.execute '12345', '12346'
     def execute *items
@@ -79,6 +77,9 @@ module AkamaiApi::Ccu::Purge
       parse_response response
     end
 
+    # Request body to send to the API.
+    # @param [Array<String>] items resources to clean
+    # @return [String] request body in JSON format
     def request_body items
       { type: type, action: action, domain: domain, objects: items }.to_json
     end
@@ -87,19 +88,20 @@ module AkamaiApi::Ccu::Purge
 
     def parse_response response
       raise ::AkamaiApi::Unauthorized if response.code == 401
+      raise AkamaiApi::CCU::Error.new response.parsed_response unless successful_response? response
       Response.new response.parsed_response
     end
 
     def raise_unrecognized_action bad_action
-      raise ::AkamaiApi::Ccu::UnrecognizedOption, "Unknown action '#{bad_action}' (allowed values: invalidate, remove)"
+      raise ::AkamaiApi::CCU::UnrecognizedOption, "Unknown action '#{bad_action}' (allowed values: invalidate, remove)"
     end
 
     def raise_unrecognized_type bad_type
-      raise ::AkamaiApi::Ccu::UnrecognizedOption, "Unknown type '#{bad_type}' (allowed values: arl, cpcode)"
+      raise ::AkamaiApi::CCU::UnrecognizedOption, "Unknown type '#{bad_type}' (allowed values: arl, cpcode)"
     end
 
     def raise_unrecognized_domain bad_domain
-      raise ::AkamaiApi::Ccu::UnrecognizedOption, "Unknown domain '#{bad_domain}' (allowed_values: production, staging)"
+      raise ::AkamaiApi::CCU::UnrecognizedOption, "Unknown domain '#{bad_domain}' (allowed_values: production, staging)"
     end
 
     def valid_action? action
@@ -112,6 +114,10 @@ module AkamaiApi::Ccu::Purge
 
     def valid_domain? domain
       %w(production staging).include? domain.to_s
+    end
+
+    def successful_response? response
+      (200...300).include? response.parsed_response['httpStatus']
     end
   end
 end

@@ -1,15 +1,15 @@
 require "akamai_api/eccu/base_edit_request"
 
-module AkamaiApi::Eccu
+module AkamaiApi::ECCU
   # {UpdateAttributeRequest} is a generic request class that can be used to update an attribute of an ECCU request.
   #
-  # This class is used to update the {AkamaiApi::EccuRequest#notes} or the {AkamaiApi::EccuRequest#email} attributes
+  # This class is used to update the {AkamaiApi::ECCURequest#notes} or the {AkamaiApi::ECCURequest#email} attributes
   #
   # @example
   #   begin
-  #     res = AkamaiApi::Eccu::UpdateAttributeRequest.execute 12345, 'notes', 'my new notes'
+  #     res = AkamaiApi::ECCU::UpdateAttributeRequest.execute 12345, 'notes', 'my new notes'
   #     puts "Request completed: #{res}"
-  #   rescue AkamaiApi::Eccu::NotFound
+  #   rescue AkamaiApi::ECCU::NotFound
   #     puts "No request can be found with the given code"
   #   rescue AkamaiApi::Unauthorized
   #     puts "Invalid login credentials"
@@ -18,7 +18,7 @@ module AkamaiApi::Eccu
     # @return [String] attribute to update
     attr_reader :attribute
 
-    # Updates an attribute of an eccu request
+    # Updates an attribute of an ECCU request
     # @param [Fixnum] code request code
     # @param [String] attribute name
     # @param [String] value new value to set
@@ -34,7 +34,7 @@ module AkamaiApi::Eccu
       @attribute = attribute
     end
 
-    # Updates an attribute of an eccu request
+    # Updates an attribute of an ECCU request
     # @param [String] value new value to set
     # @return [true,false] whether the request was successful or not
     def execute value

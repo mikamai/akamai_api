@@ -1,13 +1,13 @@
 require 'spec_helper'
 
-describe AkamaiApi::Eccu::DestroyRequest do
-  subject { AkamaiApi::Eccu::DestroyRequest.new '1234' }
+describe AkamaiApi::ECCU::DestroyRequest do
+  subject { AkamaiApi::ECCU::DestroyRequest.new '1234' }
 
   describe "#execute" do
     let(:fake_client) { double call: nil }
 
     before do
-      AkamaiApi::Eccu.stub client: fake_client
+      AkamaiApi::ECCU.stub client: fake_client
     end
 
     it "calls 'delete' via savon with a message" do
@@ -36,7 +36,7 @@ describe AkamaiApi::Eccu::DestroyRequest do
         exc.stub to_s: ''
         raise exc
       end
-      expect { subject.execute }.to raise_error AkamaiApi::Eccu::NotFound
+      expect { subject.execute }.to raise_error AkamaiApi::ECCU::NotFound
     end
 
     it "raises unauthorized if request raises a Savon::HTTPError with code 401" do
@@ -60,11 +60,11 @@ describe AkamaiApi::Eccu::DestroyRequest do
     end
 
     it "returns a SoapBody object" do
-      expect(subject_request_body).to be_a AkamaiApi::Eccu::SoapBody
+      expect(subject_request_body).to be_a AkamaiApi::ECCU::SoapBody
     end
 
     it "sets an integer value named 'fileId' with the given code" do
-      expect_any_instance_of(AkamaiApi::Eccu::SoapBody).to receive(:integer).with :fileId, 1234
+      expect_any_instance_of(AkamaiApi::ECCU::SoapBody).to receive(:integer).with :fileId, 1234
       subject_request_body
     end
 
