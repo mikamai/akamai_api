@@ -22,6 +22,7 @@ module AkamaiApi::CCU::PurgeStatus
     # Checks the status of the requested associated with the given argument
     # @param [String] purge_id_or_progress_uri a purge request ID or URI
     # @return [Response] an object detailing the response
+    # @raise [AkamaiApi::CCU::PurgeStatus::NotFound] when the request cannot be found
     # @raise [AkamaiApi::CCU::Error] when there is an error in the request
     # @raise [AkamaiApi::Unauthorized] when login credentials are invalid
     def self.execute purge_id_or_progress_uri
@@ -30,6 +31,7 @@ module AkamaiApi::CCU::PurgeStatus
 
     # Checks the status of the requested associated with the given argument
     # @return [Response] an object detailing the response
+    # @raise [AkamaiApi::CCU::PurgeStatus::NotFound] when the request cannot be found
     # @raise [AkamaiApi::CCU::Error] when there is an error in the request
     # @raise [AkamaiApi::Unauthorized] when login credentials are invalid
     def execute purge_id_or_progress_uri

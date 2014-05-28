@@ -3,12 +3,11 @@ require "akamai_api/ccu/base_response"
 module AkamaiApi::CCU::PurgeStatus
   # This class represents a successful response and details a purge request status
   class Response < AkamaiApi::CCU::BaseResponse
-    # URI to use to ask the status of the Purge Request
-    # @return [String] URI to use to ask the status
-    def uri
+    # @return [String] URI to use to check the status of the request
+    def progress_uri
       raw['progressUri']
     end
-    alias_method :progress_uri, :uri
+    alias_method :uri, :progress_uri
 
     # Purge Request identifier
     # @return [String] Purge Request identifier
@@ -20,10 +19,10 @@ module AkamaiApi::CCU::PurgeStatus
     # @return ['In-Progress'] when the request is in progress
     # @return ['Done'] when the request has been completed
     # @return ['Unknown']
-    def status
+    def purge_status
       raw['purgeStatus']
     end
-    alias_method :purge_status, :status
+    alias_method :status, :purge_status
 
     # @return [Fixnum] Suggested time to wait (in seconds) before asking the status again
     def time_to_wait

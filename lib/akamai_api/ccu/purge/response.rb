@@ -28,8 +28,7 @@ module AkamaiApi::CCU::Purge
     end
     alias_method :estimated_seconds, :estimated_time
 
-    # URI to use to ask the status of the Purge Request
-    # @return [String] URI to use to ask the status
+    # @return [String] URI to use to check the status of the request
     def uri
       raw['progressUri']
     end
