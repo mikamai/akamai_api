@@ -1,6 +1,6 @@
 require "thor"
-require "akamai_api/cli/CCU"
-require "akamai_api/cli/Eccu"
+require "akamai_api/cli/ccu"
+require "akamai_api/cli/eccu"
 
 module AkamaiApi::CLI
   class App < Thor
