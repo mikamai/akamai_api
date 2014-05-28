@@ -1,5 +1,5 @@
 require "akamai_api/cli/command"
-require "akamai_api/cli/Eccu/entry_renderer"
+require "akamai_api/cli/eccu/entry_renderer"
 
 module AkamaiApi::CLI::ECCU
   class Base < AkamaiApi::CLI::Command
