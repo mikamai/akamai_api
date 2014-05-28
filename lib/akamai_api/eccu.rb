@@ -11,7 +11,7 @@ module AkamaiApi::ECCU
 
   def self.client_args
     {
-      :wsdl       => File.expand_path('../../../wsdls/ECCU.wsdl', __FILE__),
+      :wsdl       => File.expand_path('../../../wsdls/eccu.wsdl', __FILE__),
       :basic_auth => AkamaiApi.config[:auth],
       :log        => AkamaiApi.config[:log]
     }
