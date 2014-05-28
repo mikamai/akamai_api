@@ -1,10 +1,5 @@
 require "akamai_api/ccu/purge/request"
 
-# @note Generally you don't want to directly use this module because some handy helpers are
-#   already defined in the {AkamaiApi::CCU} module.
-#   But if you need to do it, read the following examples and check
-#   the details of {Request} and {Response} classes.
-#
 # This module encapsulates classes aiming to purge resources using the Akamai CCU interface.
 #
 # @example Handling a purge response

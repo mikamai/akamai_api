@@ -45,14 +45,18 @@ module AkamaiApi::ECCU
 
     protected
 
-    def attribute_for_soap
-      attribute.to_s.camelize(:lower).to_sym
-    end
-
+    # Creates the request body filling it with all necessary arguments
+    # @return [SoapBody]
     def request_body notes
       super do |block|
         block.string  attribute_for_soap,  notes
       end
+    end
+
+    private
+
+    def attribute_for_soap
+      attribute.to_s.camelize(:lower).to_sym
     end
   end
 end

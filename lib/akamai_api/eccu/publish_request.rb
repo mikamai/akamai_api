@@ -48,6 +48,8 @@ module AkamaiApi::ECCU
 
     protected
 
+    # Creates the request body filling it with all necessary arguments
+    # @return [SoapBody]
     def request_body content, args
       SoapBody.new.tap do |body|
         body.string :filename,               args.fetch(:file_name, '')

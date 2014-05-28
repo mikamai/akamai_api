@@ -30,6 +30,7 @@ module AkamaiApi::ECCU
     #       end
     #     end
     #   end
+    # @return [SoapBody]
     def request_body *args, &block
       SoapBody.new.tap do |block|
         block.integer :fileId, code

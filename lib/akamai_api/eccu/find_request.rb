@@ -34,6 +34,8 @@ module AkamaiApi::ECCU
 
     protected
 
+    # Creates the request body filling it with all necessary arguments
+    # @return [SoapBody]
     def request_body retrieve_content
       super do |block|
         block.boolean :retrieveContents, retrieve_content == true
