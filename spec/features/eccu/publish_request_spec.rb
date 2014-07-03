@@ -6,8 +6,8 @@ describe "Given I want to publish a request" do
 
   context "when login credentials are invalid", vcr: { cassette_name: "akamai_api_eccu_publish/invalid_credentials" } do
     before do
-      AkamaiApi.stub config: { auth: ['foo', 'bar'] }
-      AkamaiApi::ECCU.stub client: AkamaiApi::ECCU.send(:build_client)
+      allow(AkamaiApi).to receive(:config) { { auth: ['foo', 'bar'] } }
+      allow(AkamaiApi::ECCU).to receive(:client) { AkamaiApi::ECCU.send(:build_client) }
     end
 
     it "raises Unauthorized" do

@@ -8,13 +8,13 @@ describe 'Given I request to purge an asset' do
 
     it 'responds with a PurgeResponse object' do
       VCR.use_cassette "akamai_api_ccu_#{type}_#{action}/single_item" do
-        subject.send(method, items).should be_a AkamaiApi::CCU::Purge::Response
+        expect(subject.send method, items).to be_a AkamaiApi::CCU::Purge::Response
       end
     end
 
     it 'raises error when user is not authorized' do
       VCR.use_cassette "akamai_api_ccu_#{type}_#{action}/invalid_credentials" do
-        AkamaiApi.stub auth: { username: 'foo', password: 'bar' }
+        allow(AkamaiApi).to receive(:auth) { { username: 'foo', password: 'bar' } }
         expect { subject.send(method, items) }.to raise_error AkamaiApi::Unauthorized
       end
     end
@@ -28,31 +28,31 @@ describe 'Given I request to purge an asset' do
     describe 'when data are correct' do
       it 'returns the expected response code' do
         VCR.use_cassette "akamai_api_ccu_#{type}_#{action}/single_item" do
-          subject.send(method, items).code.should == 201
+          expect(subject.send(method, items).code).to eq 201
         end
       end
 
       it 'returns a successful message' do
         VCR.use_cassette "akamai_api_ccu_#{type}_#{action}/single_item" do
-          subject.send(method, items).message.should == 'Request accepted.'
+          expect(subject.send(method, items).message).to eq 'Request accepted.'
         end
       end
 
       it 'returns a unique purge id' do
         VCR.use_cassette "akamai_api_ccu_#{type}_#{action}/single_item" do
-          subject.send(method, items).purge_id.should == '12345678-1234-1234-1234-123456789012'
+          expect(subject.send(method, items).purge_id).to eq '12345678-1234-1234-1234-123456789012'
         end
       end
 
       it 'returns a unique support id' do
         VCR.use_cassette "akamai_api_ccu_#{type}_#{action}/single_item" do
-          subject.send(method, items).support_id.should == '12345678901234567890-123456789'
+          expect(subject.send(method, items).support_id).to eq '12345678901234567890-123456789'
         end
       end
 
       it 'returns the estimated time in seconds' do
         VCR.use_cassette "akamai_api_ccu_#{type}_#{action}/single_item" do
-          subject.send(method, items).estimated_time.should == 420
+          expect(subject.send(method, items).estimated_time).to eq 420
         end
       end
     end

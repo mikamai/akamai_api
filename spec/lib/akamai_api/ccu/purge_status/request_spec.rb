@@ -21,7 +21,7 @@ describe AkamaiApi::CCU::PurgeStatus::Request do
     end
 
     it "sets the auth in the request" do
-      AkamaiApi.stub auth: 'foo'
+      allow(AkamaiApi).to receive(:auth) { 'foo' }
       expect(AkamaiApi::CCU::PurgeStatus::Request).to receive :get do |uri, args|
         expect(args).to eq basic_auth: 'foo'
         fake_response
@@ -30,19 +30,19 @@ describe AkamaiApi::CCU::PurgeStatus::Request do
     end
 
     it "raises an exception when the response code is 401" do
-      fake_response.stub code: 401
+      allow(fake_response).to receive(:code) { 401 }
       expect(AkamaiApi::CCU::PurgeStatus::Request).to receive(:get).and_return fake_response
       expect { subject.execute '/ccu/v2/purges/foo' }.to raise_error AkamaiApi::Unauthorized
     end
 
     it "returns a response built with the received json" do
-      fake_response.stub parsed_response: { 'httpStatus' => 201, 'submissionTime' => 1 }
+      allow(fake_response).to receive(:parsed_response) { { 'httpStatus' => 201, 'submissionTime' => 1 } }
       expect(AkamaiApi::CCU::PurgeStatus::Request).to receive(:get).and_return fake_response
       expect(subject.execute '/ccu/v2/purges/foo' ).to be_a AkamaiApi::CCU::PurgeStatus::Response
     end
 
     it "raises an error if json code in response is not valid" do
-      fake_response.stub parsed_response: { 'httpStatus' => 400, 'submissionTime' => 1 }
+      allow(fake_response).to receive(:parsed_response) { { 'httpStatus' => 400, 'submissionTime' => 1 } }
       expect(AkamaiApi::CCU::PurgeStatus::Request).to receive(:get).and_return fake_response
       expect { subject.execute '/ccu/v2/purges/foo' }.to raise_error AkamaiApi::CCU::Error
     end

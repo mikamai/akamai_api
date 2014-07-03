@@ -139,12 +139,12 @@ describe AkamaiApi::ECCU::FindResponse do
     end
 
     it "returns a 'exact_match' property set to true when 'property_name_exact_match' is true" do
-      expect(subject.property[:exact_match]).to be_true
+      expect(subject.property[:exact_match]).to be_truthy
     end
 
     it "returns a 'exact_match' property set to false when 'property_name_exact_match' isnt true" do
       raw_data[:property_name_exact_match] = {}
-      expect(subject.property[:exact_match]).to be_false
+      expect(subject.property[:exact_match]).to be_falsy
     end
 
     it "returns a 'type' property when there is a 'property_type'" do

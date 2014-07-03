@@ -14,7 +14,7 @@ module AkamaiApi
       end
 
       it 'returns the id list of all available requests' do
-        ECCURequest.all_ids.should =~ ['42994282', '43000154']
+        expect(ECCURequest.all_ids).to match_array ['42994282', '43000154']
       end
     end
 
@@ -47,7 +47,7 @@ module AkamaiApi
       }.each do |local_name, remote_name|
         it "maps response '#{remote_name}' to '#{local_name}'" do
           response = AkamaiApi::ECCU::FindResponse.new({})
-          response.stub remote_name => "foobarbaz"
+          allow(response).to receive(remote_name) { "foobarbaz" }
           expect_any_instance_of(AkamaiApi::ECCU::FindRequest).to receive(:execute).and_return response
           expect(subject.find('1234').send local_name).to eq "foobarbaz"
         end
@@ -56,26 +56,26 @@ module AkamaiApi
 
     describe '::last' do
       it 'find the most recent entry' do
-        ECCURequest.stub :all_ids => %w(a b)
-        ECCURequest.should_receive(:find).with('b', anything()).and_return :a
-        ECCURequest.last.should == :a
+        allow(ECCURequest).to receive(:all_ids) { %w(a b) }
+        allow(ECCURequest).to receive(:find).with('b', anything()).and_return :a
+        expect(ECCURequest.last).to eq :a
       end
     end
 
     describe '::first' do
       it 'find the oldest entry' do
-        ECCURequest.stub :all_ids => %w(a b)
-        ECCURequest.should_receive(:find).with('a', anything()).and_return :a
-        ECCURequest.first.should == :a
+        allow(ECCURequest).to receive(:all_ids) { %w(a b) }
+        allow(ECCURequest).to receive(:find).with('a', anything()).and_return :a
+        expect(ECCURequest.first).to eq :a
       end
     end
 
     describe '::all' do
       it 'returns the detail for each enlisted id' do
-        ECCURequest.stub :all_ids => %w(a b)
-        ECCURequest.should_receive(:find).with('a', anything()).and_return(:a)
-        ECCURequest.should_receive(:find).with('b', anything()).and_return(:b)
-        ECCURequest.all.should =~ [:a, :b]
+        allow(ECCURequest).to receive(:all_ids) { %w(a b) }
+        allow(ECCURequest).to receive(:find).with('a', anything()).and_return(:a)
+        allow(ECCURequest).to receive(:find).with('b', anything()).and_return(:b)
+        expect(ECCURequest.all).to match_array [:a, :b]
       end
     end
 
@@ -86,7 +86,7 @@ module AkamaiApi
       describe '::publish_file' do
         it 'calls publish with the content of the specified file' do
           args = {}
-          ECCURequest.should_receive(:publish).with('foo', xml_request_content, args)
+          allow(ECCURequest).to receive(:publish).with('foo', xml_request_content, args)
           ECCURequest.publish_file('foo', xml_request, args)
         end
       end
@@ -132,8 +132,8 @@ module AkamaiApi
       describe 'constructor' do
         it 'assigns the attributes hash to the accessors' do
           req = ECCURequest.new :status => 'foo', :notes => 'bar'
-          req.status.should == 'foo'
-          req.notes.should == 'bar'
+          expect(req.status).to eq 'foo'
+          expect(req.notes).to eq 'bar'
         end
       end
 
@@ -153,7 +153,7 @@ module AkamaiApi
           end
 
           it "returns true" do
-            expect(subject.update_notes! 'foo').to be_true
+            expect(subject.update_notes! 'foo').to be_truthy
           end
 
           it "updates notes attribute" do
@@ -167,11 +167,11 @@ module AkamaiApi
           end
 
           it "returns false" do
-            expect(subject.update_notes! 'foo').to be_false
+            expect(subject.update_notes! 'foo').to be_falsy
           end
 
           it "does not update the notes attribute" do
-            expect { subject.update_notes! 'foo' }.to_not change(subject, :notes).to 'foo'
+            expect { subject.update_notes! 'foo' }.to_not change { subject.notes }
           end
         end
       end
@@ -192,7 +192,7 @@ module AkamaiApi
           end
 
           it "returns true" do
-            expect(subject.update_email! 'foo').to be_true
+            expect(subject.update_email! 'foo').to be_truthy
           end
 
           it "updates notes attribute" do
@@ -206,11 +206,11 @@ module AkamaiApi
           end
 
           it "returns false" do
-            expect(subject.update_email! 'foo').to be_false
+            expect(subject.update_email! 'foo').to be_falsy
           end
 
           it "does not update the email attribute" do
-            expect { subject.update_email! 'foo' }.to_not change(subject, :email).to 'foo'
+            expect { subject.update_email! 'foo' }.to_not change { subject.email }
           end
         end
       end
@@ -231,7 +231,7 @@ module AkamaiApi
           end
 
           it "returns true" do
-            expect(subject.destroy).to be_true
+            expect(subject.destroy).to be_truthy
           end
         end
 
@@ -241,7 +241,7 @@ module AkamaiApi
           end
 
           it "returns false" do
-            expect(subject.destroy).to be_false
+            expect(subject.destroy).to be_falsy
           end
         end
       end

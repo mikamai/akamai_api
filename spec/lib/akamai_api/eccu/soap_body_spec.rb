@@ -7,11 +7,11 @@ describe AkamaiApi::ECCU::SoapBody do
     before { subject.string 'foo', 'sample' }
 
     it 'adds a string field' do
-      subject.to_s.should =~ /<foo.*>sample<\/foo>/
+      expect(subject.to_s).to match /<foo.*>sample<\/foo>/
     end
 
     it 'sets the correct type attribute' do
-      subject.to_s.should =~ /<foo xsi:type=\"xsd:string\">/
+      expect(subject.to_s).to match /<foo xsi:type=\"xsd:string\">/
     end
   end
 
@@ -19,15 +19,15 @@ describe AkamaiApi::ECCU::SoapBody do
     before { subject.array 'foo', ['a', 'b'] }
 
     it 'adds an array field' do
-      subject.to_s.should =~ /<foo.*><item>a<\/item><item>b<\/item><\/foo>/
+      expect(subject.to_s).to match /<foo.*><item>a<\/item><item>b<\/item><\/foo>/
     end
 
     it 'sets the correct type attribute' do
-      subject.to_s.should =~ /<foo.*xsi:type="wsdl:ArrayOfString"/
+      expect(subject.to_s).to match /<foo.*xsi:type="wsdl:ArrayOfString"/
     end
 
     it 'sets the correct arrayType attribute' do
-      subject.to_s.should =~ /<foo.*soapenc:arrayType="xsd:string\[2\]"/
+      expect(subject.to_s).to match /<foo.*soapenc:arrayType="xsd:string\[2\]"/
     end
   end
 
@@ -36,11 +36,11 @@ describe AkamaiApi::ECCU::SoapBody do
 
     it 'adds a base64 encoded string field' do
       match = subject.to_s.match /<foo.*>(.+)<\/foo>/m
-      Base64.decode64(match[1]).should == 'foo'
+      expect(Base64.decode64 match[1]).to eq 'foo'
     end
 
     it 'sets the correct type attribute' do
-      subject.to_s.should =~ /<foo.*xsi:type="xsd:base64Binary/
+      expect(subject.to_s).to match /<foo.*xsi:type="xsd:base64Binary/
     end
   end
 end

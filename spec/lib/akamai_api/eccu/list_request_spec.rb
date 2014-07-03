@@ -7,7 +7,7 @@ describe AkamaiApi::ECCU::ListRequest do
     let(:fake_client) { double call: nil }
 
     before do
-      AkamaiApi::ECCU.stub client: fake_client
+      allow(AkamaiApi::ECCU).to receive(:client) { fake_client }
     end
 
     it "calls 'get_ids' via savon" do
@@ -17,12 +17,12 @@ describe AkamaiApi::ECCU::ListRequest do
     end
 
     it "returns an array of ids" do
-      fake_client.stub call: double(body: { get_ids_response: { file_ids: { file_ids: [1,2] } } })
+      allow(fake_client).to receive(:call) { double(body: { get_ids_response: { file_ids: { file_ids: [1,2] } } }) }
       expect(subject.execute).to eq [1,2]
     end
 
     it "wraps in array if only one result is returned" do
-      fake_client.stub call: double(body: { get_ids_response: { file_ids: { file_ids: 1 } } })
+      allow(fake_client).to receive(:call) { double(body: { get_ids_response: { file_ids: { file_ids: 1 } } }) }
       expect(subject.execute).to eq [1]
     end
 

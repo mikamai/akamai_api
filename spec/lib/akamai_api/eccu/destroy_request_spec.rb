@@ -7,7 +7,7 @@ describe AkamaiApi::ECCU::DestroyRequest do
     let(:fake_client) { double call: nil }
 
     before do
-      AkamaiApi::ECCU.stub client: fake_client
+      allow(AkamaiApi::ECCU).to receive(:client) { fake_client }
     end
 
     it "calls 'delete' via savon with a message" do
@@ -18,22 +18,22 @@ describe AkamaiApi::ECCU::DestroyRequest do
     end
 
     it "returns 'true' if response hash reports to be successful" do
-      subject.stub request_body: 'example'
-      fake_client.stub call: double(body: { delete_response: { success: true } })
-      expect(subject.execute).to be_true
+      allow(subject).to receive(:request_body) { 'example' }
+      allow(fake_client).to receive(:call) { double(body: { delete_response: { success: true } }) }
+      expect(subject.execute).to be_truthy
     end
 
     it "returns 'false' if response hash reports to be unsuccessful" do
-      subject.stub request_body: 'example'
-      fake_client.stub call: double(body: { delete_response: { success: false } })
-      expect(subject.execute).to be_false
+      allow(subject).to receive(:request_body) { 'example' }
+      allow(fake_client).to receive(:call) { double(body: { delete_response: { success: false } }) }
+      expect(subject.execute).to be_falsy
     end
 
     it "raises NotFound if request raises a Savon::SOAPFault with particular message" do
       expect(fake_client).to receive :call do
         exc = Savon::SOAPFault.new({}, {})
-        exc.stub to_hash: { fault: { faultstring: 'asdasd fileId xsxx does not exist' } }
-        exc.stub to_s: ''
+        allow(exc).to receive(:to_hash) { { fault: { faultstring: 'asdasd fileId xsxx does not exist' } } }
+        allow(exc).to receive(:to_s) { '' }
         raise exc
       end
       expect { subject.execute }.to raise_error AkamaiApi::ECCU::NotFound

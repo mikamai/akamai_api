@@ -7,7 +7,7 @@ describe AkamaiApi::ECCU::FindRequest do
     let(:fake_client) { double call: nil }
 
     before do
-      AkamaiApi::ECCU.stub client: fake_client
+      allow(AkamaiApi::ECCU).to receive(:client) { fake_client }
     end
 
     it "calls 'get_info' via savon with a message" do
@@ -18,16 +18,16 @@ describe AkamaiApi::ECCU::FindRequest do
     end
 
     it "returns a FindResponse" do
-      subject.stub request_body: 'example'
-      fake_client.stub call: double(body: { get_info_response: { ECCU_info: {} } })
+      allow(subject).to receive(:request_body) { 'example' }
+      allow(fake_client).to receive(:call) { double(body: { get_info_response: { ECCU_info: {} } }) }
       expect(subject.execute 'foo').to be_a AkamaiApi::ECCU::FindResponse
     end
 
     it "raises NotFound if request raises a Savon::SOAPFault with particular message" do
       expect(fake_client).to receive :call do
         exc = Savon::SOAPFault.new({}, {})
-        exc.stub to_hash: { fault: { faultstring: 'asdasd fileId xsxx does not exist' } }
-        exc.stub to_s: ''
+        allow(exc).to receive(:to_hash) { { fault: { faultstring: 'asdasd fileId xsxx does not exist' } } }
+        allow(exc).to receive(:to_s) { '' }
         raise exc
       end
       expect { subject.execute true }.to raise_error AkamaiApi::ECCU::NotFound

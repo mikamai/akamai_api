@@ -18,12 +18,12 @@ describe AkamaiApi::ECCU::PublishRequest do
     end
 
     it 'sets property_exact_match to the given boolean value' do
-      expect(subject.property_exact_match).to be_false
+      expect(subject.property_exact_match).to be_falsy
     end
 
     it 'sets property_exact_match to true if no value is given' do
       subject = AkamaiApi::ECCU::PublishRequest.new 'foo.com'
-      expect(subject.property_exact_match).to be_true
+      expect(subject.property_exact_match).to be_truthy
     end
   end
 
@@ -31,7 +31,7 @@ describe AkamaiApi::ECCU::PublishRequest do
     let(:fake_client) { double call: nil }
 
     before do
-      AkamaiApi::ECCU.stub client: fake_client
+      allow(AkamaiApi::ECCU).to receive(:client) { fake_client }
     end
 
     it "calls 'upload' via savon with a message and the message_tag 'upload'" do
@@ -42,8 +42,8 @@ describe AkamaiApi::ECCU::PublishRequest do
     end
 
     it "returns the request Id" do
-      subject.stub request_body: 'example'
-      fake_client.stub call: double(body: { upload_response: { file_id: 1 } })
+      allow(subject).to receive(:request_body) { 'example' }
+      allow(fake_client).to receive(:call) { double(body: { upload_response: { file_id: 1 } }) }
       expect(subject.execute 'foo').to be_a Fixnum
     end
 
@@ -64,8 +64,8 @@ describe AkamaiApi::ECCU::PublishRequest do
     it "raises InvalidDomain if request raises a Savon::SOAPFault with particular message" do
       expect(fake_client).to receive :call do
         exc = Savon::SOAPFault.new({}, {})
-        exc.stub to_hash: { fault: { faultstring: 'asdasd You are not authorized to specify this digital property.' } }
-        exc.stub to_s: ''
+        allow(exc).to receive(:to_hash) { { fault: { faultstring: 'asdasd You are not authorized to specify this digital property.' } } }
+        allow(exc).to receive(:to_s) { '' }
         raise exc
       end
       expect { subject.execute 'foo' }.to raise_error AkamaiApi::ECCU::InvalidDomain

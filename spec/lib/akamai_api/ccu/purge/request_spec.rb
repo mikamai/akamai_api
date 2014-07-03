@@ -68,7 +68,7 @@ describe AkamaiApi::CCU::Purge::Request do
     end
 
     it "sets the auth in the post" do
-      AkamaiApi.stub auth: 'foo'
+      allow(AkamaiApi).to receive(:auth) { 'foo' }
       expect(subject.class).to receive :post do |path, args|
         expect(args[:basic_auth]).to eq 'foo'
         fake_response
@@ -78,25 +78,25 @@ describe AkamaiApi::CCU::Purge::Request do
 
     it "accepts a single element" do
       expect(subject).to receive(:request_body).with([sample_arl])
-      subject.class.stub post: fake_response
+      allow(subject.class).to receive(:post) { fake_response }
       subject.execute sample_arl
     end
 
     it "accepts a collection with a single element" do
       expect(subject).to receive(:request_body).with([sample_arl])
-      subject.class.stub post: fake_response
+      allow(subject.class).to receive(:post) { fake_response }
       subject.execute sample_arl
     end
 
     it "accepts a collection" do
       expect(subject).to receive(:request_body).with(['a', 'b'])
-      subject.class.stub post: fake_response
+      allow(subject.class).to receive(:post) { fake_response }
       subject.execute ['a', 'b']
     end
 
     it "works with splatting" do
       expect(subject).to receive(:request_body).with(['a', 'b'])
-      subject.class.stub post: fake_response
+      allow(subject.class).to receive(:post) { fake_response }
       subject.execute 'a', 'b'
     end
 
@@ -111,19 +111,19 @@ describe AkamaiApi::CCU::Purge::Request do
 
     it "raises an exception when the response code is 401" do
       fake_response = double code: 401
-      subject.class.stub post: fake_response
+      allow(subject.class).to receive(:post) { fake_response }
       expect { subject.execute sample_arl }.to raise_error AkamaiApi::Unauthorized
     end
 
     it "returns a response built with the resulted json" do
       fake_response = double code: 201, parsed_response: { 'httpStatus' => 201 }
-      subject.class.stub post: fake_response
+      allow(subject.class).to receive(:post) { fake_response }
       expect(subject.execute(sample_arl).raw).to eq 'httpStatus' => 201
     end
 
     it "raises an error when json code in response is not successful" do
       fake_response = double code: 201, parsed_response: { 'httpStatus' => 403 }
-      subject.class.stub post: fake_response
+      allow(subject.class).to receive(:post) { fake_response }
       expect { subject.execute sample_arl }.to raise_error AkamaiApi::CCU::Error
     end
   end
