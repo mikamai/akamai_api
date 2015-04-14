@@ -1,6 +1,6 @@
 require "active_support/core_ext/object/blank"
 
-%w(version ccu eccu eccu_request).each do |file|
+%w(version ccu eccu eccu_request eccu_parser).each do |file|
   require "akamai_api/#{file}"
 end
 
