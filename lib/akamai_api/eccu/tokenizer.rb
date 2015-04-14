@@ -6,13 +6,18 @@ module AkamaiApi::ECCU
   # foo/bar/*.txt
   class Tokenizer
 
-    attr_accessor :path, :splitted_path
+    attr_accessor :path, :splitted_path, :blocks
 
     SEPARATOR = '/'
+    # When the extension is present i use the sub_separator
+    # to obtain the sub block
+    #
+    # ex: *.png => [*, png]
+    SUB_SEPARATOR = '.'
 
     def initialize p
       @path = p
-      @splitted_path = []
+      @blocks = []
     end
 
     def extension_present?
@@ -23,12 +28,20 @@ module AkamaiApi::ECCU
       end
     end
 
+    # Use recursive method with self?
     def split_path
-      @path.split(SEPARATOR).each do |block|
-        @splitted_path << TokenizerBlock.new(block)
+      @splitted_path = @path.split(SEPARATOR)
+      @splitted_path.each_with_index do |block, index|
+        if index == @splitted_path.size - 1
+          block.split(SUB_SEPARATOR).each do |sub_block|
+            @blocks << TokenizerBlock.new(sub_block)
+          end
+        else
+          @blocks << TokenizerBlock.new(block)
+        end
       end
 
-      return @splitted_path
+      return @blocks
     end
 
   end
