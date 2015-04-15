@@ -8,6 +8,8 @@ module AkamaiApi
   class ECCUParser
 
     PLACEHOLDER = "{YIELD}"
+    NOT_ALLOWED_EXTENSIONS = %w[.*]
+    NOT_ALLOWED_DIRS = %w[. ..]
     attr_reader :tokenizer, :xml
 
     def initialize expression
@@ -25,22 +27,34 @@ module AkamaiApi
 
     def parse
       while tokenizer.look_next_token
-        tokenizer.nex_token
+        tokenizer.next_token
         case tokenizer.current_token.type
         when :dir
           add_recursive_dir_tag tokenizer.current_token.value
+        when :extension
+          add_extension_tag tokenizer.current_token.value
+        when :filename
+          add_filename_tag tokenizer.current_token.value
         end
       end
 
       add_revalidate
     end
 
+    def add_revalidate
+      @xml.gsub! PLACEHOLDER, "<revalidate>#{@revalidate_on}</revalidate>"
+    end
+
     def add_recursive_dir_tag dir_name
+      raise "Dir '#{dir_name}' not allowed" if NOT_ALLOWED_DIRS.include? dir_name
+
       @xml.gsub! PLACEHOLDER, "<match:recursive-dirs value=\"#{dir_name}\">#{PLACEHOLDER}</match:recursive-dirs>"
     end
 
-    def add_revalidate
-      @xml.gsub! PLACEHOLDER, "<revalidate>#{@revalidate_on}</revalidate>"
+    def add_extension_tag extension
+      raise "Extension '#{extension}' not allowed" if NOT_ALLOWED_EXTENSIONS.include? extension
+
+      @xml.gsub! PLACEHOLDER, "<match:ext value=\"#{extension}\">#{PLACEHOLDER}</match:ext>"
     end
 
   end

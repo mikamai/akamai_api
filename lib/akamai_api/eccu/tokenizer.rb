@@ -8,7 +8,7 @@ module AkamaiApi::ECCU
 
     SEPARATORS = ['/']
     DIR_REGEXP = /^[^\/]+$/
-    WILDCARD_REGEXP = /^\*{1,2}$/
+    WILDCARD_REGEXP = /^\**$/
 
     attr_reader :tokens, :cursor
 
@@ -22,7 +22,7 @@ module AkamaiApi::ECCU
       @tokens[cursor]
     end
 
-    def nex_token
+    def next_token
       @cursor += 1
       current_token
     end
@@ -64,8 +64,10 @@ module AkamaiApi::ECCU
 
       if wildcard_value.size == 1
         Token.new :wildcard, wildcard_value
-      else
+      elsif wildcard_value.size == 2
         Token.new :double_wildcard, wildcard_value
+      else
+        raise "Unknown wildcard '#{wildcard_value}'"
       end
     end
 
