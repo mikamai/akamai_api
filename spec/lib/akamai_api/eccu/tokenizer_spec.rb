@@ -22,8 +22,17 @@ module AkamaiApi::ECCU
 
       context 'last token is a :filename' do
         let(:eccu_tokenizer) { Tokenizer.new "foo/bar/**/test.png" }
-
         it { expect( eccu_tokenizer.tokens.last.type ).to equal :filename }
+      end
+
+      context 'single word is a :filename' do
+        let(:eccu_tokenizer) { Tokenizer.new "foo" }
+        it { expect( eccu_tokenizer.tokens.first.type ).to equal :filename }
+      end
+
+      context 'single word with end / is a :dir' do
+        let(:eccu_tokenizer) { Tokenizer.new "foo/" }
+        it { expect( eccu_tokenizer.tokens.first.type ).to equal :dir }
       end
 
     end

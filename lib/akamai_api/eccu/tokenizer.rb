@@ -75,7 +75,7 @@ module AkamaiApi::ECCU
       if SEPARATORS.include? next_char
         Token.new :dir, dir_value
       else
-        if @tokens.last.type == :wildcard
+        if @tokens.size > 0 && @tokens.last.type == :wildcard
           Token.new :extension, dir_value
         else
           Token.new :filename, dir_value
