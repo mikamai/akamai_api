@@ -57,5 +57,8 @@ module AkamaiApi
       @xml.gsub! PLACEHOLDER, "<match:ext value=\"#{extension}\">#{PLACEHOLDER}</match:ext>"
     end
 
+    def add_filename_tag filename
+    end
+
   end
 end
