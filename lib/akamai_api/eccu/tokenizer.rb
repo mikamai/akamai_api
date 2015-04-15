@@ -50,6 +50,8 @@ module AkamaiApi::ECCU
         read_next_wildcard_token expression_to_parse
       elsif next_char =~ DIR_REGEXP
         read_next_dir_token expression_to_parse
+      else
+        raise "Unknown token starting with '#{next_char}'"
       end
     end
 
@@ -58,12 +60,7 @@ module AkamaiApi::ECCU
     end
 
     def read_next_wildcard_token expression_to_parse
-      wildcard_value = ''
-      next_char = ''
-      begin
-        wildcard_value << expression_to_parse.slice!(0)
-        next_char = expression_to_parse.slice 0
-      end while next_char && "#{wildcard_value}#{next_char}" =~ WILDCARD_REGEXP
+      wildcard_value, next_char = loop_until_regexp expression_to_parse, WILDCARD_REGEXP
 
       if wildcard_value.size == 1
         Token.new :wildcard, wildcard_value
@@ -73,18 +70,28 @@ module AkamaiApi::ECCU
     end
 
     def read_next_dir_token expression_to_parse
-      dir_value = ''
-      next_char = ''
-      begin
-        dir_value << expression_to_parse.slice!(0)
-        next_char = expression_to_parse.slice 0
-      end while next_char && "#{dir_value}#{next_char}" =~ DIR_REGEXP
+      dir_value, next_char = loop_until_regexp expression_to_parse, DIR_REGEXP
 
       if SEPARATORS.include? next_char
         Token.new :dir, dir_value
       else
-        Token.new :filename, dir_value
+        if @tokens.last.type == :wildcard
+          Token.new :extension, dir_value
+        else
+          Token.new :filename, dir_value
+        end
       end
+    end
+
+    def loop_until_regexp expression_to_parse, regexp
+      looped_value = ''
+      next_char = ''
+      begin
+        looped_value << expression_to_parse.slice!(0)
+        next_char = expression_to_parse.slice 0
+      end while next_char && "#{looped_value}#{next_char}" =~ regexp
+
+      return looped_value, next_char
     end
 
   end
