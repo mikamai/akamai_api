@@ -58,7 +58,18 @@ module AkamaiApi::ECCU
     end
 
     def read_next_wildcard_token expression_to_parse
-      Token.new :separator, expression_to_parse.slice!(0)
+      wildcard_value = ''
+      next_char = ''
+      begin
+        wildcard_value << expression_to_parse.slice!(0)
+        next_char = expression_to_parse.slice 0
+      end while next_char && "#{wildcard_value}#{next_char}" =~ WILDCARD_REGEXP
+
+      if wildcard_value.size == 1
+        Token.new :wildcard, wildcard_value
+      else
+        Token.new :double_wildcard, wildcard_value
+      end
     end
 
     def read_next_dir_token expression_to_parse
