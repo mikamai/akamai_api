@@ -6,5 +6,10 @@ module AkamaiApi
   # @example
   #   AkamaiApi::ECCUParser.new(foo/bar/*.png).xml
   class ECCUParser
+
+    attr_accessor :tokenizer
+
+    def initialize path
+    end
   end
 end
