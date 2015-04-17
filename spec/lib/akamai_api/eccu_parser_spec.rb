@@ -10,8 +10,11 @@ module AkamaiApi
       end
     end
 
-    describe '.xml' do
-
+    describe 'raises' do
+      context 'error on empty string' do
+        let(:parser){ ECCUParser.new "" }
+        it { expect{ parser.xml }.to raise_error "Expression can't be empty" }
+      end
       context '* as not allowed extension' do
         let(:parser){ ECCUParser.new "foo/*.*" }
         it { expect{ parser.xml }.to raise_error }
@@ -24,12 +27,15 @@ module AkamaiApi
         let(:parser){ ECCUParser.new "../test.png" }
         it { expect{ parser.xml }.to raise_error }
       end
-
-      context 'only 1 recursive-dirs tag' do
-        let(:parser){ ECCUParser.new "foo/" }
-        it{ expect( parser.xml ).to eq( "<eccu><match:recursive-dirs value=\"foo\"><revalidate>now</revalidate></match:recursive-dirs></eccu>" ) }
+      context 'Extension will be the last element ' do
+        let(:parser){ ECCUParser.new "foo/*.png/" }
+        it { expect{ parser.xml }.to raise_error "Extension will be the last element" }
       end
-
+      context '* not allowed as first toke' do
+        let(:parser){ ECCUParser.new "*/foo/bar" }
+        it { expect{ parser.xml }.to raise_error "Expression can't start with a wildcard" }
+      end
     end
+
   end
 end

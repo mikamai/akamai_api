@@ -8,56 +8,82 @@ module AkamaiApi
   class ECCUParser
 
     PLACEHOLDER = "{YIELD}"
-    NOT_ALLOWED_EXTENSIONS = %w[.*]
+    NOT_ALLOWED_EXTENSIONS = %w[*]
     NOT_ALLOWED_DIRS = %w[. ..]
-    attr_reader :tokenizer, :xml
+
+    attr_reader :tokenizer, :xml, :revalidate_on
 
     def initialize expression
+      raise "Expression can't be empty" if expression.empty?
       @tokenizer = ECCU::Tokenizer.new expression
       @revalidate_on = "now"
-    end
-
-    def xml
       @xml = "<eccu>#{PLACEHOLDER}</eccu>"
       parse
-      @xml
     end
 
   private
 
     def parse
+      raise "Expression can't start with a wildcard" if tokenizer.look_next_token.type == :wildcard
       while tokenizer.look_next_token
         tokenizer.next_token
-        case tokenizer.current_token.type
-        when :dir
-          add_recursive_dir_tag tokenizer.current_token.value
-        when :extension
-          add_extension_tag tokenizer.current_token.value
-        when :filename
-          add_filename_tag tokenizer.current_token.value
-        end
+        send "add_#{tokenizer.current_token.type.to_s}_tag", tokenizer.current_token.value
       end
 
       add_revalidate
     end
 
-    def add_revalidate
-      @xml.gsub! PLACEHOLDER, "<revalidate>#{@revalidate_on}</revalidate>"
+    def next_wildcard_extension?
+      tokenizer.look_next_token.type == :wildcard and tokenizer.look_next_token(2).type == :extension
     end
 
-    def add_recursive_dir_tag dir_name
+    def next_filename?
+      tokenizer.look_next_token.type == :filename
+    end
+
+    def add_revalidate
+      xml.gsub! PLACEHOLDER, "<revalidate>#{revalidate_on}</revalidate>"
+    end
+
+    def add_dir_tag dir_name
       raise "Dir '#{dir_name}' not allowed" if NOT_ALLOWED_DIRS.include? dir_name
 
-      @xml.gsub! PLACEHOLDER, "<match:recursive-dirs value=\"#{dir_name}\">#{PLACEHOLDER}</match:recursive-dirs>"
+      xml.gsub! PLACEHOLDER, "<match:recursive-dirs value=\"#{dir_name}\">#{PLACEHOLDER}</match:recursive-dirs>"
     end
+
+    def add_this_dir_tag
+      xml.gsub! PLACEHOLDER, "<match:this-dir value=\"This Directory Only\">#{PLACEHOLDER}</match:this-dir>"
+    end
+
 
     def add_extension_tag extension
       raise "Extension '#{extension}' not allowed" if NOT_ALLOWED_EXTENSIONS.include? extension
+      raise "Extension will be the last element" if tokenizer.look_next_token != nil
 
-      @xml.gsub! PLACEHOLDER, "<match:ext value=\"#{extension}\">#{PLACEHOLDER}</match:ext>"
+      xml.gsub! PLACEHOLDER, "<match:ext value=\"#{extension}\">#{PLACEHOLDER}</match:ext>"
     end
 
     def add_filename_tag filename
+    end
+
+    def add_separator_tag separator
+      if tokenizer.look_prev_token.type == :dir
+        if tokenizer.look_next_token == nil
+          add_this_dir_tag
+        elsif next_wildcard_extension? or next_filename?
+          add_this_dir_tag
+        end
+      end
+    end
+
+    def add_double_wildcard_tag token
+      # Double wildcard do nothing
+    end
+
+    def add_wildcard_tag wildcard
+      if tokenizer.look_next_token.type == :separator
+        xml.gsub! PLACEHOLDER, "<match:sub-dirs-only value=\"Sub-directories Only\">#{PLACEHOLDER}</match:sub-dirs-only>"
+      end
     end
 
   end

@@ -13,13 +13,13 @@ module AkamaiApi::ECCU
     attr_reader :tokens, :cursor
 
     def initialize expression
-      tokenize expression
       @cursor = -1
+      tokenize expression
     end
 
     def current_token
-      return nil if @cursor == -1
-      @tokens[cursor]
+      return nil if cursor == -1
+      tokens[cursor]
     end
 
     def next_token
@@ -27,8 +27,33 @@ module AkamaiApi::ECCU
       current_token
     end
 
-    def look_next_token
-      @tokens[cursor + 1]
+    def look_next_token i = 1
+      tokens[cursor + i] 
+    end
+
+    def look_prev_token i = 1
+      tokens[cursor - 1]
+    end
+
+    def look_next_token_except exclude_type = nil
+      look_next_token if exclude_type == nil
+
+      i = 1
+      while tokens[cursor + i].type == exclude_type
+        i += 1
+      end
+      tokens[cursor + i]
+    end
+
+    def look_next_token_of_type token_type = nil
+      look_next_token if token_type == nil
+
+      i = cursor
+      while tokens.size < i
+        return tokens[i] if tokens[i].type == token_type
+        i += 1
+      end
+      nil
     end
 
   private 
@@ -37,7 +62,7 @@ module AkamaiApi::ECCU
       @tokens = []
       expression_to_parse = expression.strip
       while expression_to_parse.size > 0
-        @tokens << read_next_token(expression_to_parse)
+        tokens << read_next_token(expression_to_parse)
       end
     end
 
@@ -74,14 +99,12 @@ module AkamaiApi::ECCU
     def read_next_dir_token expression_to_parse
       dir_value, next_char = loop_until_regexp expression_to_parse, DIR_REGEXP
 
-      if SEPARATORS.include? next_char
+      if tokens.size > 0 && tokens.last.type == :wildcard
+        Token.new :extension, dir_value.gsub('.','')
+      elsif SEPARATORS.include? next_char
         Token.new :dir, dir_value
       else
-        if @tokens.size > 0 && @tokens.last.type == :wildcard
-          Token.new :extension, dir_value
-        else
-          Token.new :filename, dir_value
-        end
+        Token.new :filename, dir_value
       end
     end
 
