@@ -64,6 +64,9 @@ module AkamaiApi
     end
 
     def add_filename_tag filename
+      raise "Filename will be the last element" if tokenizer.look_next_token != nil
+
+      xml.gsub! PLACEHOLDER, "<match:filename value=\"#{filename}\" nocase=\"off\">#{PLACEHOLDER}</match:filename>"
     end
 
     def add_separator_tag separator
