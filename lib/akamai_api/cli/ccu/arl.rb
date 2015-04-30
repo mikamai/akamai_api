@@ -22,6 +22,11 @@ module AkamaiApi::CLI::CCU
                   :desc => 'Optional argument used to specify the environment. Usually you will not need this option'
     method_option :banner => "foo@foo.com bar@bar.com",
                   :desc => 'Email(s) used to send notification when the purge has been completed'
+    method_option :poll,
+                  :desc => 'whether or not to poll for status',
+                  :type => :boolean,
+                  :default => false
+
     def invalidate(*arls)
       purge_action :invalidate, arls
     end
@@ -31,7 +36,22 @@ module AkamaiApi::CLI::CCU
         raise 'You should provide at least one valid URL' if arls.blank?
         load_config
         res = AkamaiApi::CCU.purge type, :arl, arls, :domain => options[:domain]
-        puts PurgeRenderer.new(res).render
+
+        if options[:poll] == true && res.code == 201
+          puts PurgeRenderer.new(res).render
+          if res.time_to_wait
+            status = AkamaiApi::CCU.status res.uri
+            while status.completed_at.nil?
+              puts StatusRenderer.new(status).render
+              sleep 60
+              status = AkamaiApi::CCU.status res.uri
+            end
+
+            puts StatusRenderer.new(status).render
+          end
+        else
+          puts PurgeRenderer.new(res).render
+        end
       rescue AkamaiApi::CCU::Error
         puts StatusRenderer.new($!).render_error
       rescue AkamaiApi::Unauthorized
