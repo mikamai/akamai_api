@@ -163,12 +163,12 @@ The command takes two arguments:
 
 #### Rules for the Querystring
 
-*foo* : indicate a filename
-*foo/* : indicate the **foo** dir
-*foo/** : indicate all direct sub dirs of **foo**
-*foo/*** : indicate recursively all sub dirs of **foo**
-**.png* : indicate all pngs
-*foo.txt* : indicate specific file (foo.txt)
+- *foo* : indicate a filename
+- *foo/* : indicate the **foo** dir
+- *foo/** : indicate all direct sub dirs of **foo**
+- *foo/*** : indicate recursively all sub dirs of **foo**
+- **.png* : indicate all pngs
+- *foo.txt* : indicate specific file (foo.txt)
 
 # As a Library
 
