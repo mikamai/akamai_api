@@ -31,10 +31,6 @@ module AkamaiApi
         let(:parser){ ECCUParser.new "foo/*.png/" }
         it { expect{ parser.xml }.to raise_error "Extension will be the last element" }
       end
-      context '* not allowed as first token' do
-        let(:parser){ ECCUParser.new "*/foo/bar" }
-        it { expect{ parser.xml }.to raise_error "Expression can't start with a wildcard" }
-      end
     end
 
   end

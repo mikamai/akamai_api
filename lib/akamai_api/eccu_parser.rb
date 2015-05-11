@@ -13,18 +13,17 @@ module AkamaiApi
 
     attr_reader :tokenizer, :xml, :revalidate_on
 
-    def initialize expression
+    def initialize expression, revalidate_on = "now"
       raise "Expression can't be empty" if expression.empty?
       @tokenizer = ECCU::Tokenizer.new expression
-      @revalidate_on = "now"
-      @xml = "<eccu>#{PLACEHOLDER}</eccu>"
+      @revalidate_on = revalidate_on
+      @xml = "<?xml version=\"1.0\"?><eccu>#{PLACEHOLDER}</eccu>"
       parse
     end
 
   private
 
     def parse
-      raise "Expression can't start with a wildcard" if tokenizer.look_next_token.type == :wildcard
       while tokenizer.look_next_token
         tokenizer.next_token
         send "add_#{tokenizer.current_token.type.to_s}_tag", tokenizer.current_token.value

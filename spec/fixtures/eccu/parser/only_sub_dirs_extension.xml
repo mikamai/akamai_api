@@ -1,3 +1,4 @@
+<?xml version="1.0"?>
 <eccu>
   <match:recursive-dirs value="eccu_test">
     <match:sub-dirs-only value="Sub-directories Only">
