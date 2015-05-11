@@ -13,8 +13,9 @@ module AkamaiApi
 
     attr_reader :tokenizer, :xml, :revalidate_on
 
-    def initialize expression, revalidate_on = "now"
+    def initialize expression, revalidate_on = 'now'
       raise "Expression can't be empty" if expression.empty?
+      revalidate_on = revalidate_on.to_i if revalidate_on != 'now'
       @tokenizer = ECCU::Tokenizer.new expression
       @revalidate_on = revalidate_on
       @xml = "<?xml version=\"1.0\"?><eccu>#{PLACEHOLDER}</eccu>"
