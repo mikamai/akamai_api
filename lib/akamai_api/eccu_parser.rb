@@ -34,7 +34,9 @@ module AkamaiApi
     end
 
     def next_wildcard_extension?
-      tokenizer.look_next_token.type == :wildcard and tokenizer.look_next_token(2).type == :extension
+      tokenizer.look_next_token.type == :wildcard and 
+        ! tokenizer.look_next_token(2).nil? and 
+        tokenizer.look_next_token(2).type == :extension
     end
 
     def next_filename?
@@ -64,8 +66,6 @@ module AkamaiApi
     end
 
     def add_filename_tag filename
-      raise "Filename will be the last element" if tokenizer.look_next_token != nil
-
       xml.gsub! PLACEHOLDER, "<match:filename value=\"#{filename}\" nocase=\"off\">#{PLACEHOLDER}</match:filename>"
     end
 
@@ -84,7 +84,8 @@ module AkamaiApi
     end
 
     def add_wildcard_tag wildcard
-      if tokenizer.look_next_token.type == :separator
+      if tokenizer.look_next_token.nil? or 
+          tokenizer.look_next_token.type == :separator
         xml.gsub! PLACEHOLDER, "<match:sub-dirs-only value=\"Sub-directories Only\">#{PLACEHOLDER}</match:sub-dirs-only>"
       end
     end

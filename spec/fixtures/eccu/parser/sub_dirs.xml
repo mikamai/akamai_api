@@ -1,0 +1,7 @@
+<eccu>
+  <match:recursive-dirs value="foo">
+    <match:sub-dirs-only value="Sub-directories Only">
+      <revalidate>now</revalidate>
+    </match:sub-dirs-only>
+  </match:recursive-dirs>
+</eccu>

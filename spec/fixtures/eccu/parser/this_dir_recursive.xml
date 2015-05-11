@@ -1,0 +1,5 @@
+<eccu>
+  <match:recursive-dirs value="foo">
+    <revalidate>now</revalidate>
+  </match:recursive-dirs>
+</eccu>

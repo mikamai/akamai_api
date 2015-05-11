@@ -35,10 +35,6 @@ module AkamaiApi
         let(:parser){ ECCUParser.new "*/foo/bar" }
         it { expect{ parser.xml }.to raise_error "Expression can't start with a wildcard" }
       end
-      context 'Filename will be the last element' do
-        let(:parser){ ECCUParser.new "foo/bar/baz.png" }
-        it { expect{ parser.xml }.to raise_error "Filename will be the last element" }
-      end
     end
 
   end

@@ -1,0 +1,9 @@
+<eccu>
+  <match:recursive-dirs value="eccu_test">
+    <match:sub-dirs-only value="Sub-directories Only">
+      <match:ext value="txt">
+        <revalidate>now</revalidate>
+      </match:ext>
+    </match:sub-dirs-only>
+  </match:recursive-dirs>
+</eccu>

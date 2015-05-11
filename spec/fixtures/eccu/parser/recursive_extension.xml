@@ -1,0 +1,7 @@
+<eccu>
+  <match:recursive-dirs value="eccu_test">
+    <match:ext value="txt">
+      <revalidate>now</revalidate>
+    </match:ext>
+  </match:recursive-dirs>
+</eccu>
