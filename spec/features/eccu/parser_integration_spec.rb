@@ -2,7 +2,11 @@ require 'spec_helper'
 
 def open_expected_file( filename )
   content = File.open(File.dirname(__FILE__) + "/../../fixtures/eccu/parser/#{filename}", "r").read
-  content.gsub(/(\n|\t|\r)/, " ").gsub(/>\s*</, "><").strip
+  strip_content content
+end
+
+def strip_content( xml )
+  xml.gsub(/(\n|\t|\r)/, " ").gsub(/>\s*</, "><").strip
 end
 
 describe 'Some example of input -> output' do
@@ -21,7 +25,7 @@ describe 'Some example of input -> output' do
   tests.each do |expression, file|
     context expression do
       let(:parser){ AkamaiApi::ECCUParser.new expression }
-      it{ expect( parser.xml ).to eq( open_expected_file(file) ) }
+      it{ expect( strip_content( parser.xml ) ).to eq( open_expected_file(file) ) }
     end
   end
 

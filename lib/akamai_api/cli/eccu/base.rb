@@ -84,7 +84,7 @@ module AkamaiApi::CLI::ECCU
       if options[:force]
         str = "Y"
       else
-        puts "Publish this XML (Y/n)"
+        print "\nPublish this XML? (Y/n)"
         begin
           system("stty raw -echo")
           str = STDIN.getc
@@ -94,10 +94,10 @@ module AkamaiApi::CLI::ECCU
       end
       if str == "Y"
         id = AkamaiApi::ECCURequest.publish property, parser.xml, args
-        puts "Request correctly published:"
+        puts "\n\nRequest correctly published:"
         puts EntryRenderer.new(AkamaiApi::ECCURequest.find(id, :verbose => true)).render
       else
-        puts "Exit without publish request"
+        puts "\n\nExit without publish request"
       end
     rescue Exception => e
       puts e.message

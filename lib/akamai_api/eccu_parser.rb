@@ -18,7 +18,7 @@ module AkamaiApi
       revalidate_on = revalidate_on.to_i if revalidate_on != 'now'
       @tokenizer = ECCU::Tokenizer.new expression
       @revalidate_on = revalidate_on
-      @xml = "<?xml version=\"1.0\"?><eccu>#{PLACEHOLDER}</eccu>"
+      @xml = "<?xml version=\"1.0\"?>\n<eccu>#{PLACEHOLDER}</eccu>"
       parse
     end
 

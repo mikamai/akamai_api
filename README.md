@@ -150,7 +150,7 @@ Options:
   -n, [--notes=NOTES]                      # Default: ECCU Request using AkamaiApi gem
 ```
 
-The command produce the following result and ask you if you want to publish:
+The command produces the following result and ask you if you want to publish:
 
 ```xml
 <?xml version="1.0"?><eccu><match:ext value="png"><revalidate>now</revalidate></match:ext></eccu>
@@ -169,6 +169,10 @@ The command takes two arguments:
 - *foo/*** : indicate recursively all sub dirs of **foo**
 - **.png* : indicate all pngs
 - *foo.txt* : indicate specific file (foo.txt)
+
+Following the Akamai API docs there is a limitation:
+
+Akamai recommends that you limit the number of matches to 250 or fewer. Submitting more than 250 invalidation requests at one time can result in a “global invalidation”
 
 # As a Library
 
