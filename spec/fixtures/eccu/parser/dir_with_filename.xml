@@ -1,0 +1,10 @@
+<?xml version="1.0"?>
+<eccu>
+  <match:recursive-dirs value="foo">
+    <match:this-dir value="This Directory Only">
+      <match:filename value="bar.txt" nocase="off">
+        <revalidate>now</revalidate>
+      </match:filename>
+    </match:this-dir>
+  </match:recursive-dirs>
+</eccu>

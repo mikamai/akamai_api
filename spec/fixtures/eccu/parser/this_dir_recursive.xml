@@ -1,0 +1,6 @@
+<?xml version="1.0"?>
+<eccu>
+  <match:recursive-dirs value="foo">
+    <revalidate>now</revalidate>
+  </match:recursive-dirs>
+</eccu>

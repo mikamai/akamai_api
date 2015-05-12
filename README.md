@@ -102,6 +102,7 @@ In the ECCU interface you can see the requestes already published and publish yo
     akamai_api ECCU last_request                              # Print the last request made to ECCU
     akamai_api ECCU publish_xml path/to/request.xml john.com  # Publish a request made in XML for the specified Digital Property (usually the Host Header)
     akamai_api ECCU requests                                  # Print the list of the last requests made to ECCU
+    akamai_api ECCU revalidate now jhon.com "*.png"           # Create an XML request based on querystring input (*.png) for the specified Digital Property (usually the Host Header)
 ```
 
 ### Viewing Requests
@@ -125,13 +126,53 @@ Options:
                                           # Default: hostheader
       [--no-exact-match]                  # Do not do an exact match on property names
   -e, [--emails=foo@foo.com bar@bar.com]  # Email(s) to use to send notification on status change
-  -n, [--notes=NOTES]
-                                          # Default: ECCU Request using AkamaiApi gem
+  -n, [--notes=NOTES]                     # Default: ECCU Request using AkamaiApi gem
 ```
 
 The command takes two arguments:
 - the file containing the request;
 - the Digital Property to which you want to apply the request (usually it's the host);
+
+### Revalidate based on a query string
+
+You con use *akamai_api ECCU revalidate* for generate an XML revalidation file base on a query string.
+
+```
+Usage:
+  akamai_api revalidate now jhon.com "*.png"
+
+Options:
+  -f, [--force]                            # Force request without confirm
+  -P, [--property-type=type]               # Type of enlisted properties
+                                           # Default: hostheader
+      [--no-exact-match]                   # Do not do an exact match on property names
+  -e, [--emails=foo@foo.com bar@bar.com]   # Email(s) to use to send notification on status change
+  -n, [--notes=NOTES]                      # Default: ECCU Request using AkamaiApi gem
+```
+
+The command produces the following result and ask you if you want to publish:
+
+```xml
+<?xml version="1.0"?><eccu><match:ext value="png"><revalidate>now</revalidate></match:ext></eccu>
+```
+
+The command takes two arguments:
+- the timestamp after which any content, matched, in cache with an older timestamp will be considered stale
+- the Digital Property to which you want to apply the request (usually it's the host);
+- the query string that will be analyzed to produce the XML
+
+#### Rules for the Querystring
+
+- *foo* : indicate a filename
+- *foo/* : indicate the **foo** dir
+- *foo/** : indicate all direct sub dirs of **foo**
+- *foo/*** : indicate recursively all sub dirs of **foo**
+- **.png* : indicate all pngs
+- *foo.txt* : indicate specific file (foo.txt)
+
+Following the Akamai API docs there is a limitation:
+
+Akamai recommends that you limit the number of matches to 250 or fewer. Submitting more than 250 invalidation requests at one time can result in a “global invalidation”
 
 # As a Library
 

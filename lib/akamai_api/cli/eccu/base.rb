@@ -55,5 +55,52 @@ module AkamaiApi::CLI::ECCU
     rescue Savon::SOAPFault
       puts $!.message
     end
+
+    desc 'revalidate now jhon.com "*.png"', 'Create an XML request based on querystring input (*.png) for the specified Digital Property (usually the Host Header)'
+    long_desc 'Create an XML request based on querystring input (*.png) for the specified Digital Property (usually the Host Header)'
+    method_option :force, :type => :boolean, :aliases => '-f',
+                  :default => false, :banner => 'force',
+                  :desc => 'Force request without confirm'
+    method_option :property_type, :type => :string, :aliases => '-P',
+                  :default => 'hostheader', :banner => 'type',
+                  :desc => 'Type of enlisted properties'
+    method_option :no_exact_match, :type => :boolean,
+                  :desc => 'Do not do an exact match on property names'
+    method_option :emails,   :type => :array,  :aliases => '-e',
+                  :banner => "foo@foo.com bar@bar.com",
+                  :desc => 'Email(s) to use to send notification on status change'
+    method_option :notes, :type => :string, :aliases => '-n',
+                  :default => "ECCU Request using AkamaiApi #{AkamaiApi::VERSION}"
+    def revalidate(revalidate_on, property, querystring)
+      load_config
+      args = {
+        :notes => options[:notes],
+        :property_exact_match => !options[:no_exact_match],
+        :property_type => options[:property_type],
+        :emails => options[:emails]
+      }
+      parser = AkamaiApi::ECCUParser.new querystring, revalidate_on
+      puts parser.xml
+      if options[:force]
+        str = "Y"
+      else
+        print "\nPublish this XML? (Y/n)"
+        begin
+          system("stty raw -echo")
+          str = STDIN.getc
+        ensure
+          system("stty -raw echo")
+        end
+      end
+      if str == "Y"
+        id = AkamaiApi::ECCURequest.publish property, parser.xml, args
+        puts "\n\nRequest correctly published:"
+        puts EntryRenderer.new(AkamaiApi::ECCURequest.find(id, :verbose => true)).render
+      else
+        puts "\n\nExit without publish request"
+      end
+    rescue Exception => e
+      puts e.message
+    end
   end
 end

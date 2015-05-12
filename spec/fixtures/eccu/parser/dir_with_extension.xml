@@ -1,0 +1,10 @@
+<?xml version="1.0"?>
+<eccu>
+  <match:recursive-dirs value="eccu_test">
+    <match:this-dir value="This Directory Only">
+      <match:ext value="txt">
+        <revalidate>now</revalidate>
+      </match:ext>
+    </match:this-dir>
+  </match:recursive-dirs>
+</eccu>
