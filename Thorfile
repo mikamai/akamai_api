@@ -20,7 +20,7 @@ class Default < Thor
 
   desc "release", "Create tag v#{AkamaiApi::VERSION} and build and push akamai_api-#{AkamaiApi::VERSION}.gem to Rubygems"
   def release
-    Rake::Task["release"].execute
+    Rake::Task["release"].invoke
   end
 
   desc "spec", "Run RSpec code examples"
