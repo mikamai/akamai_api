@@ -45,7 +45,7 @@ module AkamaiApi::ECCU
       :version     => :version_string
     }.each do |local_field, soap_field|
       define_method local_field do
-        get_if_string(raw[soap_field])
+        get_if_handleable(raw[soap_field])
       end
     end
 
@@ -61,12 +61,12 @@ module AkamaiApi::ECCU
     #   - :name [String] file name
     #   - :md5 [String] MD5 digest of the file content
     def file
-      content64 = get_if_string(raw[:contents])
+      content64 = get_if_handleable(raw[:contents])
       {
         :content => content64 ? Base64.decode64(content64) : nil,
         :size    => raw[:file_size].to_i,
-        :name    => get_if_string(raw[:filename]),
-        :md5     => get_if_string(raw[:md5_digest])
+        :name    => get_if_handleable(raw[:filename]),
+        :md5     => get_if_handleable(raw[:md5_digest])
       }.reject { |k, v| v.nil? }
     end
 
@@ -78,10 +78,10 @@ module AkamaiApi::ECCU
     #   - :updated_at [String] last time the status has been updated
     def status
       {
-        :extended   => get_if_string(raw[:extended_status_message]),
+        :extended   => get_if_handleable(raw[:extended_status_message]),
         :code       => raw[:status_code].to_i,
-        :message    => get_if_string(raw[:status_message]),
-        :updated_at => get_if_string(raw[:status_update_date])
+        :message    => get_if_handleable(raw[:status_message]),
+        :updated_at => get_if_handleable(raw[:status_update_date])
       }.reject { |k, v| v.nil? }
     end
 
@@ -92,9 +92,9 @@ module AkamaiApi::ECCU
     #   - :type [String]
     def property
       {
-        :name        => get_if_string(raw[:property_name]),
+        :name        => get_if_handleable(raw[:property_name]),
         :exact_match => (raw[:property_name_exact_match] == true),
-        :type        => get_if_string(raw[:property_type])
+        :type        => get_if_handleable(raw[:property_type])
       }.reject { |k, v| v.nil? }
     end
 
@@ -103,8 +103,12 @@ module AkamaiApi::ECCU
     # This method is used because, for nil values, savon will respond with an hash containing all other attributes.
     # If we check that the expected type is matched, we can
     # prevent to retrieve wrong values
-    def get_if_string value
-      value.kind_of?(String) && value || nil
+    def get_if_handleable value
+      case value
+      when String then value
+      when DateTime then value.to_time.utc.xmlschema(3)
+      else nil
+      end
     end
   end
 end
