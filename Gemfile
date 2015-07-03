@@ -6,7 +6,7 @@ gemspec
 group :test do
   gem 'rspec', '>= 3.0.0'
   gem 'cucumber'
-  gem 'aruba'
+  gem 'aruba', '= 0.5.4'
   gem 'webmock'
   gem 'vcr'
   gem 'coveralls'
