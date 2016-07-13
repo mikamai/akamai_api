@@ -18,7 +18,7 @@ Gem::Specification.new do |gem|
   gem.required_ruby_version = Gem::Requirement.new(">= 1.9.2")
 
   gem.add_dependency 'httparty',       '~> 0.13.1'
-  gem.add_dependency 'activesupport',  '>= 2.3.9',  '< 5.0'
+  gem.add_dependency 'activesupport',  '>= 2.3.9'
   gem.add_dependency 'thor',           '>= 0.14.0', '< 2.0'
   gem.add_dependency 'savon',          '~> 2.5'
   gem.add_dependency 'builder',        '~> 3.0'
