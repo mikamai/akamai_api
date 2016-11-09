@@ -1,11 +1,14 @@
-require "httparty"
-
 require 'active_support'
 require 'active_support/core_ext/array'
 
 require "akamai_api/unauthorized"
 require "akamai_api/ccu/unrecognized_option"
 require "akamai_api/ccu/purge/response"
+
+require "akamai/edgegrid"
+require "net/http"
+require "uri"
+require "json"
 
 module AkamaiApi::CCU::Purge
   # {AkamaiApi::CCU::Purge} encapsulates the behavior needed to purge a resource from Akamai via CCU.
@@ -15,10 +18,12 @@ module AkamaiApi::CCU::Purge
   # @example Invalidate multiple CPCodes
   #     AkamaiApi::CCU::Purge::Request.new(:invalidate, :cpcode).execute(12345, 12346)
   class Request
-    include HTTParty
-    format :json
-    base_uri 'https://api.ccu.akamai.com/ccu/v2/queues/default'
-    headers 'Content-Type' => 'application/json'
+    #include HTTParty
+    #format :json
+    #base_uri 'https://api.ccu.akamai.com/ccu/v2/queues/default'
+    #headers 'Content-Type' => 'application/json'
+
+    @@headers = { "Content-Type" => "application/json" }
 
     attr_reader :type, :action, :domain
 
@@ -72,9 +77,14 @@ module AkamaiApi::CCU::Purge
     # @example Clean multiple resources
     #   request.execute '12345', '12346'
     def execute *items
+      http = Akamai::Edgegrid::HTTP.new(address=baseuri.host, port=baseuri.port)
+      http.setup_edgegrid(creds)
       items = Array.wrap(items.first) if items.length == 1
-      response = self.class.post('/', basic_auth: AkamaiApi.auth, body: request_body(items))
-      parse_response response
+      req = Net::HTTP::Post.new(resource, initheader = @@headers).tap do |pq|
+        pq.body = {"objects" => items}.to_json
+      end
+  
+      parse_response http.request(req)
     end
 
     # Request body to send to the API.
@@ -85,11 +95,27 @@ module AkamaiApi::CCU::Purge
     end
 
     private
+    def creds
+      AkamaiApi.auth.tap do |auth|
+        auth.delete(:base_url)
+        auth[:max_body] = 128*1024
+      end
+    end
+
+    def resource
+      URI.join(baseuri.to_s, "/ccu/v3/#{action}/url/#{domain}").to_s
+    end
+
+    def baseuri
+      URI(AkamaiApi.auth[:base_url])
+    end
 
     def parse_response response
+      parsed_response = JSON.load(response.body)
+
       raise ::AkamaiApi::Unauthorized if response.code == 401
-      raise AkamaiApi::CCU::Error.new response.parsed_response unless successful_response? response
-      Response.new response.parsed_response
+      raise AkamaiApi::CCU::Error.new parsed_response unless successful_response? parsed_response
+      Response.new parsed_response
     end
 
     def raise_unrecognized_action bad_action
@@ -117,7 +143,7 @@ module AkamaiApi::CCU::Purge
     end
 
     def successful_response? response
-      (200...300).include? response.parsed_response['httpStatus']
+      (200...300).include? response['httpStatus']
     end
   end
 end

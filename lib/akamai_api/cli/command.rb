@@ -12,8 +12,8 @@ module AkamaiApi::CLI
     no_tasks do
       def load_config
         load_config_from_file
-        load_config_from_env
-        load_config_from_options
+      #  load_config_from_env
+      #  load_config_from_options
         if AkamaiApi.auth_empty?
           render_auth_info
           exit 1

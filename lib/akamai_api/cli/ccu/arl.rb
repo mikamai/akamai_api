@@ -38,10 +38,7 @@ module AkamaiApi::CLI::CCU
         res = AkamaiApi::CCU.purge type, :arl, arls, :domain => options[:domain]
         puts PurgeRenderer.new(res).render
 
-        if options[:poll] == true && res.code == 201
-          poll_status res
-        end
-      rescue AkamaiApi::CCU::Error
+      rescue AkamaiApi::CCU::Error => e
         puts StatusRenderer.new($!).render_error
       rescue AkamaiApi::Unauthorized
         puts 'Your login credentials are invalid.'
