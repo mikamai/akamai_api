@@ -22,10 +22,6 @@ module AkamaiApi::CLI::CCU
                   :desc => 'Optional argument used to specify the environment. Usually you will not need this option'
     method_option :banner => "foo@foo.com bar@bar.com",
                   :desc => 'Email(s) used to send notification when the purge has been completed'
-    method_option :poll,
-                  :desc => 'whether or not to poll for status',
-                  :type => :boolean,
-                  :default => false
 
     def invalidate(*arls)
       purge_action :invalidate, arls
@@ -42,20 +38,6 @@ module AkamaiApi::CLI::CCU
         puts StatusRenderer.new($!).render_error
       rescue AkamaiApi::Unauthorized
         puts 'Your login credentials are invalid.'
-      end
-    end
-
-    no_commands do 
-      def poll_status purge_response
-        if purge_response.time_to_wait
-          status = AkamaiApi::CCU.status purge_response.uri
-          while status.completed_at.nil?
-            puts StatusRenderer.new(status).render
-            sleep 60
-            status = AkamaiApi::CCU.status purge_response.uri
-          end
-        end
-        puts StatusRenderer.new(status).render
       end
     end
   end
