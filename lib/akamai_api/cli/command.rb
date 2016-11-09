@@ -12,8 +12,6 @@ module AkamaiApi::CLI
     no_tasks do
       def load_config
         load_config_from_file
-      #  load_config_from_env
-      #  load_config_from_options
         if AkamaiApi.auth_empty?
           render_auth_info
           exit 1
@@ -27,37 +25,20 @@ module AkamaiApi::CLI
       def load_config_from_file
         if File.exists?(config_file)
           AkamaiApi.config.merge! YAML::load_file(config_file).symbolize_keys
-        end
-      end
-
-      def load_config_from_options
-        AkamaiApi.config[:auth].tap do |auth|
-          auth[0] = options.fetch 'username', auth[0]
-          auth[1] = options.fetch 'password', auth[1]
-        end
-      end
-
-      def load_config_from_env
-        AkamaiApi.config[:auth].tap do |auth|
-          auth[0] = ENV.fetch 'AKAMAI_USERNAME', auth[0]
-          auth[1] = ENV.fetch 'AKAMAI_PASSWORD', auth[1]
+        else
+          render_auth_info
+          exit 1
         end
       end
 
       def render_auth_info
         puts <<-OUTPUT
-No authentication config found. You can specify auth credentials with one of the following methods:"
-
-* Creating a file in your home directory named `.akamai_api.yml` with the following content:"
-  auth:"
-    - my_username"
-    - my_password"
-
-* Using the environment variables AKAMAI_USERNAME and AKAMAI_PASSWORD. E.g:"
-  AKAMAI_USERNAME=my_username AKAMAI_PASSWORD=my_password akamai_api ECCU last_request"
-
-* Passing username and password options from command line. E.g.:"
- akamai_api ECCU last_request -u my_username -p my_password"
+No authentication config found. You can specify auth credentials by creating a file in your home directory named `.akamai_api.yml` with the following content:"
+  openapi:
+    base_url: 
+    client_token:
+    client_secret:
+    access_token:
 OUTPUT
       end
     end

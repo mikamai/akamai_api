@@ -8,6 +8,7 @@ end
 module AkamaiApi
   def self.config
     @config ||= {
+      :auth => {},
       :openapi => {},
       :log => false
     }
