@@ -5,7 +5,7 @@ module AkamaiApi::CCU::Purge
   class Response < AkamaiApi::CCU::BaseResponse
     # @return [Fixnum] Suggested time to wait (in seconds) before asking the status again
     def time_to_wait
-      raw['pingAfterSeconds']
+      nil
     end
     alias_method :ping_after_seconds, :time_to_wait
 
@@ -24,13 +24,13 @@ module AkamaiApi::CCU::Purge
 
     # @return [Fixnum] Estimated time (in seconds) for the operation to be completed
     def estimated_time
-      raw['estimatedSeconds']
+      nil
     end
     alias_method :estimated_seconds, :estimated_time
 
     # @return [String] URI to use to check the status of the request
     def uri
-      raw['progressUri']
+      nil
     end
     alias_method :progress_uri, :uri
   end

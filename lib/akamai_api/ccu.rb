@@ -131,26 +131,5 @@ module AkamaiApi
       request.execute items
     end
 
-    # @overload status
-    #   Checks the status of the Akamai CCU queue
-    #   @return [AkamaiApi::CCU::Status::Response] a response object describing the status of the Akamai CCU queue
-    #   @raise [AkamaiApi::CCU::Error] when there is an error in the request
-    #   @raise [AkamaiApi::Unauthorized] when login credentials are invalid
-    # @overload status(progress_uri)
-    #   Checks the status of an Akamai CCU purge request
-    #   @param [String] purge_id_or_progress_uri request id
-    #     (both purge_id and progress_uri are accepted)
-    #   @return [AkamaiApi::CCU::PurgeStatus::Response] an object detailing the response
-    #   @raise [AkamaiApi::CCU::PurgeStatus::NotFound] when not request has been found
-    #   @raise [AkamaiApi::CCU::Error] when there is an error in the request
-    #   @raise [AkamaiApi::Unauthorized] when login credentials are invalid
-    # Checks the status of the Akamai CCU queue or the status of a purge request
-    def status purge_id_or_progress_uri = nil
-      if purge_id_or_progress_uri
-        PurgeStatus::Request.new.execute purge_id_or_progress_uri
-      else
-        Status::Request.new.execute
-      end
-    end
   end
 end

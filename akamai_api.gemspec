@@ -22,4 +22,5 @@ Gem::Specification.new do |gem|
   gem.add_dependency 'thor',           '>= 0.14.0', '< 2.0'
   gem.add_dependency 'savon',          '~> 2.5'
   gem.add_dependency 'builder',        '~> 3.0'
+  gem.add_dependency 'akamai-edgegrid','~> 1.0'
 end
