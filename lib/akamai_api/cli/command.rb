@@ -33,9 +33,13 @@ module AkamaiApi::CLI
 
       def render_auth_info
         puts <<-OUTPUT
-No authentication config found. You can specify auth credentials by creating a file in your home directory named `.akamai_api.yml` with the following content:"
+No authentication config found. At the very least, specify auth credentials by creating a file in your home directory named `.akamai_api.yml` with the following content:"
+  auth:
+    - my_username
+    - my_password
+If using "ccu arl invalidate", your CCU api credentials should also be added:
   openapi:
-    base_url: 
+    base_url:
     client_token:
     client_secret:
     access_token:

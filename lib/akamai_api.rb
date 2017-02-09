@@ -8,17 +8,20 @@ end
 module AkamaiApi
   def self.config
     @config ||= {
-      :auth => {},
+      :auth => [
+        ENV.fetch('AKAMAI_USERNAME', ''),
+        ENV.fetch('AKAMAI_PASSWORD', ''),
+      ],
       :openapi => {},
       :log => false
     }
   end
 
   def self.auth_empty?
-    config[:openapi].select { |v| v.blank? }.any?
+    config[:auth].select { |v| v.blank? }.any?
   end
 
   def self.auth
-    config[:openapi].symbolize_keys
+    { username: config[:auth].first, password: config[:auth].last }.merge(config[:openapi].symbolize_keys)
   end
 end
