@@ -18,11 +18,6 @@ module AkamaiApi::CCU::Purge
   # @example Invalidate multiple CPCodes
   #     AkamaiApi::CCU::Purge::Request.new(:invalidate, :cpcode).execute(12345, 12346)
   class Request
-    #include HTTParty
-    #format :json
-    #base_uri 'https://api.ccu.akamai.com/ccu/v2/queues/default'
-    #headers 'Content-Type' => 'application/json'
-
     @@headers = { "Content-Type" => "application/json" }
 
     attr_reader :type, :action, :domain
@@ -83,7 +78,6 @@ module AkamaiApi::CCU::Purge
       req = Net::HTTP::Post.new(resource, initheader = @@headers).tap do |pq|
         pq.body = {"objects" => items}.to_json
       end
-  
       parse_response http.request(req)
     end
 
