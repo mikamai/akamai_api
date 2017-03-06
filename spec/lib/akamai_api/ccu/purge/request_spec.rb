@@ -1,18 +1,6 @@
 require 'spec_helper'
 
 describe AkamaiApi::CCU::Purge::Request do
-  it "includes httparty" do
-    expect(subject.class.included_modules).to include HTTParty
-  end
-
-  it "sets a base_uri" do
-    expect(subject.class.base_uri).to eq 'https://api.ccu.akamai.com/ccu/v2/queues/default'
-  end
-
-  it "sets a content type header" do
-    expect(subject.class.headers).to eq 'Content-Type' => 'application/json'
-  end
-
   describe "#action" do
     it "is :remove by default" do
       expect(subject.action).to eq :remove
@@ -59,59 +47,52 @@ describe AkamaiApi::CCU::Purge::Request do
     let(:fake_response) { double code: 201, parsed_response: { 'httpStatus' => 201, 'submissionTime' => 1 } }
     let(:sample_arl) { 'http://www.foo.bar/t.txt' }
 
+    before(:each) do
+      allow_any_instance_of(Akamai::Edgegrid::HTTP).to receive(:request).and_return(double code: 201, body: '{ "httpStatus" : 201}')
+    end
+
     it "executes a post on the base url" do
-      expect(subject.class).to receive :post do |path, args|
-        expect(path).to eq '/'
-        fake_response
-      end
+      expect_any_instance_of(Akamai::Edgegrid::HTTP).to receive(:request).with an_instance_of(Net::HTTP::Post)
       subject.execute sample_arl
     end
 
     it "sets the auth in the post" do
-      allow(AkamaiApi).to receive(:auth) { 'foo' }
-      expect(subject.class).to receive :post do |path, args|
-        expect(args[:basic_auth]).to eq 'foo'
-        fake_response
+      expect_any_instance_of(Akamai::Edgegrid::HTTP).to receive(:setup_edgegrid).with({:username => 'USERNAME', :password => 'PASSWORD', :max_body=>131072})
+      subject.execute sample_arl
+    end
+
+    it "sets headers and base uri" do
+      fake_net_http_post = double
+      allow(fake_net_http_post).to receive(:body=)
+      expect(Net::HTTP::Post).to receive(:new) do |base_uri, initheaders|
+        expect(base_uri).to eq "https://some-subdomain.luna.akamaiapis.net/ccu/v3/remove/url/production"
+        expect(initheaders)
+        fake_net_http_post
       end
       subject.execute sample_arl
     end
 
     it "accepts a single element" do
-      expect(subject).to receive(:request_body).with([sample_arl])
-      allow(subject.class).to receive(:post) { fake_response }
-      subject.execute sample_arl
-    end
-
-    it "accepts a collection with a single element" do
-      expect(subject).to receive(:request_body).with([sample_arl])
-      allow(subject.class).to receive(:post) { fake_response }
+      require "json"
+      expect_any_instance_of(Net::HTTP::Post).to receive(:body=).with({"objects" => ['http://www.foo.bar/t.txt']}.to_json)
       subject.execute sample_arl
     end
 
     it "accepts a collection" do
-      expect(subject).to receive(:request_body).with(['a', 'b'])
-      allow(subject.class).to receive(:post) { fake_response }
-      subject.execute ['a', 'b']
+      require "json"
+      expect_any_instance_of(Net::HTTP::Post).to receive(:body=).with({"objects" => ["a", "b"]}.to_json)
+      subject.execute ["a", "b"]
     end
 
     it "works with splatting" do
-      expect(subject).to receive(:request_body).with(['a', 'b'])
-      allow(subject.class).to receive(:post) { fake_response }
-      subject.execute 'a', 'b'
-    end
-
-    it "sets the request body" do
-      expect(subject).to receive(:request_body).with([sample_arl]).and_return 'foo'
-      expect(subject.class).to receive :post do |path, args|
-        expect(args[:body]).to eq 'foo'
-        fake_response
-      end
-      subject.execute sample_arl
+      require "json"
+      expect_any_instance_of(Net::HTTP::Post).to receive(:body=).with({"objects" => ["a", "b"]}.to_json)
+      subject.execute "a", "b"
     end
 
     it "raises an exception when the response code is 401" do
-      fake_response = double code: 401
-      allow(subject.class).to receive(:post) { fake_response }
+      fake_response = double code: 401, body: '{ "httpStatus" : 401}'
+      allow_any_instance_of(Akamai::Edgegrid::HTTP).to receive(:request) { fake_response }
       expect { subject.execute sample_arl }.to raise_error AkamaiApi::Unauthorized
     end
 
@@ -122,8 +103,8 @@ describe AkamaiApi::CCU::Purge::Request do
     end
 
     it "raises an error when json code in response is not successful" do
-      fake_response = double code: 201, parsed_response: { 'httpStatus' => 403 }
-      allow(subject.class).to receive(:post) { fake_response }
+      fake_response = double code: 403, body: '{ "httpStatus" : 403 }'
+      allow_any_instance_of(Akamai::Edgegrid::HTTP).to receive(:request) { fake_response }
       expect { subject.execute sample_arl }.to raise_error AkamaiApi::CCU::Error
     end
   end
