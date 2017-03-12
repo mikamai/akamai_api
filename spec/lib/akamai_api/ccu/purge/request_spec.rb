@@ -57,7 +57,7 @@ describe AkamaiApi::CCU::Purge::Request do
     end
 
     it "sets the auth in the post" do
-      expect_any_instance_of(Akamai::Edgegrid::HTTP).to receive(:setup_edgegrid).with({:username => 'USERNAME', :password => 'PASSWORD', :max_body=>131072})
+      expect_any_instance_of(Akamai::Edgegrid::HTTP).to receive(:setup_edgegrid).with({:username => 'USERNAME', :password => 'PASSWORD', :max_body=>131072, :client_token => "client_token", :client_secret => "client_secret", :access_token => "access_token"})
       subject.execute sample_arl
     end
 
