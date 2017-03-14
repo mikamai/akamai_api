@@ -79,7 +79,7 @@ module AkamaiApi::CCU::Purge
 
       items = Array.wrap(items.first) if items.length == 1
       req = Net::HTTP::Post.new(resource, initheader = @@headers).tap do |pq|
-        if @type == :cpcode
+        if for_ccu_v2?
           pq.body = request_body items
         else
           pq.body = {"objects" => items}.to_json
@@ -108,8 +108,12 @@ module AkamaiApi::CCU::Purge
       end
     end
 
+    def for_ccu_v2?
+      @type == :cpcode || (@type == :arl && @action == :remove)
+    end
+
     def resource
-      if @type == :cpcode
+      if for_ccu_v2?
         URI.join(baseuri.to_s, "/ccu/v2/queues/default").to_s
       else
         URI.join(baseuri.to_s, "/ccu/v3/#{action}/url/#{domain}").to_s
