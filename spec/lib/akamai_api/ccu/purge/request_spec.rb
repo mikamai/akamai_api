@@ -67,7 +67,7 @@ describe AkamaiApi::CCU::Purge::Request do
       allow(fake_net_http_post).to receive(:body=)
       allow(fake_net_http_post).to receive(:[]=)
       expect(Net::HTTP::Post).to receive(:new) do |base_uri, initheaders|
-        expect(base_uri).to eq "https://some-subdomain.purge.akamaiapis.net/ccu/v3/remove/url/production"
+        expect(base_uri).to eq "https://some-subdomain.purge.akamaiapis.net/ccu/v2/queues/default"
         expect(initheaders)
         fake_net_http_post
       end
@@ -76,20 +76,19 @@ describe AkamaiApi::CCU::Purge::Request do
 
     it "accepts a single element" do
       require "json"
-      expect_any_instance_of(Net::HTTP::Post).to receive(:body=).with({"objects" => ['http://www.foo.bar/t.txt']}.to_json)
-
+      expect_any_instance_of(Net::HTTP::Post).to receive(:body=).with({type: :arl, action: :remove, domain: :production, objects: [ sample_arl ] }.to_json)
       subject.execute sample_arl
     end
 
     it "accepts a collection" do
       require "json"
-      expect_any_instance_of(Net::HTTP::Post).to receive(:body=).with({"objects" => ["a", "b"]}.to_json)
+      expect_any_instance_of(Net::HTTP::Post).to receive(:body=).with({type: :arl, action: :remove, domain: :production, objects: ["a", "b"]}.to_json)
       subject.execute ["a", "b"]
     end
 
     it "works with splatting" do
       require "json"
-      expect_any_instance_of(Net::HTTP::Post).to receive(:body=).with({"objects" => ["a", "b"]}.to_json)
+      expect_any_instance_of(Net::HTTP::Post).to receive(:body=).with({type: :arl, action: :remove, domain: :production, objects: ["a", "b"]}.to_json)
       subject.execute "a", "b"
     end
 
