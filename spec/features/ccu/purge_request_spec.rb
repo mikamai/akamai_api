@@ -3,6 +3,8 @@ require 'spec_helper'
 describe 'Given I request to purge an asset' do
   subject { AkamaiApi::CCU }
 
+  let(:estimated_time) { 420 }
+
   shared_examples 'purge helper' do
     let(:method) { "#{action}_#{type}" }
 
@@ -51,7 +53,7 @@ describe 'Given I request to purge an asset' do
 
       it 'returns the estimated time in seconds' do
         VCR.use_cassette "akamai_api_ccu_#{type}_#{action}/single_item" do
-          expect(subject.send(method, items).estimated_time).to eq 420
+          expect(subject.send(method, items).estimated_time).to eq estimated_time
         end
       end
     end
@@ -61,6 +63,8 @@ describe 'Given I request to purge an asset' do
     let(:action) { 'invalidate' }
     let(:type) { 'arl' }
     let(:items) { ['http://www.foo.bar/t.txt'] }
+
+    let(:estimated_time) { 5 }
 
     it_should_behave_like 'purge helper'
   end
