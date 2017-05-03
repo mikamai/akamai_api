@@ -21,6 +21,10 @@ module AkamaiApi
     config[:auth].select { |v| v.blank? }.any?
   end
 
+  def self.auth_ok?
+    [:username, :password, :base_url, :client_token, :client_secret, :access_token ].all? { |k| auth.key? k }
+  end
+
   def self.auth
     { username: config[:auth].first, password: config[:auth].last }.merge(config[:openapi].symbolize_keys)
   end

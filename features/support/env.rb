@@ -7,11 +7,16 @@ require 'vcr'
 require 'webmock'
 require 'coveralls'
 Coveralls.wear_merged!
-
 begin
   require File.expand_path '../auth.rb', __FILE__
 rescue LoadError
-  AkamaiApi.config[:auth] = ['test_username', 'test_password']
+  AkamaiApi.config[:auth] = ['USERNAME', 'PASSWORD']
+  AkamaiApi.config[:openapi] = {
+    :base_url => "https://some-subdomain.purge.akamaiapis.net",
+    :client_token => "client_token",
+    :client_secret => "client_secret",
+    :access_token => "access_token"
+  }
 end
 ENV['AKAMAI_USERNAME'], ENV['AKAMAI_PASSWORD'] = AkamaiApi.config[:auth]
 

@@ -30,7 +30,13 @@ module AkamaiApi::CLI::CCU
     no_tasks do
       def purge_action type, arls
         raise 'You should provide at least one valid URL' if arls.blank?
-        load_config
+
+        begin
+          load_config
+        rescue ArgumentError
+          return
+        end
+
         res = AkamaiApi::CCU.purge type, :arl, arls, :domain => options[:domain]
         puts PurgeRenderer.new(res).render
 

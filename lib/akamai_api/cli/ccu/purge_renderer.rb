@@ -34,7 +34,10 @@ module AkamaiApi::CLI::CCU
       result = [
         "Purge request successfully submitted:",
         "\t* Result: #{response.code} - #{response.message}",
-        "\t* Purge ID: #{response.purge_id} | Support ID: #{response.support_id}"
+        "\t* Purge ID: #{response.purge_id} | Support ID: #{response.support_id}",
+        "\t* Estimated time: #{response.estimated_time} secs.",
+        "\t* Progress URI: #{response.uri}",
+        "\t* Time to wait before check: #{response.time_to_wait} secs."
       ]
 
       result

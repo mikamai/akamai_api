@@ -62,7 +62,7 @@ http_interactions:
   recorded_at: Tue, 20 May 2014 16:49:29 GMT
 - request:
     method: post
-    uri: https://USERNAME:PASSWORD@control.akamai.com/webservices/services/PublishECCU
+    uri: https://control.akamai.com/webservices/services/PublishECCU
     body:
       encoding: UTF-8
       string: <?xml version="1.0" encoding="UTF-8"?><env:Envelope xmlns:xsd="http://www.w3.org/2001/XMLSchema"
@@ -83,6 +83,8 @@ http_interactions:
       - '*/*'
       User-Agent:
       - Ruby
+      Authorization:
+      - Basic VVNFUk5BTUU6UEFTU1dPUkQ=
   response:
     status:
       code: 200

@@ -11,10 +11,10 @@ module AkamaiApi::CLI
 
     no_tasks do
       def load_config
+        return if AkamaiApi.auth_ok?
         load_config_from_file
         if AkamaiApi.auth_empty?
           render_auth_info
-          exit 1
         end
       end
 
@@ -27,7 +27,7 @@ module AkamaiApi::CLI
           AkamaiApi.config.merge! YAML::load_file(config_file).symbolize_keys
         else
           render_auth_info
-          exit 1
+          raise ArgumentError
         end
       end
 
