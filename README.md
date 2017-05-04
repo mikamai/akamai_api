@@ -9,14 +9,18 @@ AkamaiApi is a ruby library and command line utility to interact with Akamai CCU
 
 After gem installation you will have a CLI utility to execute operations on Akamai. Each method requires authentication. You can provide auth info using one of the following methods:
 
-- Passing --username (-u) and --password (-p) arguments at each invocation
-- Set ENV variables: `AKAMAI_USERNAME` and `AKAMAI_PASSWORD`
+- Passing --username (-u) and --password (-p) arguments at each invocation (for ECCU/old CCU Rest Api)
 - Creating a config file in your HOME directory named `.akamai_api.yml` with the following format:
 
 ```yaml
     auth:
       - user
       - pass
+    openapi: # openapi credentials
+        base_url: https://akab-abcdefghi-jklmnopq.purge.akamaiapis.net
+        client_token: akab-abcdefghijklmnopqrstuv12345
+        client_secret: abcedfhijklmnopqrstuv12345
+        access_token: akab-12345abcedfghijklmnopqrstuv
     log: true # optional for enabling logging in ECCU requests. false by default
 ```
 
@@ -297,13 +301,4 @@ You can specify the following optional arguments in args: file_name, notes, vers
 
 - Clone this repository
 - Run 'bundle install'
-- To run the specs, create the file spec/auth.rb with the following content:
-
-   ```ruby
-    # Fill the following with your akamai login before running your spec
-    AkamaiApi.config.merge!({
-      :auth => ['user', 'pass']
-    })
-  ```
-
 - Run specs using `guard`. Alternatively you can execute the specs with `thor spec` and cucumber features with `cucumber`
