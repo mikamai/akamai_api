@@ -18,11 +18,6 @@ module AkamaiApi::CCU::Purge
   # @example Invalidate multiple CPCodes
   #     AkamaiApi::CCU::Purge::Request.new(:invalidate, :cpcode).execute(12345, 12346)
   class Request
-    #include HTTParty
-    #format :json
-    #base_uri 'https://api.ccu.akamai.com/ccu/v2/queues/default'
-    #headers 'Content-Type' => 'application/json'
-
     @@headers = { "Content-Type" => "application/json" }
 
     attr_reader :type, :action, :domain
@@ -77,13 +72,24 @@ module AkamaiApi::CCU::Purge
     # @example Clean multiple resources
     #   request.execute '12345', '12346'
     def execute *items
-      http = Akamai::Edgegrid::HTTP.new(address=baseuri.host, port=baseuri.port)
-      http.setup_edgegrid(creds)
+      akamai = Akamai::Edgegrid::HTTP.new(address=baseuri.host, port=baseuri.port)
+      akamai.setup_edgegrid(creds)
+      http = Net::HTTP.new(address=baseuri.host, port=baseuri.port)
+      http.use_ssl = true
+
       items = Array.wrap(items.first) if items.length == 1
       req = Net::HTTP::Post.new(resource, initheader = @@headers).tap do |pq|
-        pq.body = {"objects" => items}.to_json
+        if for_ccu_v2?
+          pq.body = request_body items
+        else
+          pq.body = {"objects" => items}.to_json
+        end
       end
-  
+
+      timestamp = Akamai::Edgegrid::HTTP.eg_timestamp()
+      nonce = Akamai::Edgegrid::HTTP.new_nonce()
+      req['Authorization'] = akamai.make_auth_header(req, timestamp, nonce)
+
       parse_response http.request(req)
     end
 
@@ -102,8 +108,16 @@ module AkamaiApi::CCU::Purge
       end
     end
 
+    def for_ccu_v2?
+      @type == :cpcode || (@type == :arl && @action == :remove)
+    end
+
     def resource
-      URI.join(baseuri.to_s, "/ccu/v3/#{action}/url/#{domain}").to_s
+      if for_ccu_v2?
+        URI.join(baseuri.to_s, "/ccu/v2/queues/default").to_s
+      else
+        URI.join(baseuri.to_s, "/ccu/v3/#{action}/url/#{domain}").to_s
+      end
     end
 
     def baseuri
@@ -113,7 +127,7 @@ module AkamaiApi::CCU::Purge
     def parse_response response
       parsed_response = JSON.load(response.body)
 
-      raise ::AkamaiApi::Unauthorized if response.code == 401
+      raise ::AkamaiApi::Unauthorized if ["400", 401].include?(response.code)
       raise AkamaiApi::CCU::Error.new parsed_response unless successful_response? parsed_response
       Response.new parsed_response
     end

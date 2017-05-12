@@ -10,6 +10,7 @@ group :test do
   gem 'webmock'
   gem 'vcr'
   gem 'coveralls'
+  gem 'rake'
 end
 
 group :development do

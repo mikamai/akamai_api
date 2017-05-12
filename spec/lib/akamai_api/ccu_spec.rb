@@ -54,22 +54,4 @@ describe AkamaiApi::CCU do
       end
     end
   end
-
-  describe '#status' do
-    context "when no argument is given" do
-      it "delegates to Status request instance" do
-        expect(AkamaiApi::CCU::Status::Request).to receive(:new).and_return double execute: 'foo'
-        expect(subject.status).to eq 'foo'
-      end
-    end
-
-    context "when a progress uri is passed as argument" do
-      it "delegates to PurgeStatus request instance" do
-        fake_instance = double
-        expect(AkamaiApi::CCU::PurgeStatus::Request).to receive(:new).and_return fake_instance
-        expect(fake_instance).to receive(:execute).with('foo').and_return 'asd'
-        expect(subject.status 'foo').to eq 'asd'
-      end
-    end
-  end
 end

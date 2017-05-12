@@ -2,7 +2,7 @@
 http_interactions:
 - request:
     method: post
-    uri: https://USERNAME:PASSWORD@api.ccu.akamai.com/ccu/v2/queues/default/
+    uri: https://some-subdomain.purge.akamaiapis.net/ccu/v2/queues/default
     body:
       encoding: UTF-8
       string: '{"type":"cpcode","action":"remove","domain":"production","objects":["12345"]}'

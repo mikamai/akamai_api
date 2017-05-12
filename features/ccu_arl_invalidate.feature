@@ -37,22 +37,10 @@ Feature: akamai_api ccu arl invalidate
       """
       * Purge ID: 12345678-1234-1234-1234-123456789012 | Support ID: 12345678901234567890-123456789
       """
-    And the output should contain:
-      """
-      * Estimated time: 420 secs.
-      """
-    And the output should contain:
-      """
-      * Progress URI: /ccu/v2/purges/12345678-1234-5678-1234-123456789012
-      """
-    And the output should contain:
-      """
-      * Time to wait before check: 420 secs.
-      """
 
   @vcr
   Scenario: multiple items
-    When I run `akamai_api ccu arl invalidate http://www.foo.com/bar.txt http://www.foo.com/baz.txt`
+    When I run `akamai_api ccu arl invalidate http://www.foo.bar/t.txt http://www.foo.com/baz.txt`
     Then the output should contain:
       """
       Purge request successfully submitted:
@@ -64,16 +52,4 @@ Feature: akamai_api ccu arl invalidate
     And the output should contain:
       """
       * Purge ID: 12345678-1234-1234-1234-123456789012 | Support ID: 12345678901234567890-123456789
-      """
-    And the output should contain:
-      """
-      * Estimated time: 420 secs.
-      """
-    And the output should contain:
-      """
-      * Progress URI: /ccu/v2/purges/12345678-1234-5678-1234-123456789012
-      """
-    And the output should contain:
-      """
-      * Time to wait before check: 420 secs.
       """
